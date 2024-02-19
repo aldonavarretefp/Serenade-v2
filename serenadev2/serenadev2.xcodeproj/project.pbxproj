@@ -75,6 +75,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EA9BC9E22B83A28D00292705 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		EA9BC9E32B83A29F00292705 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EA9BC9E42B83A2AD00292705 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		EA9BC9E52B83A2B300292705 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		F137D2262B839A81006264C1 = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +126,10 @@
 		F137D2312B839A82006264C1 /* serenadev2 */ = {
 			isa = PBXGroup;
 			children = (
+				EA9BC9E52B83A2B300292705 /* View */,
+				EA9BC9E42B83A2AD00292705 /* Model */,
+				EA9BC9E32B83A29F00292705 /* ViewModel */,
+				EA9BC9E22B83A28D00292705 /* Components */,
 				F137D2322B839A82006264C1 /* serenadev2App.swift */,
 				F137D2342B839A82006264C1 /* ContentView.swift */,
 				F137D2362B839A82006264C1 /* Item.swift */,
