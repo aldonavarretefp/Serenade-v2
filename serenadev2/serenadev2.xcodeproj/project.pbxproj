@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA9BC9E82B83A44800292705 /* ProfileBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9BC9E72B83A44800292705 /* ProfileBar.swift */; };
 		F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2322B839A82006264C1 /* serenadev2App.swift */; };
 		F137D2352B839A82006264C1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2342B839A82006264C1 /* ContentView.swift */; };
 		F137D2372B839A82006264C1 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2362B839A82006264C1 /* Item.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EA9BC9E72B83A44800292705 /* ProfileBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileBar.swift; sourceTree = "<group>"; };
 		F137D22F2B839A82006264C1 /* serenadev2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = serenadev2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F137D2322B839A82006264C1 /* serenadev2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2App.swift; sourceTree = "<group>"; };
 		F137D2342B839A82006264C1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 		EA9BC9E22B83A28D00292705 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EA9BC9E72B83A44800292705 /* ProfileBar.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F137D2352B839A82006264C1 /* ContentView.swift in Sources */,
+				EA9BC9E82B83A44800292705 /* ProfileBar.swift in Sources */,
 				F137D2372B839A82006264C1 /* Item.swift in Sources */,
 				F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */,
 			);
