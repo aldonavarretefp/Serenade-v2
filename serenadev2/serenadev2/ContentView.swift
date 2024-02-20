@@ -7,11 +7,12 @@
 
 import SwiftUI
 import SwiftData
+import CloudKit
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
-
+    
     var body: some View {
         NavigationSplitView {
             List {
@@ -23,6 +24,19 @@ struct ContentView: View {
                     }
                 }
                 .onDelete(perform: deleteItems)
+                Button {
+                    SongService.saveSong(song: .init(id: "1212", title: "Hola", artist: "Hola", album: "Hola")) { result in
+                        switch result {
+                        case .success(let song):
+                            print("Success")
+                        case .failure(let error):
+                            print("Error", error.localizedDescription)
+                        }
+                    }
+                } label: {
+                    Text("Save a song")
+                }
+
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

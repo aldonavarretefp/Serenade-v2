@@ -15,6 +15,9 @@
 		F137D2482B839A84006264C1 /* serenadev2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2472B839A84006264C1 /* serenadev2Tests.swift */; };
 		F137D2522B839A84006264C1 /* serenadev2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2512B839A84006264C1 /* serenadev2UITests.swift */; };
 		F137D2542B839A84006264C1 /* serenadev2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */; };
+		F7207C982B84E00A00E383E6 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C972B84E00A00E383E6 /* Song.swift */; };
+		F7207C9A2B84E02400E383E6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C992B84E02400E383E6 /* User.swift */; };
+		F7207C9D2B84E4BD00E383E6 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C9C2B84E4BD00E383E6 /* SongService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +51,9 @@
 		F137D24D2B839A84006264C1 /* serenadev2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = serenadev2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F137D2512B839A84006264C1 /* serenadev2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITests.swift; sourceTree = "<group>"; };
 		F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F7207C972B84E00A00E383E6 /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		F7207C992B84E02400E383E6 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		F7207C9C2B84E4BD00E383E6 /* SongService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +98,8 @@
 		EA9BC9E42B83A2AD00292705 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F7207C972B84E00A00E383E6 /* Song.swift */,
+				F7207C992B84E02400E383E6 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -126,6 +134,7 @@
 		F137D2312B839A82006264C1 /* serenadev2 */ = {
 			isa = PBXGroup;
 			children = (
+				F7207C9B2B84E4A200E383E6 /* Service */,
 				EA9BC9E52B83A2B300292705 /* View */,
 				EA9BC9E42B83A2AD00292705 /* Model */,
 				EA9BC9E32B83A29F00292705 /* ViewModel */,
@@ -164,6 +173,14 @@
 				F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */,
 			);
 			path = serenadev2UITests;
+			sourceTree = "<group>";
+		};
+		F7207C9B2B84E4A200E383E6 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				F7207C9C2B84E4BD00E383E6 /* SongService.swift */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -296,8 +313,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7207C982B84E00A00E383E6 /* Song.swift in Sources */,
 				F137D2352B839A82006264C1 /* ContentView.swift in Sources */,
+				F7207C9D2B84E4BD00E383E6 /* SongService.swift in Sources */,
 				F137D2372B839A82006264C1 /* Item.swift in Sources */,
+				F7207C9A2B84E02400E383E6 /* User.swift in Sources */,
 				F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
