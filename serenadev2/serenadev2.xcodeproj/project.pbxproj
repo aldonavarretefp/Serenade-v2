@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C47B8F082B84EE88002027CF /* ItemSmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47B8F072B84EE88002027CF /* ItemSmall.swift */; };
 		EA9BC9E82B83A44800292705 /* ProfileBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9BC9E72B83A44800292705 /* ProfileBar.swift */; };
 		EA9BC9EA2B84EF8100292705 /* UnfriendSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9BC9E92B84EF8100292705 /* UnfriendSheet.swift */; };
 		F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2322B839A82006264C1 /* serenadev2App.swift */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C47B8F072B84EE88002027CF /* ItemSmall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSmall.swift; sourceTree = "<group>"; };
 		EA9BC9E72B83A44800292705 /* ProfileBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileBar.swift; sourceTree = "<group>"; };
 		EA9BC9E92B84EF8100292705 /* UnfriendSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfriendSheet.swift; sourceTree = "<group>"; };
 		F137D22F2B839A82006264C1 /* serenadev2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = serenadev2.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				EA9BC9E72B83A44800292705 /* ProfileBar.swift */,
+				C47B8F072B84EE88002027CF /* ItemSmall.swift */,
 				EA9BC9E92B84EF8100292705 /* UnfriendSheet.swift */,
 			);
 			path = Components;
@@ -304,6 +307,7 @@
 			files = (
 				F137D2352B839A82006264C1 /* ContentView.swift in Sources */,
 				EA9BC9E82B83A44800292705 /* ProfileBar.swift in Sources */,
+				C47B8F082B84EE88002027CF /* ItemSmall.swift in Sources */,
 				F137D2372B839A82006264C1 /* Item.swift in Sources */,
 				EA9BC9EA2B84EF8100292705 /* UnfriendSheet.swift in Sources */,
 				F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */,
@@ -471,7 +475,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"serenadev2/Preview Content\"";
-				DEVELOPMENT_TEAM = 8T878FXD47;
+				DEVELOPMENT_TEAM = W3R57UHU9V;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = serenadev2/Info.plist;
@@ -485,7 +489,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.serenade.serenadev2;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.serenade.serenadev2-pablo20Feb";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -502,7 +506,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"serenadev2/Preview Content\"";
-				DEVELOPMENT_TEAM = 8T878FXD47;
+				DEVELOPMENT_TEAM = W3R57UHU9V;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = serenadev2/Info.plist;
@@ -516,7 +520,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.serenade.serenadev2;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.serenade.serenadev2-pablo20Feb";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
