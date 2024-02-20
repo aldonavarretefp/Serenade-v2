@@ -57,9 +57,11 @@ struct ItemSmall: View {
                 Text(item.title)
                     .font(.footnote)
                     .fontWeight(.bold)
+                    
                 
                 Text(item.isPerson ? "@\(item.subtitle)" : item.subtitle)
                     .font(.caption)
+                    .foregroundStyle(.callout)
             }
             
             Spacer()
@@ -86,8 +88,8 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ItemSmall(item: ContentItem(imageUrl: URL(string: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"), title: "Fernando Fernández", subtitle: "janedoe", isPerson: true), showArrow: true)
-                .previewLayout(.sizeThatFits)
-                .previewDisplayName("Person Preview with Arrow")
+                    .previewLayout(.sizeThatFits)
+                    .previewDisplayName("Person Preview with Arrow")
             
             ItemSmall(item: ContentItem(imageUrl: URL(string: "https://i.scdn.co/image/ab67616d0000b2738940ac99f49e44f59e6f7fb3"), title: "See you again (feat. Kali Uchis)", subtitle: "Tyler, The Creator, Kali Uchis", isPerson: false), showArrow: true)
                 .previewLayout(.sizeThatFits)
