@@ -13,7 +13,7 @@ struct ProfileBar: View {
     @State var isSettingsSheetDisplayed: Bool = false
     @State var isUnfriendSheetDisplayed: Bool = false
     @State var isFriendRequestSent: Bool = false
-    @State var isCurrentUser: Bool = true
+    @State var isCurrentUser: Bool = false
     @State var isFriend: Bool? = true
     
     var body: some View {
