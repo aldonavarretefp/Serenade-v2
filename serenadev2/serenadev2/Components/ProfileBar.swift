@@ -8,16 +8,20 @@
 import SwiftUI
 
 struct ProfileBar: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    @State var isSettingsSheetDisplayed: Bool = false
+    @State var isUnfriendSheetDisplayed: Bool = false
+    @State var isFriendRequestSent: Bool = false
+    @State var isCurrentUser: Bool = true
+    @State var isFriend: Bool? = true
+    
     var body: some View {
         NavigationStack {
             HStack(alignment: .top) {
                 ZStack(alignment: .top) {
                     if false {
-//                        KFImage(URL(string: imageUrl))
-//                            .resizable()
-//                            .aspectRatio(contentMode: .fit)
-//                            .frame(height: 100)
-//                            .clipShape(Circle())
+//                        user.profile_picture
                     } else {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()
@@ -32,39 +36,53 @@ struct ProfileBar: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(height: 25)
-                                //.foregroundStyle(.accent)
-//                            Text("\(userModel.user?.streak ?? 0)")
-                            Text("10")
+                                .foregroundStyle(.accent)
+                            Text("10")  // user.streak
                                 .bold()
                                 .font(.title3)
-                        }
-                        
-                        .padding(5)
-                        //.background(Color.colorCard.opacity(0.9))
+                        }                        .padding(5)
+                        .background(Color.card.opacity(0.9))
                         .clipShape(RoundedRectangle(cornerRadius: 6))
-                        //.shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0), radius: 12.5, x: 0, y: 4)
+                        .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0), radius: 12.5, x: 0, y: 4)
                         .offset(y: 5)
                     }
                 }
                 .padding(.trailing)
-                VStack(alignment: .leading) {
-                    
-                    Text("Name Surname")
-                        .font(.title2)
-                        .bold()
-                        .foregroundStyle(.callout)
-                    
-                    if false {
-//                        Text("\(username)")
-//                            .font(.footnote)
-//                            .foregroundStyle(.secondary)
-                    } else {
-                        Text("Username")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
+                VStack {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading) {
+                            
+                            Text("Name Surname")    // user.name
+                                .font(.title2)
+                                .bold()
+                            
+                            Text("Username")    // user.username
+                                .font(.footnote)
+                                .foregroundStyle(.callout)
+                            Spacer()
+                        }
+                        Spacer()
+                        if isCurrentUser {
+                            Button(action: {
+                                isSettingsSheetDisplayed = true
+                            }, label: {
+                                Image(systemName: "gearshape.fill")
+                                    .resizable()
+                                    .frame(width: 25, height: 25)
+                            })
+                            
+                            //                                        .sheet(isPresented: $isSettingsSheetDisplayed){
+                            //                                            SettingsView(passedDarkMode: $darkModeToggle)
+                            //                                        }
+                            .padding(5)
+                            .foregroundStyle(.primary)
+                        }
+                        else {
+                            Spacer()
+                                .frame(width: 25, height: 25)
+                                .padding(5)
+                        }
                     }
-                    
-                    Spacer()
                     HStack {
                         VStack {
                             Text("55")
@@ -75,20 +93,55 @@ struct ProfileBar: View {
                             Text("Friends")
                         }
                         .padding(.horizontal)
+                        Spacer()
+                        if !isCurrentUser {
+                            if !isFriend! {
+                                if !isFriendRequestSent {
+                                    Button(action: {
+                                        //                                    sendFriendRequest()
+                                        isFriendRequestSent = true
+                                    }, label: {
+                                        ZStack {
+                                            Capsule()
+                                            Text("Add friend")
+                                                .foregroundStyle(.white)
+                                                .fontWeight(.bold)
+                                                .font(.headline)
+                                        }
+                                    })
+                                }
+                                else {
+                                    ZStack {
+                                        Capsule()
+                                            .fill(.secondaryButton)
+                                        Text("Pending")
+                                        //                                        .foregroundStyle(.callout)
+                                            .fontWeight(.bold)
+                                            .font(.subheadline)
+                                    }
+                                }
+                            }
+                            else {
+                                Button(action: {
+                                    isUnfriendSheetDisplayed = true
+                                }, label: {
+                                    ZStack {
+                                        Capsule()
+                                            .fill(.secondaryButton)
+                                        Image(systemName: "person.fill.checkmark")
+                                            .foregroundStyle(colorScheme == .light ? .black : .white)
+                                            .font(.headline)
+                                    }
+                                })
+                                .sheet(isPresented: $isUnfriendSheetDisplayed, content: {
+                                    UnfriendSheet(isFriend: $isFriend)
+                                        .presentationDetents([.fraction(0.3)])
+                                })
+                            }
+                        }
                     }
                     .font(.footnote)
                 }
-                Spacer()
-//                Button(action: {
-//                    isSettingsSheetDisplayed = true
-//                }, label: {
-//                    Image(systemName: "gearshape.fill")
-//                })
-//                .sheet(isPresented: $isSettingsSheetDisplayed){
-//                    SettingsView(passedDarkMode: $darkModeToggle)
-//                }
-//                .padding(5)
-//                .foregroundStyle(.primary)
             }
             .padding()
             .frame(height: 130)
