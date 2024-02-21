@@ -25,7 +25,7 @@ struct serenadev2App: App {
 
     var body: some Scene {
         WindowGroup {
-            ProfileBar()
+            SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview122/v4/72/a3/ab/72a3ab79-0066-f773-6618-7a53adc250b3/mzaf_17921540907592750976.plus.aac.p.m4a")!, coverArt: "entropy", title: "Entropy", author: "Beach bunny", color: Color(hex: 0xAEA6F6), fontColor: Color(hex: 0x202020), seconds: 30.0)
         }
         .modelContainer(sharedModelContainer)
     }
