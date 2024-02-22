@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct SearchView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     @State private var searchText = ""
     @State private var selectedTab = "Music"
     @State private var underlineOffset: CGFloat = 0 // Offset for the underline
+    
     
     private let underlineHeight: CGFloat = 2
     private let animationDuration = 0.2
@@ -36,8 +39,7 @@ struct SearchView: View {
                         Text("Music")
                             .padding(.vertical)
                             .frame(maxWidth: .infinity)
-                            .background(Color.black)
-                            .foregroundColor(selectedTab == "Music" ? Color.white : .gray)
+                            .foregroundColor(selectedTab == "Music" ? (colorScheme == .dark ? .white: .black) : .callout)
                             .fontWeight(.semibold)
                             .onTapGesture {
                                 withAnimation(.easeOut(duration: animationDuration)) {
@@ -50,9 +52,8 @@ struct SearchView: View {
                         Text("People")
                             .padding(.vertical)
                             .frame(maxWidth: .infinity)
-                            .background(Color.black)
                             .fontWeight(.semibold)
-                            .foregroundColor(selectedTab == "People" ? Color.white : .gray)
+                            .foregroundColor(selectedTab == "People" ? (colorScheme == .dark ? .white: .black) : .callout)
                             .onTapGesture {
                                 withAnimation(.easeOut(duration: animationDuration)) {
                                     selectedTab = "People"
@@ -63,7 +64,7 @@ struct SearchView: View {
                     .overlay(
                         Rectangle()
                             .frame(width: geometry.size.width / 2, height: underlineHeight)
-                            .foregroundColor(Color.white)
+                            .foregroundColor(selectedTab == "Music" ? colorScheme == .dark ? .white: .black : .callout)
                             .offset(x: underlineOffset, y: 0),
                         alignment: .bottomLeading
                     )
