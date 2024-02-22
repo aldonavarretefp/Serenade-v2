@@ -6,52 +6,74 @@
 //
 
 import Foundation
+import CloudKit
 
-// MARK: - User model
-struct User: Identifiable, Decodable {
-    var id: String
+enum UserRecordKeys: String {
+    case type = "User"
+    case name
+    case username
+    case email
+    case friends
+    case posts
+    case streak
+    case queue
+    case profilePicture
+    case notifications
+    case isActive
+    case tagName
+    case friendRequestSent
+    case friendRequestReceived
+}
+
+struct User: Identifiable {
+    var id: CKRecord.ID?
     var name: String
-    var username: String
     var email: String
-    var friends: [String]
-    var posts: [String]
+    var friends: [String]?
+    var posts: [String]?
     var streak: Int
-    var queue: [String]
-    var profilePictue: String
-    var notifications: [String]
+    var profilePicture: String
     var isActive: Bool
     var tagName: String
+    var friendRequestSent: [CKRecord.Reference]?
+    var friendRequestReceived: [CKRecord.Reference]?
 }
 
 extension User {
-    init?(data: [String: Any]) {
-        guard let id = data["id"] as? String,
-              let name = data["name"] as? String,
-              let email = data["email"] as? String,
-              let friends = data["friends"] as? [String],
-              let posts = data["posts"] as? [String],
-              let streak = data["streak"] as? Int,
-              let queue = data["queue"] as? [String],
-              let profilePictue = data["profileImageUrl"] as? String,
-              let notifications = data["notifications"] as? [String],
-              let isActive = data["isActive"] as? Bool,
-              let tagName = data["tagName"] as? String,
-              let username = data["tagName"] as? String else
-              {
+    init?(record: CKRecord) {
+        guard let name = record[UserRecordKeys.name.rawValue] as? String,
+                let email = record[UserRecordKeys.email.rawValue] as? String,
+                let friends = record[UserRecordKeys.friends.rawValue] as? [String]?,
+                let posts = record[UserRecordKeys.posts.rawValue] as? [String]?,
+                let streak = record[UserRecordKeys.streak.rawValue] as? Int,
+                let profilePicture = record[UserRecordKeys.profilePicture.rawValue] as? String,
+                let isActive = record[UserRecordKeys.isActive.rawValue] as? Bool,
+              let tagName = record[UserRecordKeys.tagName.rawValue] as? String,
+              let friendRequestSent = record[UserRecordKeys.friendRequestSent.rawValue] as? [CKRecord.Reference]?,
+              let friendRequestReceived = record[UserRecordKeys.friendRequestReceived.rawValue] as? [CKRecord.Reference]? else {
             return nil
         }
+        
+        self.init(id: record.recordID, name: name, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, tagName: tagName, friendRequestSent: friendRequestSent, friendRequestReceived: friendRequestReceived)
+    }
+}
 
-        self.id = id
-        self.name = name
-        self.email = email
-        self.friends = friends
-        self.posts = posts
-        self.streak = streak
-        self.queue = queue
-        self.profilePictue = profilePictue
-        self.notifications = notifications
-        self.isActive = isActive
-        self.tagName = tagName
-        self.username = username
+extension User {
+    var record: CKRecord {
+        let record = CKRecord(recordType: UserRecordKeys.type.rawValue)
+        
+        record[UserRecordKeys.name.rawValue] = name
+        record[UserRecordKeys.email.rawValue] = email
+        record[UserRecordKeys.friends.rawValue] = friends
+        record[UserRecordKeys.posts.rawValue] = posts
+        record[UserRecordKeys.streak.rawValue] = streak
+        record[UserRecordKeys.profilePicture.rawValue] = profilePicture
+        record[UserRecordKeys.isActive.rawValue] = isActive
+        record[UserRecordKeys.tagName.rawValue] = tagName
+        record[UserRecordKeys.friendRequestSent.rawValue] = friendRequestSent
+        record[UserRecordKeys.friendRequestReceived.rawValue] = friendRequestReceived
+        
+        return record
+        
     }
 }
