@@ -7,29 +7,23 @@
 
 import SwiftUI
 
-struct Post: View {
+struct PostView: View {
     
     @Environment(\.colorScheme) var colorScheme
     
-    var sender: String
-    var senderProfilePicture: String?
-    var caption: String
-    var date: Date
-    var songTitle: String
-    var songArtist: String
-    var songCoverArt: String
+    var post: Post
     
     var formattedDate: String {
         let calendar = Calendar.current
         
-        if calendar.isDateInToday(date) {
+        if calendar.isDateInToday(post.date) {
             return "Today"
-        } else if calendar.isDateInYesterday(date) {
+        } else if calendar.isDateInYesterday(post.date) {
             return "Yesterday"
         } else {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMM d, yyyy"
-            return dateFormatter.string(from: date)
+            return dateFormatter.string(from: post.date)
         }
     }
     
@@ -44,8 +38,8 @@ struct Post: View {
                 .opacity(0.3)
             VStack(alignment: .leading) {
                 HStack {
-                    if (senderProfilePicture != nil) {
-                        Image(senderProfilePicture!)
+                    if (post.senderUser?.profilePictue != nil) {
+                        Image("person.circle.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .clipShape(Circle())
@@ -58,22 +52,23 @@ struct Post: View {
                             .clipShape(Circle())
                             .frame(height: 30)
                     }
-                    Text(sender).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text("'s daily song")
+                    Text(post.sender).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text("'s daily song")
                     Spacer()
                     Text(formattedDate)
                         .font(.caption)
                 }
                 .foregroundStyle(.callout)
                 .padding([.top, .leading, .trailing])
+                .padding(.bottom, post.caption == "" ? 5 : 0)
 //                Spacer()
-                if caption != "" {
-                    Text(caption)
+                if post.caption != "" {
+                    Text(post.caption!)
                         .lineLimit(4)
                         .padding(.horizontal)
                         .padding(.top, 5)
                         .padding(.bottom, 10)
                 }
-                Image(songCoverArt)
+                Image(post.song!.coverArt)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(height: 95)
@@ -88,24 +83,26 @@ struct Post: View {
                     .opacity(0.7)
                     
                 HStack {
-                    Image(songCoverArt) //  song.coverArt
+                    Image(post.song!.coverArt)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 70, height: 70)
                         .clipShape(RoundedRectangle(cornerRadius: 10.0))
                         .padding()
                     VStack(alignment: .leading) {
-                        Text(songTitle)  //  song.title
+                        Text(post.song!.title)
                             .fontWeight(.bold)
-                        Text(songArtist) //  song.artist
+                        Text(post.song!.artist)
                             .font(.caption)
                             .foregroundStyle(colorScheme == .light ? .black : .callout)
                     }
+                    .padding(.trailing)
+                    .lineLimit(2)
                 }
                 .frame(height: 95)
             }
             .onTapGesture {
-//                SongDetailSheet(song: song)
+//                SongDetailSheet(song: post.song)
             }
         }
         .font(.footnote)
@@ -115,9 +112,9 @@ struct Post: View {
 
 #Preview {
     ScrollView {
-        Post(sender: "sebatoo", caption: "This is the best song I've ever heard!!! Give it a listen right now, you won't regret it!!", date: Date(), songTitle: "Save Your Tears", songArtist: "The Weeknd", songCoverArt: "AfterHoursCoverArt")
-        Post(sender: "sebatoo", caption: "This is the best song I've ever heard!!!", date: Date(), songTitle: "Save Your Tears", songArtist: "The Weeknd", songCoverArt: "AfterHoursCoverArt")
-        Post(sender: "sebatoo", caption: "This is the best song I've ever heard!!!", date: Date(), songTitle: "Save Your Tears", songArtist: "The Weeknd", songCoverArt: "AfterHoursCoverArt")
-        Post(sender: "sebatoo", caption: "This is the best song I've ever heard!!!", date: Date(), songTitle: "Save Your Tears", songArtist: "The Weeknd", songCoverArt: "AfterHoursCoverArt")
+        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!! Give it a listen right now, you won't regret it!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears", artist: "The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt")))
+        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt")))
+        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt")))
+        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt")))
     }
 }
