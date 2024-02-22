@@ -39,7 +39,7 @@ struct SearchView: View {
                         Text("Music")
                             .padding(.vertical)
                             .frame(maxWidth: .infinity)
-                            .foregroundColor(selectedTab == "Music" ? (colorScheme == .dark ? .white: .black) : .callout)
+                            .foregroundColor(selectedTab == "Music" ? colorScheme == .dark ? .white: .black : .callout)
                             .fontWeight(.semibold)
                             .onTapGesture {
                                 withAnimation(.easeOut(duration: animationDuration)) {
@@ -53,7 +53,7 @@ struct SearchView: View {
                             .padding(.vertical)
                             .frame(maxWidth: .infinity)
                             .fontWeight(.semibold)
-                            .foregroundColor(selectedTab == "People" ? (colorScheme == .dark ? .white: .black) : .callout)
+                            .foregroundColor(selectedTab == "People" ? colorScheme == .dark ? .white: .black : .callout)
                             .onTapGesture {
                                 withAnimation(.easeOut(duration: animationDuration)) {
                                     selectedTab = "People"
@@ -64,7 +64,7 @@ struct SearchView: View {
                     .overlay(
                         Rectangle()
                             .frame(width: geometry.size.width / 2, height: underlineHeight)
-                            .foregroundColor(selectedTab == "Music" ? colorScheme == .dark ? .white: .black : .callout)
+                            .foregroundColor(colorScheme == .dark ? .white: .black)
                             .offset(x: underlineOffset, y: 0),
                         alignment: .bottomLeading
                     )
