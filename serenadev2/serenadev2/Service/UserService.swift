@@ -8,41 +8,53 @@
 import Foundation
 import CloudKit
 
-
-/*
- This class is used to fetch the user from the database.
- // MARK: - User model
- struct User: Identifiable, Decodable {
- var id: String
- var name: String
- var email: String
- var friends: [String]
- var posts: [String]
- var streak: Int
- var queue: [String]
- var profilePictue: String
- var notifications: [String]
- var isActive: Bool
- }
- */
-
+enum UserServiceError: Error {
+    case couldNotFetchUser(String)
+    case couldNotAddFriend(String)
+}
 
 class UserService {
     
     static let database = CKContainer(identifier: Config.containerIdentifier).publicCloudDatabase
     
     static func createUser(user: User) async throws {
-        let record = try await database.save(user.record)
+        try await database.save(user.record)
     }
     
-    static func fetchUserWithId(id: String) {
+    static func fetchUserWithId(id: CKRecord.ID) async throws -> User {
+        let recordID = id
+        let record = try await database.record(for: recordID)
+        guard let user = User(record: record) else {
+            throw UserServiceError.couldNotFetchUser("No se pudo traer al usuario")
+        }
+        return user
+    }
+    /*
+        This method will append a friend from the friendsRequestReceived array to the friends array of the user with the idFromUser and remove the friend from the friendsRequestReceived array.
+    */
+    static func sendFriendRequestTo(user: User, fromUser: User) async throws {
+            guard let fromUserId = fromUser.id, let newFriendId = fromUser.id else {
+                throw UserServiceError.couldNotAddFriend("Could not get ids from users")
+            }
+            
+            // Creating a new friend request record
+            let friendRequestRecord = CKRecord(recordType: "FriendRequest")
+            
+            // Setting references for fromUser and toUser
+            friendRequestRecord["fromUser"] = CKRecord.Reference(recordID: fromUserId, action: .none)
+            friendRequestRecord["toUser"] = CKRecord.Reference(recordID: newFriendId, action: .none)
+            
+            // Optionally set the status and timestamp
+            friendRequestRecord["status"] = "pending" as CKRecordValue
+            friendRequestRecord["timestamp"] = Date() as CKRecordValue
+            
+            do {
+                try await database.save(friendRequestRecord)
+            } catch {
         
-    }
-    
-    
-    static func addFriendToUserWithId(idFromUser: String, newFriendId: String) {
-        
-    }
+                throw error
+            }
+        }
     
     static func deleteFriendFromUserWithId(id: String, friendId: String) {
         
@@ -60,8 +72,21 @@ class UserService {
         
     }
     
-    
-    
+    // Example conversion method (needs to be implemented based on your User struct)
+    private static func convertRecordToUser(_ record: CKRecord) -> User {
+        // Extract values from the record and initialize a User instance
+        let id = record.recordID
+        let name = record["name"] as? String ?? ""
+        let email = record["email"] as? String ?? ""
+        let friends = record["friends"] as? [String] ?? []
+        let posts = record["posts"] as? [String] ?? []
+        let streak = record["streak"] as? Int ?? 0
+        let profilePicture = record["profilePicture"] as? String ?? ""
+        let tagName = record["tagName"] as? String ?? ""
+        let isActive = record["isActive"] as? Bool ?? false
+        
+        return User(id: id, name: name, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, tagName: tagName)
+    }
     
     //    static func fetchUser(withId id: String, completionHandler: @escaping (Result<User, Error>) -> Void) {
     //

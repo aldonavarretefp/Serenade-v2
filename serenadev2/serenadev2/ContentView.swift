@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import CloudKit
 
 struct ContentView: View {
 //    @Environment(\.modelContext) private var modelContext
@@ -26,6 +27,19 @@ struct ContentView: View {
                 }, label: {
                     Text("Save User")
                 })
+                
+                Button {
+                    Task {
+                        guard let user = await userViewModel.fetchUserWithId(id: CKRecord.ID(recordName: "AEDA4BC0-1922-4ACB-A80E-31F3087DC1BA")) else {
+                            return
+                        }
+                        print(user)
+                        
+                    }
+                } label: {
+                    Text("Fetch User with AEDA4BC0-1922-4ACB-A80E-31F3087DC1BA id")
+                }
+
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

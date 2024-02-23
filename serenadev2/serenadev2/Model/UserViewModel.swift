@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CloudKit
 
 
 class UserViewModel: ObservableObject {
@@ -19,6 +20,17 @@ class UserViewModel: ObservableObject {
             }
         } catch let error {
             print("error", error.localizedDescription)
+        }
+        
+    }
+    
+    func fetchUserWithId(id: CKRecord.ID) async -> User? {
+        do {
+            let user = try await UserService.fetchUserWithId(id: id)
+            return user
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
         }
         
     }

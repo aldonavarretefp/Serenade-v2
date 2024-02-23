@@ -29,8 +29,8 @@ struct User: Identifiable {
     var id: CKRecord.ID?
     var name: String
     var email: String
-    var friends: [String]?
-    var posts: [String]?
+    var friends: [CKRecord.Reference]?
+    var posts: [CKRecord.Reference]?
     var streak: Int
     var profilePicture: String
     var isActive: Bool
@@ -43,8 +43,8 @@ extension User {
     init?(record: CKRecord) {
         guard let name = record[UserRecordKeys.name.rawValue] as? String,
                 let email = record[UserRecordKeys.email.rawValue] as? String,
-                let friends = record[UserRecordKeys.friends.rawValue] as? [String]?,
-                let posts = record[UserRecordKeys.posts.rawValue] as? [String]?,
+              let friends = record[UserRecordKeys.friends.rawValue] as? [CKRecord.Reference]?,
+                let posts = record[UserRecordKeys.posts.rawValue] as? [CKRecord.Reference]?,
                 let streak = record[UserRecordKeys.streak.rawValue] as? Int,
                 let profilePicture = record[UserRecordKeys.profilePicture.rawValue] as? String,
                 let isActive = record[UserRecordKeys.isActive.rawValue] as? Bool,
