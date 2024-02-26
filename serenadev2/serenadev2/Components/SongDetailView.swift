@@ -74,6 +74,7 @@ struct SongDetailView: View {
                         dismiss()
                     } label: {
                         Image(systemName: "xmark.circle")
+                            .font(.title2)
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(.white, .clear)
                             .background(.black.opacity(0.2))

@@ -15,7 +15,7 @@ struct FeedView: View {
     
     // MARK: - Variables
     // Check if the daily is already posted
-    @State var isDailyPosted: Bool = false
+    @State var isDailyPosted: Bool = true
     
     // Variables to hide/show the header
     @State var headerHeight: CGFloat = 0
@@ -132,7 +132,7 @@ struct FeedView: View {
                                 
                                 // Navigation title
                                 Text("Feed")
-                                    .font(.title2)
+                                    .font(.title)
                                     .bold()
                                 
                                 Spacer()
@@ -140,6 +140,8 @@ struct FeedView: View {
                                 // Navigation link to open notifications view
                                 NavigationLink(destination: EmptyView()){
                                     Image(systemName: "bell")
+                                        .font(.title2)
+                                        .fontWeight(.semibold)
                                 }
                                 .foregroundStyle(.primary)
                             }
