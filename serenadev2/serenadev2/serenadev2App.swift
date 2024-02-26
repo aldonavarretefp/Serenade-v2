@@ -25,7 +25,7 @@ struct serenadev2App: App {
 
     var body: some Scene {
         WindowGroup {
-            SearchView()
+            ContentView()
         }
         .modelContainer(sharedModelContainer)
     }
