@@ -68,7 +68,7 @@ struct PreviewPlayer: View {
                         .symbolRenderingMode(.palette)
                         .foregroundStyle(mainColor.adjustedForContrast(), .white)
                 }
-                /*.onTapGesture {
+                .onTapGesture {
                     if self.isPlaying {
                         self.player.pause()
                         
@@ -78,7 +78,7 @@ struct PreviewPlayer: View {
                         
                     }
                     self.isPlaying.toggle()
-                }*/
+                }
                 
             }
             
