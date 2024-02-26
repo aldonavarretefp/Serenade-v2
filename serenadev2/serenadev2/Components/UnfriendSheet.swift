@@ -13,15 +13,17 @@ struct UnfriendSheet: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var isFriend: Bool?
     
+    var user: User
+    
     var body: some View {
         VStack {
             Spacer()
             HStack {
-                Text("Unfriend ") + Text("username").fontWeight(.semibold) + Text("?")
+                Text("Unfriend ") + Text(user.tagName).fontWeight(.semibold) + Text("?")
             }
             .font(.title3)
             .padding()
-            Text("Are you sure you want to delete ") + Text("username").fontWeight(.semibold) + Text(" from your friend list?")
+            Text("Are you sure you want to delete ") + Text(user.tagName).fontWeight(.semibold) + Text(" from your friend list?")
             Spacer()
             HStack {
                 Button(action: {dismiss()}, label: {
@@ -59,5 +61,5 @@ struct UnfriendSheet: View {
 }
 
 #Preview {
-    UnfriendSheet(isFriend: .constant(true))
+    UnfriendSheet(isFriend: .constant(true), user: sebastian)
 }
