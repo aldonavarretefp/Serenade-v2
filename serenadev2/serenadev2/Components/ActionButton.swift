@@ -1,8 +1,8 @@
 //
 //  ActionButton.swift
-//  serenadev2
+//  prueba
 //
-//  Created by Pablo Navarro Zepeda on 21/02/24.
+//  Created by Alejandro Oliva Ochoa on 19/02/24.
 //
 
 import SwiftUI
@@ -12,6 +12,8 @@ struct ActionButton: View {
     // Accessing the color scheme environment variable
     @Environment(\.colorScheme) private var colorScheme
     
+    
+    
     // Properties for the button
     var label: String                // Text to display on the button
     var symbolName: String           // Name of the SF Symbol to display on the button
@@ -19,7 +21,7 @@ struct ActionButton: View {
     var backgroundColor: Color      // Background color of the button
     var isShareDaily : Bool          // Boolean indicating if it's a share daily button
     var action: () -> Void           // Action to perform when the button is tapped
-    var materialEffect : Material = .thinMaterial  // Material effect for the button
+    var materialEffect : Material = .ultraThinMaterial  // Material effect for the button
     
     var body: some View {
         // Conditionally choose between share daily button and standard button
@@ -32,7 +34,16 @@ struct ActionButton: View {
     
     // View for the share daily button
     private var shareDailyButton: some View {
-        Button(action: action) {
+        
+        let strokeGradient = LinearGradient(gradient:
+                                                Gradient(colors: [
+                                                    (colorScheme == .light ?
+                                                     (Color.black).opacity(0.60) : Color.white).opacity(0.20),
+                                                    (colorScheme == .light ?
+                                                     (Color.black).opacity(0.52) : Color.white).opacity(0.12)]),
+                                            startPoint: .topLeading, endPoint: .bottomTrailing)
+        
+        return Button(action: action) {
             // Content of the button
             HStack {
                 Image(systemName: symbolName)
@@ -44,9 +55,16 @@ struct ActionButton: View {
                     .fontWeight(.bold)
             }
         }
+    
         .padding(.horizontal)
         .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(.clear)
+                .strokeBorder(strokeGradient, lineWidth: 1)
+        )
         .background(materialEffect)
+        
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .shadow(color: .black.opacity(0.13), radius: 25, x: 0, y: 4)
     }
@@ -97,7 +115,6 @@ struct DailyButtonView: View {
         }
     }
 }
-
 
 // Preview provider
 #Preview {
