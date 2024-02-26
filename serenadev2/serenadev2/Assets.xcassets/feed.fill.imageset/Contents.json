@@ -1,12 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "home.filled.pdf",
+      "filename" : "feed.fill.pdf",
       "idiom" : "universal"
-    },
-    {
-      "idiom" : "universal",
-      "width-class" : "compact"
     }
   ],
   "info" : {
