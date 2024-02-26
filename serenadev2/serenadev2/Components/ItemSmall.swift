@@ -36,6 +36,9 @@ struct ItemSmall: View {
                     case .success(let image):
                         image.resizable()
                             .aspectRatio(contentMode: .fit)
+                            .overlay{
+                                Color.gray
+                            }
                     case .failure(_):
                         // Displays a placeholder in case of failure to load the image
                         Color.gray
