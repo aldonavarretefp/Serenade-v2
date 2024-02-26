@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-var sebastian = User(id: "id", name: "Sebastian Leon", email: "mail@domain.com", friends: ["1", "2", "3"], posts: ["1", "2", "3", "4", "5"], streak: 15, profilePicture: "AfterHoursCoverArt", notifications: [""], isActive: true, tagName: "sebatoo", friendRequestsSent: [""], friendRequestsReceived: [""])
+var sebastian = User(id: "id", name: "Sebastian Leon", email: "mail@domain.com", friends: ["1", "2", "3"], posts: ["1", "2", "3", "4", "5"], streak: 15, profilePicture: "", notifications: [""], isActive: true, tagName: "sebatoo", friendRequestsSent: [""], friendRequestsReceived: [""])
 
 struct ProfileBar: View {
     

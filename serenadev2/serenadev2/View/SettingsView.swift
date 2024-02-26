@@ -38,9 +38,9 @@ struct SettingsView: View {
                             Text("Favorite streaming apps")
                             Spacer()
                         })
-                        .sheet(isPresented: $isStreamingServiceSheetDisplayed, content: {
-                            EmptyView()
-                        })
+//                        .sheet(isPresented: $isStreamingServiceSheetDisplayed, content: {
+//                            EmptyView()
+//                        })
                     }
                     .backgroundStyle(.card)
                     .foregroundStyle(.primary)
@@ -55,9 +55,9 @@ struct SettingsView: View {
                                 .fontWeight(.bold)
                         })
                         .foregroundStyle(.primary)
-                        .sheet(isPresented: $isInfoSheetDisplayed, content: {
-                            EmptyView()
-                        })
+//                        .sheet(isPresented: $isInfoSheetDisplayed, content: {
+//                            EmptyView()
+//                        })
                     }
                 }
                 .toolbarBackground(.black)
