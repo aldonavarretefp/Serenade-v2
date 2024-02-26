@@ -78,8 +78,8 @@ class UserService {
         let id = record.recordID
         let name = record["name"] as? String ?? ""
         let email = record["email"] as? String ?? ""
-        let friends = record["friends"] as? [String] ?? []
-        let posts = record["posts"] as? [String] ?? []
+        let friends = record["friends"] as? [CKRecord.Reference] ?? []
+        let posts = record["posts"] as? [CKRecord.Reference] ?? []
         let streak = record["streak"] as? Int ?? 0
         let profilePicture = record["profilePicture"] as? String ?? ""
         let tagName = record["tagName"] as? String ?? ""
