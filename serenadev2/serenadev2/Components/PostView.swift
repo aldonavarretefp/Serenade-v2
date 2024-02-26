@@ -10,8 +10,12 @@ import SwiftUI
 struct PostView: View {
     
     @Environment(\.colorScheme) var colorScheme
+    @State var isSongInfoDisplayed: Bool = false
     
     var post: Post
+    
+    // Quitar despues
+    var profileImg: String
     
     var formattedDate: String {
         let calendar = Calendar.current
@@ -29,44 +33,35 @@ struct PostView: View {
     
     var body: some View {
         
-        let strokeGradient = LinearGradient(gradient: Gradient(colors: [(colorScheme == .light ? Color.black : Color.white).opacity(0.46), (colorScheme == .light ? Color.black : Color.white).opacity(0.23)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+        //let strokeGradient = LinearGradient(gradient: Gradient(colors: [(colorScheme == .light ? Color.black : Color.white).opacity(0.46), (colorScheme == .light ? Color.black : Color.white).opacity(0.23)]), startPoint: .topLeading, endPoint: .bottomTrailing)
         
         ZStack(alignment: .bottom) {
             RoundedRectangle(cornerRadius: 15)
                 .fill(.card)
-                .shadow(radius: colorScheme == .light ? 30 : 0)
-                .opacity(0.3)
+                .shadow(color: .black.opacity(0.13), radius: colorScheme == .light ? 25 : 0, y: 5)
             VStack(alignment: .leading) {
                 HStack {
-                    if (post.senderUser?.profilePictue != nil) {
-                        Image("person.circle.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .clipShape(Circle())
-                            .frame(height: 30)
-                    }
-                    else {
-                        Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .clipShape(Circle())
-                            .frame(height: 30)
-                    }
+                    Image(profileImg)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(Circle())
+                        .frame(height: 28)
+                    
                     Text(post.sender).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text("'s daily song")
                     Spacer()
                     Text(formattedDate)
-                        .font(.caption)
+                        .font(.footnote)
                 }
                 .foregroundStyle(.callout)
                 .padding([.top, .leading, .trailing])
                 .padding(.bottom, post.caption == "" ? 5 : 0)
-//                Spacer()
+                //                Spacer()
                 if post.caption != "" {
                     Text(post.caption!)
                         .lineLimit(4)
                         .padding(.horizontal)
-                        .padding(.top, 5)
-                        .padding(.bottom, 10)
+                        .padding(.top, 2)
+                        .padding(.bottom, 2)
                 }
                 Image(post.song!.coverArt)
                     .resizable()
@@ -78,10 +73,9 @@ struct PostView: View {
             ZStack(alignment: .leading) {
                 UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0))
                     .fill(.card)
-                    .strokeBorder(strokeGradient, lineWidth: 1)
                     .frame(height: 95)
                     .opacity(0.7)
-                    
+                
                 HStack {
                     Image(post.song!.coverArt)
                         .resizable()
@@ -93,7 +87,7 @@ struct PostView: View {
                         Text(post.song!.title)
                             .fontWeight(.bold)
                         Text(post.song!.artist)
-                            .font(.caption)
+                            .font(.footnote)
                             .foregroundStyle(colorScheme == .light ? .black : .callout)
                     }
                     .padding(.trailing)
@@ -101,20 +95,23 @@ struct PostView: View {
                 }
                 .frame(height: 95)
             }
+            // On tap gesture to open the info of the passed song
             .onTapGesture {
-//                SongDetailSheet(song: post.song)
+                isSongInfoDisplayed = true
+            }
+            .fullScreenCover(isPresented: $isSongInfoDisplayed){
+                SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, song: post.song!)
             }
         }
-        .font(.footnote)
-        .padding([.top, .leading, .trailing])
+        .font(.subheadline)
     }
 }
 
 #Preview {
     ScrollView {
-        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!! Give it a listen right now, you won't regret it!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears", artist: "The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt")))
-        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt")))
-        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt")))
-        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt")))
+        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!! Give it a listen right now, you won't regret it!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears", artist: "The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
+        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
+        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
+        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
     }
 }

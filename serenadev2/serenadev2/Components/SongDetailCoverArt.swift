@@ -9,11 +9,14 @@ import SwiftUI
 
 struct SongDetailCoverArt: View {
     
+    // MARK: - Properties
     var covertArt: String
     var mainColor: Color
     
+    // MARK: - Body
     var body: some View {
         ZStack{
+            // Background song cover art
             Image(covertArt)
                 .resizable()
                 .scaledToFit()
@@ -28,6 +31,7 @@ struct SongDetailCoverArt: View {
                 .scaleEffect(1.1)
             
             
+            // Front song cover art
             Image(covertArt)
                 .resizable()
                 .scaledToFit()
