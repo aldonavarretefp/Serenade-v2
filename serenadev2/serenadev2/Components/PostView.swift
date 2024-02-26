@@ -43,9 +43,13 @@ struct PostView: View {
                 HStack {
                     Image(profileImg)
                         .resizable()
+                        .overlay{
+                            post.song?.color
+                        }
                         .aspectRatio(contentMode: .fit)
                         .clipShape(Circle())
                         .frame(height: 28)
+                    
                     
                     Text(post.sender).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text("'s daily song")
                     Spacer()
@@ -65,6 +69,9 @@ struct PostView: View {
                 }
                 Image(post.song!.coverArt)
                     .resizable()
+                    .overlay{
+                        post.song?.color
+                    }
                     .aspectRatio(contentMode: .fill)
                     .frame(height: 95)
                     .blur(radius: 20.0)
@@ -79,6 +86,9 @@ struct PostView: View {
                 HStack {
                     Image(post.song!.coverArt)
                         .resizable()
+                        .overlay{
+                            post.song?.color
+                        }
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 70, height: 70)
                         .clipShape(RoundedRectangle(cornerRadius: 10.0))

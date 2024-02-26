@@ -19,6 +19,9 @@ struct SongDetailCoverArt: View {
             // Background song cover art
             Image(covertArt)
                 .resizable()
+                .overlay{
+                   mainColor
+                }
                 .scaledToFit()
                 .ignoresSafeArea()
             
@@ -34,6 +37,9 @@ struct SongDetailCoverArt: View {
             // Front song cover art
             Image(covertArt)
                 .resizable()
+                .overlay{
+                   mainColor
+                }
                 .scaledToFit()
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(
