@@ -132,7 +132,7 @@ struct FeedView: View {
                                 
                                 // Navigation title
                                 Text("Feed")
-                                    .font(.title2)
+                                    .font(.title)
                                     .bold()
                                 
                                 Spacer()
@@ -140,6 +140,8 @@ struct FeedView: View {
                                 // Navigation link to open notifications view
                                 NavigationLink(destination: EmptyView()){
                                     Image(systemName: "bell")
+                                        .fontWeight(.semibold)
+                                        .font(.title2)
                                 }
                                 .foregroundStyle(.primary)
                             }
