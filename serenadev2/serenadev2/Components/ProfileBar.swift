@@ -7,21 +7,29 @@
 
 import SwiftUI
 
+var sebastian = User(id: "id", name: "Sebastian Leon", email: "mail@domain.com", friends: ["1", "2", "3"], posts: ["1", "2", "3", "4", "5"], streak: 15, profilePicture: "", notifications: [""], isActive: true, tagName: "sebatoo", friendRequestsSent: [""], friendRequestsReceived: [""])
+
 struct ProfileBar: View {
     
     @Environment(\.colorScheme) var colorScheme
     @State var isSettingsSheetDisplayed: Bool = false
     @State var isUnfriendSheetDisplayed: Bool = false
-    @State var isFriendRequestSent: Bool = false
-    @State var isCurrentUser: Bool = false
-    @State var isFriend: Bool? = true
+    @State var isFriendRequestSent: Bool
+    @State var isCurrentUser: Bool
+    @State var isFriend: Bool?
+    
+    var user: User
     
     var body: some View {
         NavigationStack {
             HStack(alignment: .top) {
                 ZStack(alignment: .top) {
-                    if false {
-//                        user.profile_picture
+                    if user.profilePicture != "" {
+                        Image(user.profilePicture)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 80)
+                            .clipShape(Circle())
                     } else {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()
@@ -37,10 +45,11 @@ struct ProfileBar: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(height: 25)
                                 .foregroundStyle(.accent)
-                            Text("10")  // user.streak
+                            Text(String(user.streak))  // user.streak
                                 .bold()
                                 .font(.title3)
-                        }                        .padding(5)
+                        }
+                        .padding(5)
                         .background(Color.card.opacity(0.9))
                         .clipShape(RoundedRectangle(cornerRadius: 6))
                         .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0), radius: 12.5, x: 0, y: 4)
@@ -52,28 +61,34 @@ struct ProfileBar: View {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
                             
-                            Text("Name Surname")    // user.name
+                            Text(user.name)
                                 .font(.title2)
                                 .bold()
                             
-                            Text("Username")    // user.username
+                            Text(user.tagName)
                                 .font(.footnote)
                                 .foregroundStyle(.callout)
                             Spacer()
                         }
                         Spacer()
                         if isCurrentUser {
-                            Button(action: {
-                                isSettingsSheetDisplayed = true
-                            }, label: {
+                            NavigationLink(destination: SettingsView().toolbarRole(.editor)) {
                                 Image(systemName: "gearshape.fill")
                                     .resizable()
                                     .frame(width: 25, height: 25)
-                            })
-                            
-                            //                                        .sheet(isPresented: $isSettingsSheetDisplayed){
-                            //                                            SettingsView(passedDarkMode: $darkModeToggle)
-                            //                                        }
+                            }
+//                            Button(action: {
+//                                isSettingsSheetDisplayed = true
+//                            }, label: {
+//                                Image(systemName: "gearshape.fill")
+//                                    .resizable()
+//                                    .frame(width: 25, height: 25)
+//                            })
+//                            
+//                            .sheet(isPresented: $isSettingsSheetDisplayed) {
+////                                SettingsView(passedDarkMode: $darkModeToggle)
+//                                EmptyView()
+//                            }
                             .padding(5)
                             .foregroundStyle(.primary)
                         }
@@ -85,11 +100,11 @@ struct ProfileBar: View {
                     }
                     HStack {
                         VStack {
-                            Text("55")
+                            Text(String(user.posts.count))
                             Text("Posts")
                         }
                         VStack {
-                            Text("100")
+                            Text(String(user.friends.count))
                             Text("Friends")
                         }
                         .padding(.horizontal)
@@ -134,7 +149,7 @@ struct ProfileBar: View {
                                     }
                                 })
                                 .sheet(isPresented: $isUnfriendSheetDisplayed, content: {
-                                    UnfriendSheet(isFriend: $isFriend)
+                                    UnfriendSheet(isFriend: $isFriend, user: user)
                                         .presentationDetents([.fraction(0.3)])
                                 })
                             }
@@ -151,5 +166,5 @@ struct ProfileBar: View {
 }
 
 #Preview {
-    ProfileBar()
+    ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: sebastian)
 }

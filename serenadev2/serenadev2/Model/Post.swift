@@ -15,7 +15,7 @@ enum TypeRec: String, CaseIterable, Decodable {
 }
 
 // MARK: - Post model
-struct Post: Identifiable, Decodable, Equatable, Hashable {
+struct Post: Identifiable, Equatable, Hashable {
     static func == (lhs: Post, rhs: Post) -> Bool {
         lhs.date < rhs.date
     }

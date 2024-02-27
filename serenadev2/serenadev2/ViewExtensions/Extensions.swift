@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-
+// MARK: - Custom Color extensions
 extension Color {
     init(hex: Int, opacity: Double = 1) {
         self.init(
@@ -21,18 +21,18 @@ extension Color {
     }
     
     func adjustedForContrast() -> Color {
-        // Obtener el componente de luminosidad del color
+        // Get the lightness component of the color
         let luminance = self.luminance()
         
-        // Definir un umbral de contraste
+        // Define a contrast threshold
         let contrastThreshold: CGFloat = 10.0
         
-        // Comparar el componente de luminosidad con el umbral de contraste
+        // Compare the luminosity component with the contrast threshold
         if luminance > contrastThreshold {
-            // Si el contraste es bueno, devolver el color original
+            // If the contrast is good, return the original color
             return self
         } else {
-            // Si el contraste no es bueno, ajustar el color hacia un tono más oscuro
+            // If the contrast is not good, adjust the color to a darker tone
             return self.darkened()
         }
     }
@@ -41,16 +41,17 @@ extension Color {
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
         UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
         
-        // Calcular el componente de luminosidad según la fórmula de luminosidad
+        // Calculate the luminosity component according to the luminosity formula
         return 0.299 * r + 0.587 * g + 0.114 * b
     }
     
     func darkened() -> Color {
-        // Oscurecer el color al reducir su componente de brillo
+        // Darken the color by reducing its brightness component
         return Color(UIColor(self).adjusted(by: -0.2))
     }
 }
 
+// MARK: - Custom UIColor extensions
 extension UIColor {
     func adjusted(by percentage: CGFloat) -> UIColor {
         var hue: CGFloat = 0
@@ -58,14 +59,75 @@ extension UIColor {
         var brightness: CGFloat = 0
         var alpha: CGFloat = 0
         
-        // Extraer los componentes HSB del color
+        // Extract the HSB components of the color
         getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
         
-        // Ajustar el brillo por el porcentaje dado
+        // Adjust the brightness by the given percentage
         brightness += percentage
-        brightness = max(min(brightness, 1.0), 0.0) // Asegurar que esté dentro del rango 0-1
+        brightness = max(min(brightness, 1.0), 0.0) // Ensure it is within the range 0-1
         
-        // Crear y devolver el nuevo color ajustado
+        // Create and return the new adjusted color
         return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: alpha)
+    }
+}
+
+// MARK: - Custom View estensions
+extension View{
+    
+    // MARK: - Preview, current offset to find the direction of swipe
+    @ViewBuilder
+    func offsetY(completion: @escaping (CGFloat, CGFloat) -> ()) -> some View{
+        self
+            .modifier(OffsetHelper(onChange: completion))
+    }
+    
+    // MARK: - Safe area
+    func safeArea() -> UIEdgeInsets {
+        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {return .zero}
+        guard let safeArea = scene.windows.first?.safeAreaInsets else {return .zero}
+        return safeArea
+    }
+}
+
+// MARK: - Offset helper
+struct OffsetHelper: ViewModifier{
+    var onChange: (CGFloat, CGFloat) -> ()
+    
+    @State var currentOffset: CGFloat = 0
+    @State var previousOffset: CGFloat = 0
+    
+    func body(content: Content) -> some View {
+        content
+            .overlay{
+                GeometryReader{ proxy in
+                    let minY = proxy.frame(in: .named("SCROLL")).minY
+                    Color.clear
+                        .preference(key: OffsetKey.self, value: minY)
+                        .onPreferenceChange(OffsetKey.self){ value in
+                            previousOffset = currentOffset
+                            currentOffset = value
+                            onChange(previousOffset, currentOffset)
+                        }
+                }
+            }
+    }
+}
+
+// MARK: - Offset key
+struct OffsetKey: PreferenceKey{
+    static var defaultValue: CGFloat = 0
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+    
+}
+
+// MARK: - Bounds preference key for identifying heigth of the header view
+struct HeaderBoundsKey: PreferenceKey{
+    static var devaultValue: Anchor<CGRect>?
+    
+    static func reduce(value: inout Anchor<CGRect>?, nextValue: () -> Anchor<CGRect>?) {
+        value = nextValue()
     }
 }
