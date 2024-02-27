@@ -14,7 +14,7 @@ struct DailyPosted: View {
     @Environment(\.colorScheme) var colorScheme
     
     // MARK: - Properties
-    var song: Song
+    var song: SongModel
     @State var isSongInfoDisplayed: Bool = false
     
     // MARK: - Body
@@ -63,5 +63,5 @@ struct DailyPosted: View {
 }
 
 #Preview {
-    DailyPosted(song: Song(id: "5", title: "See you again (feat. Kali Uchis)", artist: "Tyler, The Creator, Kali Uchis", album: "Flowerboy", coverArt: "tyler", color: Color(hex: 0xD5881C), fontColor: Color(hex: 0xffffff)))
+    DailyPosted(song: SongModel(id: "5", title: "See you again (feat. Kali Uchis)", artist: "Tyler, The Creator, Kali Uchis", album: "Flowerboy", coverArt: "tyler", color: Color(hex: 0xD5881C), fontColor: Color(hex: 0xffffff)))
 }

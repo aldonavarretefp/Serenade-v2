@@ -15,7 +15,7 @@ struct SongDetailView: View {
     // MARK: - Properties
     // Audio URL (will be added to Song)?
     var audioURL: URL
-    var song: Song
+    var song: SongModel
     var seconds: Double = 15.0
     
     // MARK: - Body
@@ -87,5 +87,5 @@ struct SongDetailView: View {
 }
 
 #Preview {
-    SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, song: Song(id: "id", title: "Robbers", artist: "The 1975", album: "After Hours", coverArt: "the19", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff)))
+    SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, song: SongModel(id: "id", title: "Robbers", artist: "The 1975", album: "After Hours", coverArt: "the19", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff)))
 }

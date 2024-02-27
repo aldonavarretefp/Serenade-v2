@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct ContentItem {
+struct ContentItem: Identifiable {
+    let id = UUID()
     var imageUrl: URL?
     var title: String
     var subtitle: String
@@ -36,9 +37,6 @@ struct ItemSmall: View {
                     case .success(let image):
                         image.resizable()
                             .aspectRatio(contentMode: .fit)
-                            .overlay{
-                                Color.gray
-                            }
                     case .failure(_):
                         // Displays a placeholder in case of failure to load the image
                         Color.gray
