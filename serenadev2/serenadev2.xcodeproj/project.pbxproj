@@ -26,9 +26,7 @@
 		F137D2542B839A84006264C1 /* serenadev2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */; };
 		F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */; };
 		F7207CA22B85055D00E383E6 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207CA12B85055D00E383E6 /* UserService.swift */; };
-		F7F9285C2B877ECD00050926 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F9285B2B877ECD00050926 /* User.swift */; };
 		F7F9285E2B878AAF00050926 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F9285D2B878AAF00050926 /* SongService.swift */; };
-		F7F928602B878AE300050926 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F9285F2B878AE300050926 /* Song.swift */; };
 		F7F928622B878D8E00050926 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F928612B878D8E00050926 /* UserViewModel.swift */; };
 		F7F928652B879FAF00050926 /* MockedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F928642B879FAF00050926 /* MockedUser.swift */; };
 /* End PBXBuildFile section */
@@ -75,9 +73,7 @@
 		F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitConfig.swift; sourceTree = "<group>"; };
 		F7207CA12B85055D00E383E6 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
-		F7F9285B2B877ECD00050926 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		F7F9285D2B878AAF00050926 /* SongService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongService.swift; sourceTree = "<group>"; };
-		F7F9285F2B878AE300050926 /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 		F7F928612B878D8E00050926 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserViewModel.swift; path = serenadev2/Model/UserViewModel.swift; sourceTree = SOURCE_ROOT; };
 		F7F928642B879FAF00050926 /* MockedUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockedUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -140,8 +136,6 @@
 		EA9BC9E42B83A2AD00292705 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				F7F9285B2B877ECD00050926 /* User.swift */,
-				F7F9285F2B878AE300050926 /* Song.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -390,7 +384,6 @@
 				C40C09AD2B863B9B009BE4C5 /* SongDetailCoverArt.swift in Sources */,
 				C47B8F082B84EE88002027CF /* ItemSmall.swift in Sources */,
 				F7F9285E2B878AAF00050926 /* SongService.swift in Sources */,
-				F7F9285C2B877ECD00050926 /* User.swift in Sources */,
 				C40C09B12B863C1A009BE4C5 /* PreviewPlayer.swift in Sources */,
 				F7F928622B878D8E00050926 /* UserViewModel.swift in Sources */,
 				C40C09AF2B863BF8009BE4C5 /* SongDetailTitleInfo.swift in Sources */,
@@ -400,7 +393,6 @@
 				C40C09B62B863CA2009BE4C5 /* Extensions.swift in Sources */,
 				F7207CA22B85055D00E383E6 /* UserService.swift in Sources */,
 				F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */,
-				F7F928602B878AE300050926 /* Song.swift in Sources */,
 				F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */,
 				C40C09B82B863EFA009BE4C5 /* ActionButton.swift in Sources */,
 			);
