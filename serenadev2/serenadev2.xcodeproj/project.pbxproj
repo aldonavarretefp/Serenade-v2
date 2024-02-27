@@ -22,7 +22,6 @@
 		C49B42122B87869800FD66F9 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49B42112B87869800FD66F9 /* SearchView.swift */; };
 		C4F14A7B2B88FBC800D7111E /* CreateUsernameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F14A7A2B88FBC800D7111E /* CreateUsernameView.swift */; };
 		C4F14A7D2B88FBD800D7111E /* CreatePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F14A7C2B88FBD800D7111E /* CreatePasswordView.swift */; };
-		E0540C6F2B8DD65B001A7561 /* SearchSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0540C6E2B8DD65B001A7561 /* SearchSong.swift */; };
 		E0540C732B8E703A001A7561 /* DailySongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0540C722B8E703A001A7561 /* DailySongView.swift */; };
 		E0540C772B8E71AF001A7561 /* SelectSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0540C762B8E71AF001A7561 /* SelectSongView.swift */; };
 		E0F6F8332B879BAC009B35B1 /* BrandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F6F8322B879BAC009B35B1 /* BrandButton.swift */; };
@@ -84,7 +83,6 @@
 		C49B42112B87869800FD66F9 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchView.swift; path = serenadev2/Components/SearchView.swift; sourceTree = SOURCE_ROOT; };
 		C4F14A7A2B88FBC800D7111E /* CreateUsernameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUsernameView.swift; sourceTree = "<group>"; };
 		C4F14A7C2B88FBD800D7111E /* CreatePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePasswordView.swift; sourceTree = "<group>"; };
-		E0540C6E2B8DD65B001A7561 /* SearchSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSong.swift; sourceTree = "<group>"; };
 		E0540C722B8E703A001A7561 /* DailySongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailySongView.swift; sourceTree = "<group>"; };
 		E0540C762B8E71AF001A7561 /* SelectSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSongView.swift; sourceTree = "<group>"; };
 		E0F6F8322B879BAC009B35B1 /* BrandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandButton.swift; sourceTree = "<group>"; };
@@ -168,7 +166,6 @@
 				E0540C762B8E71AF001A7561 /* SelectSongView.swift */,
 				EA9BC9EB2B8501ED00292705 /* PostView.swift */,
 				C402E7D62B8CD42D004EC79C /* CustomTabBar.swift */,
-				E0540C6E2B8DD65B001A7561 /* SearchSong.swift */,
 				C402E7D82B8CD444004EC79C /* TabBarItem.swift */,
 				C402E7DE2B8CD500004EC79C /* DailyPosted.swift */,
 			);
@@ -462,7 +459,6 @@
 				EA9BC9EC2B8501ED00292705 /* PostView.swift in Sources */,
 				E0540C732B8E703A001A7561 /* DailySongView.swift in Sources */,
 				EA9BC9F32B87861C00292705 /* User.swift in Sources */,
-				E0540C6F2B8DD65B001A7561 /* SearchSong.swift in Sources */,
 				C402E7D72B8CD42D004EC79C /* CustomTabBar.swift in Sources */,
 				C402E7DD2B8CD4E7004EC79C /* FeedView.swift in Sources */,
 				EA9BC9EA2B84EF8100292705 /* UnfriendSheet.swift in Sources */,
