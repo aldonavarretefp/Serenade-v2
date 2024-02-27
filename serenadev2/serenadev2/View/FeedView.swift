@@ -15,7 +15,7 @@ struct FeedView: View {
     
     // MARK: - Variables
     // Check if the daily is already posted
-    @State var isDailyPosted: Bool = false
+    @State var isDailyPosted: Bool = true
     
     // Variables to hide/show the header
     @State var headerHeight: CGFloat = 0
