@@ -20,12 +20,12 @@ extension Color {
         )
     }
     
-    func adjustedForContrast() -> Color {
+    func adjustedForContrast(with color: Color = .white) -> Color {
         // Get the lightness component of the color
-        let luminance = self.luminance()
+        let luminance = self.luminance(color: color)
         
         // Define a contrast threshold
-        let contrastThreshold: CGFloat = 10.0
+        let contrastThreshold: Double = 10.0 // You can adjust this threshold
         
         // Compare the luminosity component with the contrast threshold
         if luminance > contrastThreshold {
@@ -37,12 +37,15 @@ extension Color {
         }
     }
     
-    func luminance() -> CGFloat {
+    func luminance(color: Color = .white) -> Double {
+        // Convert Color to UIColor to access its components
+        let uiColor = UIColor(color)
+        
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
+        uiColor.getRed(&r, green: &g, blue: &b, alpha: &a)
         
         // Calculate the luminosity component according to the luminosity formula
-        return 0.299 * r + 0.587 * g + 0.114 * b
+        return Double(0.299 * r + 0.587 * g + 0.114 * b)
     }
     
     func darkened() -> Color {
