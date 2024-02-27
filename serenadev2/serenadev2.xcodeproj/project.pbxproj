@@ -161,9 +161,6 @@
 				C40C09B72B863EFA009BE4C5 /* ActionButton.swift */,
 				E0F6F8322B879BAC009B35B1 /* BrandButton.swift */,
 				E0F6F8342B879D11009B35B1 /* BrandsGrid.swift */,
-				E0F6F8362B879FC5009B35B1 /* OpenWithView.swift */,
-				E0540C722B8E703A001A7561 /* DailySongView.swift */,
-				E0540C762B8E71AF001A7561 /* SelectSongView.swift */,
 				EA9BC9EB2B8501ED00292705 /* PostView.swift */,
 				C402E7D62B8CD42D004EC79C /* CustomTabBar.swift */,
 				C402E7D82B8CD444004EC79C /* TabBarItem.swift */,
@@ -201,6 +198,9 @@
 				EA9BC9F52B87960900292705 /* ProfileView.swift */,
 				EA5A43DD2B88F66800F6F04C /* SettingsView.swift */,
 				C402E7DC2B8CD4E7004EC79C /* FeedView.swift */,
+				E0F6F8362B879FC5009B35B1 /* OpenWithView.swift */,
+				E0540C722B8E703A001A7561 /* DailySongView.swift */,
+				E0540C762B8E71AF001A7561 /* SelectSongView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
