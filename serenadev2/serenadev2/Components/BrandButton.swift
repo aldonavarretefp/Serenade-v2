@@ -72,19 +72,19 @@ enum ButtonType: CaseIterable {
     var configuration: BrandButton {
         switch self {
         case .appleMusic:
-            return BrandButton(label: "Apple Music", brandLogo: "AppleMusicBrandLogo", fontColor: .black, startColor: Color("AppleMusicStartColor"), endColor: Color("AppleMusicEndColor")) {
+            return BrandButton(label: "Apple Music", brandLogo: "AppleMusicBrandLogo", fontColor: .black, startColor: .appleMusicStart, endColor: .appleMusicEnd) {
                 print("Open Apple Music")
             }
         case .spotify:
-            return BrandButton(label: "Spotify", brandLogo: "SpotifyBrandLogo", fontColor: .black, startColor: Color("SpotifyStartColor"), endColor: Color("SpotifyEndColor")) {
+            return BrandButton(label: "Spotify", brandLogo: "SpotifyBrandLogo", fontColor: .black, startColor: .spotifyStart, endColor: .spotifyEnd) {
                 print("Open Spotify")
             }
         case .youtubeMusic:
-            return BrandButton(label: "Youtube Music", brandLogo: "YoutubeBrandLogo", fontColor: .black, startColor: Color("YoutubeMusicStartColor"), endColor: Color("YoutubeMusicEndColor")) {
+            return BrandButton(label: "Youtube Music", brandLogo: "YoutubeBrandLogo", fontColor: .black, startColor: .youtubeMusicStart, endColor: .youtubeMusicEnd) {
                 print("Open Youtube Music")
             }
         case .amazonMusic:
-            return BrandButton(label: "Amazon Music", brandLogo: "AmazonMusicBrandLogo", fontColor: .black, startColor: Color("AmazonMusicColor"), endColor: Color("AmazonMusicColor")) {
+            return BrandButton(label: "Amazon Music", brandLogo: "AmazonMusicBrandLogo", fontColor: .black, startColor: .amazonMusicStart, endColor: .amazonMusicEnd) {
                 print("Open Amazon Music")
             }
         }
@@ -100,7 +100,7 @@ extension UIScreen {
 
 // Preview code for BrandButton
 #Preview {
-    BrandButton(label: "Amazon Music", brandLogo: "AmazonMusicBrandLogo", fontColor: .black, startColor: Color("AmazonMusicColor"), endColor: Color("AmazonMusicColor")) {
+    BrandButton(label: "Amazon Music", brandLogo: "AmazonMusicBrandLogo", fontColor: .black, startColor: .amazonMusicStart, endColor: .amazonMusicEnd) {
         print("Open Amazon Music")
     }
 }
