@@ -87,24 +87,27 @@ struct SearchView: View {
                     }
                     .background(.viewBackground)
                     .overlay {
-                        if viewModel.isLoading {
-                            // Display a loading indicator or view
-                            ProgressView()
-                                .progressViewStyle(.circular)
-                        } else if viewModel.searchText.isEmpty {
-                            // Existing content for empty search state
-                            ContentUnavailableView(label: {
-                                Label("Search for music ", systemImage: "music.note")
-                            }, description: {
-                                Text("Search for your favorite songs, artists or albums")
-                            })
-                        } else if filteredResults.isEmpty {
-                            // Existing content for no matches found
-                            ContentUnavailableView(label: {
-                                Label("No Matches Found ", systemImage: "exclamationmark")
-                            }, description: {
-                                Text("We couldn't find anything for your search. Try different keywords or check for typos.")
-                            })
+                        // Check if the selected tab is Music before showing the overlay
+                        if selectedTab == "Music" {
+                            if viewModel.isLoading {
+                                // Display a loading indicator or view when music is being fetched
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                            } else if viewModel.searchText.isEmpty {
+                                // Display this when no search has been made yet (for Music tab only)
+                                ContentUnavailableView(label: {
+                                    Label("Search for music ", systemImage: "music.note")
+                                }, description: {
+                                    Text("Search for your favorite songs, artists or albums")
+                                })
+                            } else if filteredResults.isEmpty {
+                                // Display this when there are no results (for Music tab only)
+                                ContentUnavailableView(label: {
+                                    Label("No Matches Found ", systemImage: "exclamationmark")
+                                }, description: {
+                                    Text("We couldn't find anything for your search. Try different keywords or check for typos.")
+                                })
+                            }
                         }
                     }
                 }

@@ -58,11 +58,13 @@ struct ItemSmall: View {
                 Text(item.title)
                     .font(.footnote)
                     .fontWeight(.bold)
+                    .lineLimit(2)
                     
                 
                 Text(item.isPerson ? "@\(item.subtitle)" : item.subtitle)
                     .font(.caption)
                     .foregroundStyle(.callout)
+                    .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
             }
             
             Spacer()
