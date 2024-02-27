@@ -32,29 +32,29 @@ class UserService {
     /*
         This method will append a friend from the friendsRequestReceived array to the friends array of the user with the idFromUser and remove the friend from the friendsRequestReceived array.
     */
-    static func sendFriendRequestTo(user: User, fromUser: User) async throws {
-            guard let fromUserId = fromUser.id, let newFriendId = fromUser.id else {
-                throw UserServiceError.couldNotAddFriend("Could not get ids from users")
-            }
-            
-            // Creating a new friend request record
-            let friendRequestRecord = CKRecord(recordType: "FriendRequest")
-            
-            // Setting references for fromUser and toUser
-            friendRequestRecord["fromUser"] = CKRecord.Reference(recordID: fromUserId, action: .none)
-            friendRequestRecord["toUser"] = CKRecord.Reference(recordID: newFriendId, action: .none)
-            
-            // Optionally set the status and timestamp
-            friendRequestRecord["status"] = "pending" as CKRecordValue
-            friendRequestRecord["timestamp"] = Date() as CKRecordValue
-            
-            do {
-                try await database.save(friendRequestRecord)
-            } catch {
-        
-                throw error
-            }
-        }
+//    static func sendFriendRequestTo(user: User, fromUser: User) async throws {
+//            guard let fromUserId = fromUser.id, let newFriendId = fromUser.id else {
+//                throw UserServiceError.couldNotAddFriend("Could not get ids from users")
+//            }
+//            
+//            // Creating a new friend request record
+//            let friendRequestRecord = CKRecord(recordType: "FriendRequest")
+//            
+//            // Setting references for fromUser and toUser
+//            friendRequestRecord["fromUser"] = CKRecord.Reference(recordID: fromUserId, action: .none)
+//            friendRequestRecord["toUser"] = CKRecord.Reference(recordID: newFriendId, action: .none)
+//            
+//            // Optionally set the status and timestamp
+//            friendRequestRecord["status"] = "pending" as CKRecordValue
+//            friendRequestRecord["timestamp"] = Date() as CKRecordValue
+//            
+//            do {
+//                try await database.save(friendRequestRecord)
+//            } catch {
+//        
+//                throw error
+//            }
+//        }
     
     static func deleteFriendFromUserWithId(id: String, friendId: String) {
         
@@ -73,20 +73,20 @@ class UserService {
     }
     
     // Example conversion method (needs to be implemented based on your User struct)
-    private static func convertRecordToUser(_ record: CKRecord) -> User {
-        // Extract values from the record and initialize a User instance
-        let id = record.recordID
-        let name = record["name"] as? String ?? ""
-        let email = record["email"] as? String ?? ""
-        let friends = record["friends"] as? [CKRecord.Reference] ?? []
-        let posts = record["posts"] as? [CKRecord.Reference] ?? []
-        let streak = record["streak"] as? Int ?? 0
-        let profilePicture = record["profilePicture"] as? String ?? ""
-        let tagName = record["tagName"] as? String ?? ""
-        let isActive = record["isActive"] as? Bool ?? false
-        
-        return User(id: id, name: name, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, tagName: tagName)
-    }
+//    private static func convertRecordToUser(_ record: CKRecord) -> User {
+//        // Extract values from the record and initialize a User instance
+//        let id = record.recordID
+//        let name = record["name"] as? String ?? ""
+//        let email = record["email"] as? String ?? ""
+//        let friends = record["friends"] as? [CKRecord.Reference] ?? []
+//        let posts = record["posts"] as? [CKRecord.Reference] ?? []
+//        let streak = record["streak"] as? Int ?? 0
+//        let profilePicture = record["profilePicture"] as? String ?? ""
+//        let tagName = record["tagName"] as? String ?? ""
+//        let isActive = record["isActive"] as? Bool ?? false
+//        
+//        return User(id: id, name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive)
+//    }
     
     //    static func fetchUser(withId id: String, completionHandler: @escaping (Result<User, Error>) -> Void) {
     //
