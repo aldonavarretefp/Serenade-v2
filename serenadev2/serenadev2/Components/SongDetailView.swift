@@ -77,7 +77,7 @@ struct SongDetailView: View {
                             .font(.title2)
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(.white, .clear)
-                            .background(.black.opacity(0.2))
+                            .background(.black.opacity(0.3))
                             .clipShape(Circle())
                     }
                 }

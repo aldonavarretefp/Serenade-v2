@@ -140,8 +140,8 @@ struct FeedView: View {
                                 // Navigation link to open notifications view
                                 NavigationLink(destination: EmptyView()){
                                     Image(systemName: "bell")
-                                        .font(.title2)
                                         .fontWeight(.semibold)
+                                        .font(.title2)
                                 }
                                 .foregroundStyle(.primary)
                             }
