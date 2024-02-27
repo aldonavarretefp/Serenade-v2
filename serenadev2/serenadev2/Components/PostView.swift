@@ -38,7 +38,7 @@ struct PostView: View {
         ZStack(alignment: .bottom) {
             RoundedRectangle(cornerRadius: 15)
                 .fill(.card)
-                .shadow(color: .black.opacity(0.13), radius: colorScheme == .light ? 25 : 0, y: 5)
+                .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0.0), radius: 18, y: 5)
             VStack(alignment: .leading) {
                 HStack {
                     Image(profileImg)
@@ -73,9 +73,9 @@ struct PostView: View {
             }
             ZStack(alignment: .leading) {
                 UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0))
-                    .fill(.card)
+                    // .fill((post.song?.color.opacity(0.5))!) Try adding the color of each album
+                    .fill(.card.opacity(0.7))
                     .frame(height: 95)
-                    .opacity(0.7)
                 
                 HStack {
                     Image(post.song!.coverArt)
@@ -89,7 +89,7 @@ struct PostView: View {
                             .fontWeight(.bold)
                         Text(post.song!.artist)
                             .font(.footnote)
-                            .foregroundStyle(colorScheme == .light ? .black : .callout)
+                            .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
                     }
                     .padding(.trailing)
                     .lineLimit(2)
