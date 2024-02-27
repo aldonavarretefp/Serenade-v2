@@ -1,8 +1,7 @@
 //
 //  ActionButton.swift
-//  prueba
 //
-//  Created by Alejandro Oliva Ochoa on 19/02/24.
+//  Created by Pedro Daniel Rouin Salazar on 19/02/24.
 //
 
 import SwiftUI
@@ -12,16 +11,17 @@ struct ActionButton: View {
     // Accessing the color scheme environment variable
     @Environment(\.colorScheme) private var colorScheme
     
-    
-    
     // Properties for the button
     var label: String                // Text to display on the button
     var symbolName: String           // Name of the SF Symbol to display on the button
     var fontColor: Color             // Color of the text on the button
     var backgroundColor: Color      // Background color of the button
     var isShareDaily : Bool          // Boolean indicating if it's a share daily button
+    var isDisabled : Bool
+    
     var action: () -> Void           // Action to perform when the button is tapped
-    var materialEffect : Material = .ultraThinMaterial  // Material effect for the button
+    var materialEffect : Material = .thinMaterial  // Material effect for the button
+    
     
     var body: some View {
         // Conditionally choose between share daily button and standard button
@@ -34,7 +34,6 @@ struct ActionButton: View {
     
     // View for the share daily button
     private var shareDailyButton: some View {
-        
         let strokeGradient = LinearGradient(gradient:
                                                 Gradient(colors: [
                                                     (colorScheme == .light ?
@@ -42,7 +41,6 @@ struct ActionButton: View {
                                                     (colorScheme == .light ?
                                                      (Color.black).opacity(0.52) : Color.white).opacity(0.12)]),
                                             startPoint: .topLeading, endPoint: .bottomTrailing)
-        
         return Button(action: action) {
             // Content of the button
             HStack {
@@ -55,7 +53,6 @@ struct ActionButton: View {
                     .fontWeight(.bold)
             }
         }
-    
         .padding(.horizontal)
         .padding(20)
         .background(
@@ -64,7 +61,6 @@ struct ActionButton: View {
                 .strokeBorder(strokeGradient, lineWidth: 1)
         )
         .background(materialEffect)
-        
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .shadow(color: .black.opacity(0.13), radius: 25, x: 0, y: 4)
     }
@@ -88,35 +84,35 @@ struct ActionButton: View {
         .padding()
         .background(backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 15))
+        .disabled(isDisabled)
     }
 }
 
 
-struct DailyButtonView: View {
-    var body: some View {
-        VStack {
-            // First button
-            ActionButton(label: "Daily", symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false) {
-                print("Daily button tapped")
+struct ActionButtonView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            // Preview Daily button tapped
+            ActionButton(label: "Daily", symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: false) {
+                print("Daily button")
+                
             }
-            .padding()
+            .previewDisplayName("Daily button")
             
-            // Second button
-            ActionButton(label: "Share daily song", symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor , isShareDaily: true) {
-                print("Open with button tapped")
+            // Preview Open with button
+            ActionButton(label: "Share daily song", symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor , isShareDaily: true, isDisabled: false ) {
+                print("Open with button")
             }
-            .padding()
+            .previewDisplayName("Open with button")
             
-            // Third button
-            ActionButton(label: "Share daily song", symbolName: "waveform", fontColor: .white, backgroundColor: .green , isShareDaily: false) {
-                print("Open with button tapped")
+            // Preview Daily button disabled
+            ActionButton(label: "Daily", symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: true ) {
+                print("Daily button")
+                
             }
-            .padding()
+            .previewDisplayName("Daily button disabled")
         }
     }
 }
 
-// Preview provider
-#Preview {
-    DailyButtonView()
-}
+
