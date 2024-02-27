@@ -14,8 +14,8 @@ struct Song: Identifiable {
     var artist: String
     var album: String
     var coverArt: String
-    var color: Color
-    var fontColor: Color
+    var color: Color = .red
+    var fontColor: Color = .red
 }
 
 

@@ -44,6 +44,11 @@
 		F137D2482B839A84006264C1 /* serenadev2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2472B839A84006264C1 /* serenadev2Tests.swift */; };
 		F137D2522B839A84006264C1 /* serenadev2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2512B839A84006264C1 /* serenadev2UITests.swift */; };
 		F137D2542B839A84006264C1 /* serenadev2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */; };
+		F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */; };
+		F7207CA22B85055D00E383E6 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207CA12B85055D00E383E6 /* UserService.swift */; };
+		F7F9285E2B878AAF00050926 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F9285D2B878AAF00050926 /* SongService.swift */; };
+		F7F928622B878D8E00050926 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F928612B878D8E00050926 /* UserViewModel.swift */; };
+		F7F928652B879FAF00050926 /* MockedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F928642B879FAF00050926 /* MockedUser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +111,11 @@
 		F137D24D2B839A84006264C1 /* serenadev2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = serenadev2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F137D2512B839A84006264C1 /* serenadev2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITests.swift; sourceTree = "<group>"; };
 		F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitConfig.swift; sourceTree = "<group>"; };
+		F7207CA12B85055D00E383E6 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		F7F9285D2B878AAF00050926 /* SongService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongService.swift; sourceTree = "<group>"; };
+		F7F928612B878D8E00050926 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserViewModel.swift; path = serenadev2/Model/UserViewModel.swift; sourceTree = SOURCE_ROOT; };
+		F7F928642B879FAF00050926 /* MockedUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockedUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +178,7 @@
 		EA9BC9E32B83A29F00292705 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				F7F928612B878D8E00050926 /* UserViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -204,6 +215,7 @@
 				F137D2462B839A84006264C1 /* serenadev2Tests */,
 				F137D2502B839A84006264C1 /* serenadev2UITests */,
 				F137D2302B839A82006264C1 /* Products */,
+				F7F9285A2B865E4800050926 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -220,7 +232,10 @@
 		F137D2312B839A82006264C1 /* serenadev2 */ = {
 			isa = PBXGroup;
 			children = (
+				F7F928632B879FA400050926 /* Mock */,
 				C40C09B42B863C82009BE4C5 /* ViewExtensions */,
+				F7207C9E2B84F52300E383E6 /* Config */,
+				F7207C9B2B84E4A200E383E6 /* Service */,
 				EA9BC9E52B83A2B300292705 /* View */,
 				EA9BC9E42B83A2AD00292705 /* Model */,
 				EA9BC9E32B83A29F00292705 /* ViewModel */,
@@ -259,6 +274,38 @@
 				F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */,
 			);
 			path = serenadev2UITests;
+			sourceTree = "<group>";
+		};
+		F7207C9B2B84E4A200E383E6 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				F7207CA12B85055D00E383E6 /* UserService.swift */,
+				F7F9285D2B878AAF00050926 /* SongService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		F7207C9E2B84F52300E383E6 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		F7F9285A2B865E4800050926 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		F7F928632B879FA400050926 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				F7F928642B879FAF00050926 /* MockedUser.swift */,
+			);
+			path = Mock;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -393,6 +440,7 @@
 			files = (
 				E0F6F8372B879FC5009B35B1 /* OpenWithView.swift in Sources */,
 				EA9BC9F42B87861C00292705 /* Song.swift in Sources */,
+				F7F928652B879FAF00050926 /* MockedUser.swift in Sources */,
 				F137D2352B839A82006264C1 /* ContentView.swift in Sources */,
 				EA9BC9F62B87960900292705 /* ProfileView.swift in Sources */,
 				EA9BC9E82B83A44800292705 /* ProfileBar.swift in Sources */,
@@ -400,7 +448,9 @@
 				C4F14A7D2B88FBD800D7111E /* CreatePasswordView.swift in Sources */,
 				C402E7D92B8CD444004EC79C /* TabBarItem.swift in Sources */,
 				C47B8F082B84EE88002027CF /* ItemSmall.swift in Sources */,
+				F7F9285E2B878AAF00050926 /* SongService.swift in Sources */,
 				C40C09B12B863C1A009BE4C5 /* PreviewPlayer.swift in Sources */,
+				F7F928622B878D8E00050926 /* UserViewModel.swift in Sources */,
 				C40C09AF2B863BF8009BE4C5 /* SongDetailTitleInfo.swift in Sources */,
 				C40C09B32B863C49009BE4C5 /* SongDetailView.swift in Sources */,
 				F137D2372B839A82006264C1 /* Item.swift in Sources */,
@@ -417,6 +467,8 @@
 				C49B42122B87869800FD66F9 /* SearchView.swift in Sources */,
 				C40C09B62B863CA2009BE4C5 /* Extensions.swift in Sources */,
 				EA9BC9F22B87861C00292705 /* Post.swift in Sources */,
+				F7207CA22B85055D00E383E6 /* UserService.swift in Sources */,
+				F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */,
 				F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */,
 				C41F8D0F2B88F69D0081887D /* CreateAccountView.swift in Sources */,
 				C40C09B82B863EFA009BE4C5 /* ActionButton.swift in Sources */,
@@ -582,13 +634,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = serenadev2/serenadev2.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"serenadev2/Preview Content\"";
 				DEVELOPMENT_TEAM = 8T878FXD47;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = serenadev2/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Serenade;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -602,6 +657,7 @@
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.serenade.serenadev2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -614,13 +670,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = serenadev2/serenadev2.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"serenadev2/Preview Content\"";
 				DEVELOPMENT_TEAM = 8T878FXD47;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = serenadev2/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Serenade;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -634,6 +693,7 @@
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.serenade.serenadev2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
