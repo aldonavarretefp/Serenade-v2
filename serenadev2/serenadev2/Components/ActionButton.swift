@@ -85,6 +85,7 @@ struct ActionButton: View {
         .background(backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .disabled(isDisabled)
+        .opacity(isDisabled == true ? 0.5:1)
     }
 }
 
@@ -100,7 +101,7 @@ struct ActionButtonView_Previews: PreviewProvider {
             .previewDisplayName("Daily button")
             
             // Preview Open with button
-            ActionButton(label: "Share daily song", symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor , isShareDaily: true, isDisabled: false ) {
+            ActionButton(label: "Share daily song", symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor , isShareDaily: true, isDisabled: true ) {
                 print("Open with button")
             }
             .previewDisplayName("Open with button")
