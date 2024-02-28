@@ -21,6 +21,7 @@
 		C47B8F082B84EE88002027CF /* ItemSmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47B8F072B84EE88002027CF /* ItemSmall.swift */; };
 		C49B42122B87869800FD66F9 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49B42112B87869800FD66F9 /* SearchView.swift */; };
 		C4D511192B8E67F000E95549 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D511182B8E67F000E95549 /* SearchViewModel.swift */; };
+		C4D5111B2B8F759300E95549 /* SongModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D5111A2B8F759300E95549 /* SongModel.swift */; };
 		C4F14A7B2B88FBC800D7111E /* CreateUsernameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F14A7A2B88FBC800D7111E /* CreateUsernameView.swift */; };
 		C4F14A7D2B88FBD800D7111E /* CreatePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F14A7C2B88FBD800D7111E /* CreatePasswordView.swift */; };
 		E0F6F8332B879BAC009B35B1 /* BrandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F6F8322B879BAC009B35B1 /* BrandButton.swift */; };
@@ -32,7 +33,6 @@
 		EA9BC9EC2B8501ED00292705 /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9BC9EB2B8501ED00292705 /* PostView.swift */; };
 		EA9BC9F22B87861C00292705 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9BC9EF2B87861C00292705 /* Post.swift */; };
 		EA9BC9F32B87861C00292705 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9BC9F02B87861C00292705 /* User.swift */; };
-		EA9BC9F42B87861C00292705 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9BC9F12B87861C00292705 /* Song.swift */; };
 		EA9BC9F62B87960900292705 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9BC9F52B87960900292705 /* ProfileView.swift */; };
 		F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2322B839A82006264C1 /* serenadev2App.swift */; };
 		F137D2352B839A82006264C1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2342B839A82006264C1 /* ContentView.swift */; };
@@ -44,7 +44,6 @@
 		F137D2542B839A84006264C1 /* serenadev2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */; };
 		F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */; };
 		F7207CA22B85055D00E383E6 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207CA12B85055D00E383E6 /* UserService.swift */; };
-		F7F9285E2B878AAF00050926 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F9285D2B878AAF00050926 /* SongService.swift */; };
 		F7F928652B879FAF00050926 /* MockedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F928642B879FAF00050926 /* MockedUser.swift */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +79,7 @@
 		C47B8F072B84EE88002027CF /* ItemSmall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSmall.swift; sourceTree = "<group>"; };
 		C49B42112B87869800FD66F9 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SearchView.swift; path = serenadev2/Components/SearchView.swift; sourceTree = SOURCE_ROOT; };
 		C4D511182B8E67F000E95549 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		C4D5111A2B8F759300E95549 /* SongModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongModel.swift; sourceTree = "<group>"; };
 		C4F14A7A2B88FBC800D7111E /* CreateUsernameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUsernameView.swift; sourceTree = "<group>"; };
 		C4F14A7C2B88FBD800D7111E /* CreatePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePasswordView.swift; sourceTree = "<group>"; };
 		E0F6F8322B879BAC009B35B1 /* BrandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandButton.swift; sourceTree = "<group>"; };
@@ -91,7 +91,6 @@
 		EA9BC9EB2B8501ED00292705 /* PostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostView.swift; sourceTree = "<group>"; };
 		EA9BC9EF2B87861C00292705 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		EA9BC9F02B87861C00292705 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		EA9BC9F12B87861C00292705 /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 		EA9BC9F52B87960900292705 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		F137D22F2B839A82006264C1 /* serenadev2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = serenadev2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F137D2322B839A82006264C1 /* serenadev2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2App.swift; sourceTree = "<group>"; };
@@ -108,7 +107,6 @@
 		F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitConfig.swift; sourceTree = "<group>"; };
 		F7207CA12B85055D00E383E6 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
-		F7F9285D2B878AAF00050926 /* SongService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongService.swift; sourceTree = "<group>"; };
 		F7F928642B879FAF00050926 /* MockedUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockedUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -178,8 +176,8 @@
 			isa = PBXGroup;
 			children = (
 				EA9BC9EF2B87861C00292705 /* Post.swift */,
-				EA9BC9F12B87861C00292705 /* Song.swift */,
 				EA9BC9F02B87861C00292705 /* User.swift */,
+				C4D5111A2B8F759300E95549 /* SongModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -271,7 +269,6 @@
 			isa = PBXGroup;
 			children = (
 				F7207CA12B85055D00E383E6 /* UserService.swift */,
-				F7F9285D2B878AAF00050926 /* SongService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -431,7 +428,6 @@
 			files = (
 				E0F6F8372B879FC5009B35B1 /* OpenWithView.swift in Sources */,
 				C4D511192B8E67F000E95549 /* SearchViewModel.swift in Sources */,
-				EA9BC9F42B87861C00292705 /* Song.swift in Sources */,
 				F7F928652B879FAF00050926 /* MockedUser.swift in Sources */,
 				F137D2352B839A82006264C1 /* ContentView.swift in Sources */,
 				EA9BC9F62B87960900292705 /* ProfileView.swift in Sources */,
@@ -440,7 +436,6 @@
 				C4F14A7D2B88FBD800D7111E /* CreatePasswordView.swift in Sources */,
 				C402E7D92B8CD444004EC79C /* TabBarItem.swift in Sources */,
 				C47B8F082B84EE88002027CF /* ItemSmall.swift in Sources */,
-				F7F9285E2B878AAF00050926 /* SongService.swift in Sources */,
 				C40C09B12B863C1A009BE4C5 /* PreviewPlayer.swift in Sources */,
 				C40C09AF2B863BF8009BE4C5 /* SongDetailTitleInfo.swift in Sources */,
 				C40C09B32B863C49009BE4C5 /* SongDetailView.swift in Sources */,
@@ -461,6 +456,7 @@
 				F7207CA22B85055D00E383E6 /* UserService.swift in Sources */,
 				F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */,
 				F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */,
+				C4D5111B2B8F759300E95549 /* SongModel.swift in Sources */,
 				C41F8D0F2B88F69D0081887D /* CreateAccountView.swift in Sources */,
 				C40C09B82B863EFA009BE4C5 /* ActionButton.swift in Sources */,
 				EA5A43DE2B88F66800F6F04C /* SettingsView.swift in Sources */,

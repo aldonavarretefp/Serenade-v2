@@ -10,9 +10,11 @@ import SwiftUI
 struct ContentItem: Identifiable {
     let id = UUID()
     var imageUrl: URL?
-    var title: String
-    var subtitle: String
-    var isPerson: Bool // True for person, false for song
+    var title: String?
+    var subtitle: String?
+    var isPerson: Bool// True for person, false for song
+    var song: SongModel?
+    
 }
 
 struct ItemSmall: View {
@@ -26,7 +28,7 @@ struct ItemSmall: View {
     
     var body: some View {
         HStack {
-            if let imageUrl = item.imageUrl {
+            if let imageUrl = item.isPerson ? item.imageUrl: item.song!.artworkUrlSmall {
                 AsyncImage(url: imageUrl) { phase in
                     switch phase {
                     case .empty:
@@ -55,13 +57,13 @@ struct ItemSmall: View {
             }
             
             VStack(alignment: .leading, spacing: 4){
-                Text(item.title)
+                Text(item.isPerson ? item.title! : item.song!.title)
                     .font(.footnote)
                     .fontWeight(.bold)
                     .lineLimit(2)
                     
                 
-                Text(item.isPerson ? "@\(item.subtitle)" : item.subtitle)
+                Text(item.isPerson ? item.subtitle! : item.song!.artists)
                     .font(.caption)
                     .foregroundStyle(.callout)
                     .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)

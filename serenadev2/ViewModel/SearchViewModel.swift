@@ -21,7 +21,7 @@ class SearchViewModel: ObservableObject {
     @Published var isLoading = false
     
     /// The list of songs retrieved from the search. It's observed by the view to update the song list display.
-    @Published var songs: [Cancion] = []
+    @Published var songs: [SongModel] = []
     
     /// A set to hold all the cancellables, i.e., the subscriptions to publishers. This is necessary to keep the subscriptions alive.
     private var cancellables = Set<AnyCancellable>()
@@ -51,10 +51,14 @@ class SearchViewModel: ObservableObject {
     /// Fetches music from the MusicKit API based on the current search text.
     /// - Parameter searchText: The text to search for in the MusicKit API.
     func fetchMusic(with searchText: String) {
-        // Guards against empty search queries to avoid unnecessary API calls.
-        guard !searchText.isEmpty else {
-            self.songs = [] // Clears the songs list if the search text is empty.
-            return
+        
+        // Immediately clear songs and reset loading state if search text is empty
+        if searchText.isEmpty {
+            DispatchQueue.main.async {
+                self.songs = [] // Clears the songs list immediately
+                self.isLoading = false // Ensure loading state is also reset
+            }
+            return // Exit the method early if no search text is provided
         }
         
         isLoading = true 
@@ -76,7 +80,7 @@ class SearchViewModel: ObservableObject {
                         self.isLoading = false
                         // Maps the MusicKit search results to the app's song model and updates the songs list.
                         self.songs = result.songs.compactMap({
-                            return Cancion(
+                            return SongModel(
                                 id: $0.id.rawValue,
                                 title: $0.title,
                                 artists: $0.artistName,

@@ -22,7 +22,7 @@ struct DailyPosted: View {
         HStack{
             
             // Art work of the passed song
-            Image(song.coverArt)
+            Image("") //MISSING
                 .resizable()
                 .frame(width: 50, height: 50)
                 .scaledToFit()
@@ -40,7 +40,7 @@ struct DailyPosted: View {
                     .bold()
                 
                 // Song artist of the passed song
-                Text(song.artist)
+                Text(song.artists)
                     .font(.caption2)
                     .fontWeight(.semibold)
                     .foregroundStyle(.callout)
@@ -56,12 +56,27 @@ struct DailyPosted: View {
             isSongInfoDisplayed = true
         }
         .fullScreenCover(isPresented: $isSongInfoDisplayed){
-            SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview122/v4/72/a3/ab/72a3ab79-0066-f773-6618-7a53adc250b3/mzaf_17921540907592750976.plus.aac.p.m4a")!, song: song)
+            SongDetailView(song: song)
         }
         
     }
 }
 
 #Preview {
-    DailyPosted(song: SongModel(id: "5", title: "See you again (feat. Kali Uchis)", artist: "Tyler, The Creator, Kali Uchis", album: "Flowerboy", coverArt: "tyler", color: Color(hex: 0xD5881C), fontColor: Color(hex: 0xffffff)))
+    DailyPosted(song: SongModel(
+        id: "1",
+        title: "Robbers",
+        artists: "The 1975",
+        artworkUrlSmall: URL(string: "https://example.com/small.jpg"),
+        artworkUrlLarge: URL(string: "https://is5-ssl.mzstatic.com/image/thumb/Music124/v4/f4/bc/71/f4bc7194-a92a-8f73-1b81-154adc503ecb/00602537497119.rgb.jpg/1500x1500bb.jpg"),
+        bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
+        priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),
+        secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
+        terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
+        quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
+        previewUrl: URL(string: "https://example.com/preview.mp3"),
+        duration: 295.502,
+        composerName: "Greg Kurstin & Adele Adkins",
+        genreNames: ["Pop"],
+        releaseDate: Date(timeIntervalSince1970: 1445558400)))
 }

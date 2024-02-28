@@ -8,24 +8,6 @@
 import SwiftUI
 import MusicKit
 
-struct Cancion: Identifiable, Hashable {
-    var id: String
-    let title: String
-    let artists: String
-    let artworkUrlSmall: URL?
-    let artworkUrlLarge: URL?
-    let bgColor: CGColor?
-    let priColor: CGColor?
-    let secColor: CGColor?
-    let terColor: CGColor?
-    let quaColor: CGColor?
-    let previewUrl: URL?
-    let duration: TimeInterval?
-    let composerName: String?
-    let genreNames: [String]
-    let releaseDate: Date?
-    
-}
 
 struct SearchView: View {
     @Environment(\.colorScheme) private var colorScheme
@@ -33,9 +15,13 @@ struct SearchView: View {
     
     @State private var selectedTab = "Music"
     @State private var underlineOffset: CGFloat = 0
+    @State var isSongInfoDisplayed: Bool = false
+    
     
     private let underlineHeight: CGFloat = 2
     private let animationDuration = 0.2
+    
+    @State private var selectedSong: ContentItem?
     
     let peopleList = [
         ContentItem(imageUrl: URL(string: "https://www.opticalexpress.co.uk/media/1064/man-with-glasses-smiling-looking-into-distance.jpg"), title: "Fernando Fernández", subtitle: "janedoe", isPerson: true),
@@ -85,9 +71,13 @@ struct SearchView: View {
                     
                     ScrollView {
                         LazyVStack(spacing: 0) {
-                            ForEach(filteredResults) { item in
-                                ItemSmall(item: item, showArrow: true)
+                            ForEach(filteredResults) { value in
+                                
+                                ItemSmall(item: value, showArrow: false)
                                     .padding()
+                                    .onTapGesture{
+                                        selectedSong = value
+                                    }
                             }
                         }
                     }
@@ -120,18 +110,24 @@ struct SearchView: View {
             }
             .searchable(text: $viewModel.searchText)
         }
+        .onChange(of: viewModel.searchText) { newValue in
+            viewModel.fetchMusic(with: newValue)
+        }
+        .fullScreenCover(item: $selectedSong){ item in
+            SongDetailView(song: item.song!)
+        }
     }
     
     
     var filteredResults: [ContentItem] {
         if selectedTab == "Music" {
             return viewModel.songs.map { song in
-                ContentItem(imageUrl: song.artworkUrlSmall, title: song.title, subtitle: song.artists, isPerson: false)
+                ContentItem(isPerson: false, song: song)
             }
         } else {
             return peopleList.filter {
-                $0.title.localizedCaseInsensitiveContains(viewModel.searchText) ||
-                $0.subtitle.localizedCaseInsensitiveContains(viewModel.searchText) ||
+                $0.title!.localizedCaseInsensitiveContains(viewModel.searchText) ||
+                $0.subtitle!.localizedCaseInsensitiveContains(viewModel.searchText) ||
                 viewModel.searchText.isEmpty
             }
         }
