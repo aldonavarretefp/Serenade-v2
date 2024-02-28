@@ -8,6 +8,9 @@ import SwiftUI
 // View that displays a list of buttons within a navigation stack.
 // Each button represents a music streaming platform where a song can be listened to.
 struct OpenWithView : View {
+    
+    // MARK: - Environment properties
+    @Environment(\.dismiss) var dismiss
     // Property to receive an array of ButtonType.
     // which specifies the different types of buttons that can be displayed in the BrandsGrid.
     var buttonTypes: [ButtonType]
@@ -18,13 +21,13 @@ struct OpenWithView : View {
             
             ZStack{
                 Rectangle()
-                    .fill(.ultraThickMaterial)
+                    .fill(.ultraThinMaterial)
                     .ignoresSafeArea()
-                VStack(alignment: .leading){
+                VStack(alignment: .leading, spacing: 30){
                     // A text view displaying instructions or information to the user.
                     Text("Listen to this song on the following music streaming platforms")
-                        .font(.title3) // Sets the font size and style.
-                        .fontWeight(.light) // Sets the weight of the font to light.
+                        .fontWeight(.light)
+                        .foregroundStyle(.callout)
                     
                     // This is where the BrandsGrid view is placed, passing in the buttonTypes array.
                     // BrandsGrid is a custom view responsible for displaying the buttons.
@@ -42,9 +45,18 @@ struct OpenWithView : View {
                             .fontWeight(.semibold)
                     }
                     // Toolbar item placed on the trailing side of the navigation bar
-                    ToolbarItem(placement: .navigationBarTrailing){
-                        // An image view displaying a system icon.
-                        Image(systemName: "xmark.circle.fill")
+                    ToolbarItem(placement: .topBarTrailing){
+                        Button{
+                            // Dismiss the full screen
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark.circle")
+                                .font(.title2)
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.white, .clear)
+                                .background(.black.opacity(0.3))
+                                .clipShape(Circle())
+                        }
                     }
                 }
                 // Adds horizontal padding to the VStack content.

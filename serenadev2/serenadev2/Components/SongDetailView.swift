@@ -14,6 +14,7 @@ struct SongDetailView: View {
     
     
     @State var isDailySheetDisplayed: Bool = false
+    @State var isOpenWithSheetDisplayed: Bool = false
     
     // MARK: - Properties
     // Audio URL (will be added to Song)?
@@ -67,7 +68,10 @@ struct SongDetailView: View {
                         
                         // Open with button
                         ActionButton(label: "Open with", symbolName: "arrow.up.forward.circle.fill", fontColor: song.fontColor, backgroundColor: song.color, isShareDaily: false, isDisabled: false) {
-                            print("Open with tapped")
+                            isOpenWithSheetDisplayed.toggle()
+                        }.sheet(isPresented: $isOpenWithSheetDisplayed){
+                            OpenWithView(buttonTypes: [.appleMusic, .spotify, .youtubeMusic, .amazonMusic])
+                                .presentationDetents([.fraction(0.55)])
                         }
                         
                     }

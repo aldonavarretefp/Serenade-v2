@@ -42,7 +42,7 @@ struct BrandsGrid: View {
                     }
                 }
                 // Set the maximum height for each row based on the screen height
-                .frame(maxHeight: UIScreen.screenHeight / 7)
+                .frame(minHeight: UIScreen.screenHeight / 8, maxHeight: UIScreen.screenHeight / 6)
             }
         }
     }
