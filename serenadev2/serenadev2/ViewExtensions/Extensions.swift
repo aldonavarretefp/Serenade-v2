@@ -25,7 +25,7 @@ extension Color {
         let luminance = self.luminance(color: color)
         
         // Define a contrast threshold
-        let contrastThreshold: Double = 10.0 // You can adjust this threshold
+        let contrastThreshold: Double = 10 // You can adjust this threshold
         
         // Compare the luminosity component with the contrast threshold
         if luminance > contrastThreshold {
