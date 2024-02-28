@@ -9,24 +9,29 @@ import SwiftUI
 
 struct SongDetailTitleInfo: View {
     
+    // MARK: - Properties
     var title: String
     var author: String
     var fontColor: Color
     
+    // MARK: - Body
     var body: some View {
         HStack(){
             VStack(alignment: .leading, spacing: 5){
+                
+                // Song of the song
                 Text(title)
                     .font(.title3)
                     .bold()
                 
+                // Author of the song
                 Text(author)
             }
             
             Spacer()
             
             Button{
-                
+                // Add view with the song info if needed
             } label: {
                 Image(systemName: "info.circle")
                     .font(.title3)

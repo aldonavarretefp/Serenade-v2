@@ -1,0 +1,19 @@
+{
+  "images" : [
+    {
+      "filename" : "home.filled.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "idiom" : "universal",
+      "width-class" : "compact"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
+}
