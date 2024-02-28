@@ -35,5 +35,5 @@ struct Post: Identifiable, Equatable, Hashable {
     var isDeleted: Bool
     var senderUser: User?
     var receiverUser: User?
-    var song: Song?
+    var song: SongModel?
 }

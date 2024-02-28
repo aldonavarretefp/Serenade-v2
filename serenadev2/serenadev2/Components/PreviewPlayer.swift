@@ -136,7 +136,9 @@ struct PreviewPlayer: View {
                     } else {
                         // Restart playback from the beginning
                         player.seek(to: self.initialTime, toleranceBefore: .zero, toleranceAfter: .zero) { _ in
-                            seconds = 0
+                            withAnimation{
+                                seconds = 0
+                            }
                             self.isPlaying = false
                             self.stopTimer()
                             self.player.pause()
