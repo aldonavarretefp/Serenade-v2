@@ -109,6 +109,7 @@ struct SearchView: View {
                 }
             }
             .searchable(text: $viewModel.searchText)
+            .disableAutocorrection(true)
         }
         .onChange(of: viewModel.searchText) { newValue in
             viewModel.fetchMusic(with: newValue)
