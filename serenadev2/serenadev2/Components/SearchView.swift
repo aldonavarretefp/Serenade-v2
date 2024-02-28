@@ -111,8 +111,8 @@ struct SearchView: View {
             }
             .searchable(text: $viewModel.searchText)
         }
-        .onChange(of: viewModel.searchText) { newValue in
-            viewModel.fetchMusic(with: newValue)
+        .onChange(of: viewModel.searchText) {
+            viewModel.fetchMusic(with: viewModel.searchText)
         }
         .fullScreenCover(item: $selectedSong){ item in
             SongDetailView(song: item.song!)
