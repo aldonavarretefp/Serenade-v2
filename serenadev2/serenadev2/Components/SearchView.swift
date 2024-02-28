@@ -9,16 +9,22 @@ import SwiftUI
 import MusicKit
 
 struct Cancion: Identifiable, Hashable {
-    var id = UUID()
-    let name: String
-    let artist: String
-    let imageUrl: URL?
-    let bacColor: CGColor?
+    var id: String
+    let title: String
+    let artists: String
+    let artworkUrlSmall: URL?
+    let artworkUrlLarge: URL?
+    let bgColor: CGColor?
     let priColor: CGColor?
     let secColor: CGColor?
     let terColor: CGColor?
     let quaColor: CGColor?
     let previewUrl: URL?
+    let duration: TimeInterval?
+    let composerName: String?
+    let genreNames: [String]
+    let releaseDate: Date?
+    
 }
 
 struct SearchView: View {
@@ -120,7 +126,7 @@ struct SearchView: View {
     var filteredResults: [ContentItem] {
         if selectedTab == "Music" {
             return viewModel.songs.map { song in
-                ContentItem(imageUrl: song.imageUrl, title: song.name, subtitle: song.artist, isPerson: false)
+                ContentItem(imageUrl: song.artworkUrlSmall, title: song.title, subtitle: song.artists, isPerson: false)
             }
         } else {
             return peopleList.filter {
