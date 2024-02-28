@@ -12,6 +12,9 @@ struct SongDetailView: View {
     // MARK: - Environment properties
     @Environment(\.dismiss) var dismiss
     
+    
+    @State var isDailySheetDisplayed: Bool = false
+    
     // MARK: - Properties
     // Audio URL (will be added to Song)?
     var audioURL: URL
@@ -53,14 +56,20 @@ struct SongDetailView: View {
                     VStack(spacing: 15){
                         
                         // Daily button
-                        ActionButton(label: "Daily", symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false, isDisabled: true) {
-                            print("Daily button tapped")
+                        ActionButton(label: "Daily", symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false, isDisabled: false) {
+                            isDailySheetDisplayed.toggle()
+                            
+                        }
+                        .sheet(isPresented: $isDailySheetDisplayed){
+                            DailySongView(song: song, isSongFromDaily: false)
+                                .presentationDetents([.fraction(0.7)])
                         }
                         
                         // Open with button
                         ActionButton(label: "Open with", symbolName: "arrow.up.forward.circle.fill", fontColor: song.fontColor, backgroundColor: song.color, isShareDaily: false, isDisabled: false) {
-                            print("Daily button tapped")
+                            print("Open with tapped")
                         }
+                        
                     }
                     .padding()
                     

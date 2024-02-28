@@ -1,20 +1,25 @@
 //
-//  DailySongView.swift
-//  serenadev2
+//  DailyFromSongView.swift
+//  reusbleComponent
 //
-//  Created by Pedro Daniel Rouin Salazar on 27/02/24.
+//  Created by Pedro Daniel Rouin Salazar on 22/02/24.
 //
 
 import SwiftUI
 
 struct DailySongView: View {
+    
+    // MARK: - Environment properties
+    @Environment(\.dismiss) var dismiss
+    
     @Environment(\.colorScheme) private var colorScheme
     @State private var caption: String = ""
     @State var  characterLimit = 100
     @State private var isPresentingSearchSong = false //for modal presentation of SearchSong
     
-    @Binding var song: Song? // Optional to handle the case where no song is selected
+    @State var song: Song? // Optional to handle the case where no song is selected
     
+    var isSongFromDaily : Bool
     
     var body: some View {
         NavigationStack {
@@ -27,44 +32,67 @@ struct DailySongView: View {
                         .fontWeight(.light)
                         .foregroundStyle(.callout)
                     
-                    if let song = song {
-                        
-                        Button(action: {
-                            // This will toggle the state variable to present the sheet
-                            isPresentingSearchSong = true
-                        }) {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text("Selected song")
-                                        .font(.callout)
+                    if let song = song  {
+                        if isSongFromDaily {
+                            Button(action: {
+                                // This will toggle the state variable to present the sheet
+                                isPresentingSearchSong = true
+                            }) {
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text("Selected song")
+                                            .font(.callout)
+                                            
+                                        Spacer()
+                                        Text("Change song")
+                                            .font(.footnote)
+                                            .fontWeight(.light)
+                                            .foregroundStyle(.callout)
+                                    }
+                                    ZStack {
+                                        Rectangle()
+                                            .fill(.ultraThickMaterial)
                                         
-                                    Spacer()
-                                    Text("Change song")
-                                        .font(.footnote)
-                                        .fontWeight(.light)
-                                        .foregroundStyle(.callout)
+                                        ItemSmall(item: ContentItem(imageUrl: URL(string: song.coverArt), title: song.title, subtitle: song.artist, isPerson: false), showArrow: false)
+                                            .padding(.horizontal, 5)
+                                    }
+                                    .frame(maxHeight: 60)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
                                 }
-                                ZStack {
-                                    Rectangle()
-                                        .fill(.ultraThickMaterial)
-                                    
-                                    ItemSmall(item: ContentItem(imageUrl: URL(string: song.coverArt), title: song.title, subtitle: song.artist, isPerson: false), showArrow: false)
-                                        .padding(.horizontal, 5)
-                                }
-                                .frame(maxHeight: 60)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                
                             }
+                            .sheet(isPresented: $isPresentingSearchSong) {
+                                SelectSongView(song: $song)
+                                    .presentationDetents([.medium, .large])
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        else{
+                            
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text("Selected song")
+                                            .font(.callout)
+                                            
+                                    }
+                                    ZStack {
+                                        Rectangle()
+                                            .fill(.ultraThickMaterial)
+                                        
+                                        ItemSmall(item: ContentItem(imageUrl: URL(string: song.coverArt), title: song.title, subtitle: song.artist, isPerson: false), showArrow: false)
+                                            .padding(.horizontal, 5)
+                                    }
+                                    .frame(maxHeight: 60)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                }
+                                
                             
                         }
-                        .sheet(isPresented: $isPresentingSearchSong) {
-                            SelectSongView(song: $song)
-                                .presentationDetents([.medium, .large])
-                        }
-                        .buttonStyle(.plain)
+                        
                     } else {
                         // Display a placeholder when no song is selected
                         VStack(alignment: .leading) {
-                            SelectSongButton{
+                            SelectSong{
                                 isPresentingSearchSong = true
                             }
                             .sheet(isPresented: $isPresentingSearchSong) {
@@ -103,13 +131,26 @@ struct DailySongView: View {
                         .font(.title2)
                         .fontWeight(.semibold)
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Image(systemName: "xmark.circle.fill")
+                ToolbarItem(placement: .topBarTrailing){
+                    Button{
+                        // Dismiss the full screen
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle")
+                            .font(.title2)
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.white, .clear)
+                            .background(.black.opacity(0.3))
+                            .clipShape(Circle())
+                    }
                 }
             }
         }
     }
+    
+    
 }
+
 
 
 
@@ -152,7 +193,7 @@ struct CaptionView: View {
 
 
 
-struct SelectSongButton: View {
+struct SelectSong: View {
     @Environment(\.colorScheme) private var colorScheme
     var action: () -> Void
     var body: some View {
@@ -182,16 +223,27 @@ struct SelectSongButton: View {
     }
 }
 
-struct DailySongView_Previews: PreviewProvider {
+
+
+
+//MARK: Previews
+
+// Define a wrapper view for preview purposes
+
+
+
+struct DailyFromSongView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             // Preview without a song
-            DailySongView(song: .constant(nil))
-                .previewDisplayName("No Song Selected")
+         // DailySongView()
+               // .previewDisplayName("No Song Selected")
             
             // Preview with a song
-            DailySongView(song: .constant(Song(id: "1", title: "See you again (feat. Kali Uchis)", artist: "Tyler, The Creator, Kali Uchis", album: "Example Album", coverArt: "https://i.scdn.co/image/ab67616d0000b2738940ac99f49e44f59e6f7fb3")))
-                .previewDisplayName("With Song Selected")
+            DailySongView(song: Song(id: "1", title: "See you again (feat. Kali Uchis)", artist: "Tyler, The Creator, Kali Uchis", album: "Example Album", coverArt: "https://i.scdn.co/image/ab67616d0000b2738940ac99f49e44f59e6f7fb3"), isSongFromDaily: true)
+               // .previewDisplayName("With Song Selected")
         }
     }
 }
+
+

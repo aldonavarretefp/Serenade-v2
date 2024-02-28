@@ -15,7 +15,7 @@ struct FeedView: View {
     
     // MARK: - Variables
     // Check if the daily is already posted
-    @State var isDailyPosted: Bool = true
+    @State var isDailyPosted: Bool = false
     
     // Variables to hide/show the header
     @State var headerHeight: CGFloat = 0
@@ -27,6 +27,7 @@ struct FeedView: View {
     // Opacity variables for the button and the header
     @State var headerOpacity: Double = 1.0
     @State var dailyButtonOpacity: Double = 1.0
+    @State var isDailySheetOpened: Bool = false
     
     // Posts array to see some hardcoded posts
     let posts: [PostView] = [
@@ -186,9 +187,12 @@ struct FeedView: View {
                 // If the daily post has not yet been made, show the button to do it
                 if !isDailyPosted {
                     ActionButton(label: "Share daily song", symbolName: "waveform", fontColor: .white, backgroundColor: .purple, isShareDaily: true, isDisabled: false) {
-                        print("Daily button tapped")
+                        isDailySheetOpened.toggle()
                     }
                     .opacity(dailyButtonOpacity)
+                    .fullScreenCover(isPresented: $isDailySheetOpened){
+                        DailySongView(isSongFromDaily: true )
+                    }
                     .padding()
                 }
             }
