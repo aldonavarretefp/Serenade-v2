@@ -54,7 +54,7 @@ struct PreviewPlayer: View {
                         .background(
                             ZStack(alignment: .leading){
                                 // Rectangle used as background
-                                fontColor
+                                secondaryColor
                                     .opacity(0.1)
                                 
                                 // Fill the rectanble background depending on the time of the song
