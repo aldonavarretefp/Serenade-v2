@@ -10,7 +10,7 @@ import CloudKit
 
 enum UserRecordKeys: String {
     case type = "User"
-    case id
+    case accountID
     case name
     case tagName
     case email
@@ -21,8 +21,8 @@ enum UserRecordKeys: String {
     case isActive
 }
 
-struct User: Identifiable, Hashable, CloudKitableProtocol {
-    var id: String?
+struct User: Hashable, CloudKitableProtocol {
+    var accountID: CKRecord.Reference?
     var name: String
     var tagName: String
     var email: String
@@ -35,7 +35,7 @@ struct User: Identifiable, Hashable, CloudKitableProtocol {
 
 extension User {
     init?(record: CKRecord) {
-        guard let id = record[UserRecordKeys.id.rawValue] as? String,
+        guard let accountID = record[UserRecordKeys.accountID.rawValue] as? CKRecord.Reference,
               let name = record[UserRecordKeys.name.rawValue] as? String,
               let tagName = record[UserRecordKeys.tagName.rawValue] as? String,
               let email = record[UserRecordKeys.email.rawValue] as? String,
@@ -47,14 +47,14 @@ extension User {
             return nil
         }
         
-        self.init(id: id, name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive)
+        self.init(accountID: accountID,name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive)
     }
 }
 
 extension User {
     var record: CKRecord {
         let record = CKRecord(recordType: UserRecordKeys.type.rawValue)
-        record[UserRecordKeys.id.rawValue] = id
+        record[UserRecordKeys.accountID.rawValue] = accountID
         record[UserRecordKeys.name.rawValue] = name
         record[UserRecordKeys.tagName.rawValue] = tagName
         record[UserRecordKeys.email.rawValue] = email
@@ -63,7 +63,6 @@ extension User {
         record[UserRecordKeys.streak.rawValue] = streak
         record[UserRecordKeys.profilePicture.rawValue] = profilePicture
         record[UserRecordKeys.isActive.rawValue] = isActive
-        
         return record
         
     }

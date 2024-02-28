@@ -16,6 +16,5 @@ struct serenadev2App: App {
             ContentView()
                 .environmentObject(userViewModel)
         }
-    
     }
 }

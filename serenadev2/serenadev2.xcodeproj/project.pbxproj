@@ -35,7 +35,6 @@
 		EA9BC9F62B87960900292705 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9BC9F52B87960900292705 /* ProfileView.swift */; };
 		F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2322B839A82006264C1 /* serenadev2App.swift */; };
 		F137D2352B839A82006264C1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2342B839A82006264C1 /* ContentView.swift */; };
-		F137D2372B839A82006264C1 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2362B839A82006264C1 /* Item.swift */; };
 		F137D2392B839A84006264C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F137D2382B839A84006264C1 /* Assets.xcassets */; };
 		F137D23C2B839A84006264C1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F137D23B2B839A84006264C1 /* Preview Assets.xcassets */; };
 		F137D2482B839A84006264C1 /* serenadev2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2472B839A84006264C1 /* serenadev2Tests.swift */; };
@@ -96,7 +95,6 @@
 		F137D22F2B839A82006264C1 /* serenadev2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = serenadev2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F137D2322B839A82006264C1 /* serenadev2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2App.swift; sourceTree = "<group>"; };
 		F137D2342B839A82006264C1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		F137D2362B839A82006264C1 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		F137D2382B839A84006264C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F137D23B2B839A84006264C1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F137D23D2B839A84006264C1 /* serenadev2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = serenadev2.entitlements; sourceTree = "<group>"; };
@@ -236,7 +234,6 @@
 				EA9BC9E22B83A28D00292705 /* Components */,
 				F137D2322B839A82006264C1 /* serenadev2App.swift */,
 				F137D2342B839A82006264C1 /* ContentView.swift */,
-				F137D2362B839A82006264C1 /* Item.swift */,
 				F137D2382B839A84006264C1 /* Assets.xcassets */,
 				F137D23D2B839A84006264C1 /* serenadev2.entitlements */,
 				F137D23E2B839A84006264C1 /* Info.plist */,
@@ -455,7 +452,6 @@
 				F7F928622B878D8E00050926 /* UserViewModel.swift in Sources */,
 				C40C09AF2B863BF8009BE4C5 /* SongDetailTitleInfo.swift in Sources */,
 				C40C09B32B863C49009BE4C5 /* SongDetailView.swift in Sources */,
-				F137D2372B839A82006264C1 /* Item.swift in Sources */,
 				E0F6F8352B879D11009B35B1 /* BrandsGrid.swift in Sources */,
 				E0F6F8332B879BAC009B35B1 /* BrandButton.swift in Sources */,
 				EA9BC9EC2B8501ED00292705 /* PostView.swift in Sources */,

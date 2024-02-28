@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct ContentView: View {
     
@@ -32,8 +33,8 @@ struct ContentView: View {
                 }
         }
         .task {
-            //userViewModel.createUser(user: User(id: "_207b96a29dba0d0a6b555c0c4b4e3d57", name: "diego", tagName: "x", email: "diego@gmail.com", friends: nil, posts: nil, streak: 100, profilePicture: "", isActive: true))
-            print(userViewModel.users)
+            //userViewModel.createUser(user: User(accountID: CKRecord.Reference(recordID: CKRecord.ID(recordName: "_207b96a29dba0d0a6b555c0c4b4e3d57"), action: .none),name: "diego", tagName: "x", email: "diego@gmail.com", friends: nil, posts: nil, streak: 100, profilePicture: "", isActive: true))
+            //print(userViewModel.users)
         }
         
 //        VStack(spacing: 0){
