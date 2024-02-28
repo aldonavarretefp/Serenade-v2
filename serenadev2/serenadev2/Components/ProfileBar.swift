@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-var sebastian = User(id: "id", name: "Sebastian Leon", email: "mail@domain.com", friends: ["1", "2", "3"], posts: ["1", "2", "3", "4", "5"], streak: 15, profilePicture: "", notifications: [""], isActive: true, tagName: "sebatoo", friendRequestsSent: [""], friendRequestsReceived: [""])
+var sebastian = User(name: "Sebastian Leon", email: "mail@domain.com", streak: 15, profilePicture: "", isActive: true, tagName: "sebatoo")
 
 struct ProfileBar: View {
     
@@ -100,11 +100,11 @@ struct ProfileBar: View {
                     }
                     HStack {
                         VStack {
-                            Text(String(user.posts.count))
+                            
                             Text("Posts")
                         }
                         VStack {
-                            Text(String(user.friends.count))
+                            
                             Text("Friends")
                         }
                         .padding(.horizontal)
