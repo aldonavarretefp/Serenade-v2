@@ -44,7 +44,7 @@ struct SongDetailView: View {
                     Spacer()
                     
                     // View to play the preview of the passed song
-                    PreviewPlayer(mainColor: Color(song.bgColor!), audioURL: song.previewUrl!, seconds: seconds)
+                    PreviewPlayer(mainColor: Color(song.bgColor!), audioURL: song.previewUrl!, fontColor: Color(song.priColor!), secondaryColor: Color(song.secColor!), seconds: seconds)
                     
                     Spacer()
                     
