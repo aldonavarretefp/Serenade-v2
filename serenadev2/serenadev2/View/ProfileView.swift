@@ -29,29 +29,23 @@ struct ProfileView: View {
                     
                     ScrollView (.vertical, showsIndicators: false){
                         VStack(spacing: 15) {
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
+                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(
+                                id: "1",
+                                title: "Robbers",
+                                artists: "The 1975",
+                                artworkUrlSmall: URL(string: "https://example.com/small.jpg"),
+                                artworkUrlLarge: URL(string: "https://is5-ssl.mzstatic.com/image/thumb/Music124/v4/f4/bc/71/f4bc7194-a92a-8f73-1b81-154adc503ecb/00602537497119.rgb.jpg/1500x1500bb.jpg"),
+                                bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
+                                priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),
+                                secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
+                                terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
+                                quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
+                                previewUrl: URL(string: "https://example.com/preview.mp3"),
+                                duration: 295.502,
+                                composerName: "Greg Kurstin & Adele Adkins",
+                                genreNames: ["Pop"],
+                                releaseDate: Date(timeIntervalSince1970: 1445558400))), profileImg: "AfterHourCoverArt")
                             
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-                            
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-                            
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-                            
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-                            
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-                            
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-                            
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-                            
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-                            
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-                            
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
                         }
                         .padding(.top, headerHeight)
                         .padding(.bottom)
@@ -102,11 +96,11 @@ struct ProfileView: View {
                         ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: sebastian)
                             .opacity(headerOpacity)
                             .padding(.top, safeArea().top)
-//                            .background(colorScheme == .dark ? .black : .white)
+                        //                            .background(colorScheme == .dark ? .black : .white)
                             .padding(.bottom)
                             .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
-                            
-                            // Get the header height
+                        
+                        // Get the header height
                             .overlayPreferenceValue(HeaderBoundsKey.self){ value in
                                 GeometryReader{ proxy in
                                     if let anchor = value {

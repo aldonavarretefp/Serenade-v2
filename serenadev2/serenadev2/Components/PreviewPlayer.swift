@@ -94,7 +94,8 @@ struct PreviewPlayer: View {
             }
             
             // Configure the AVPlayer with the audio URL
-            let playerItem = AVPlayerItem(url: self.audioURL)
+//            let playerItem = AVPlayerItem(url: self.audioURL)
+            let playerItem = AVPlayerItem(url: audioURL)
             playerItem.seek(to: initialTime, completionHandler: nil)
             playerItem.forwardPlaybackEndTime = endTime
             self.player.replaceCurrentItem(with: playerItem)
@@ -120,7 +121,9 @@ struct PreviewPlayer: View {
                     } else {
                         // Restart playback from the beginning
                         player.seek(to: self.initialTime, toleranceBefore: .zero, toleranceAfter: .zero) { _ in
-                            seconds = 0
+                            withAnimation{
+                                seconds = 0
+                            }
                             self.isPlaying = false
                             self.stopTimer()
                             self.player.pause()
