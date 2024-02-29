@@ -59,7 +59,7 @@ struct SongDetailView: View {
                     }
                     
                     // Info of the passed song
-                    SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff)){
+                    SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff), isMetaDataDisplayed: metaDataOpacity == 0.0 ? false : true){
                         withAnimation {
                             metaDataOpacity = metaDataOpacity == 0.0 ? 1.0 : 0.0
                         }

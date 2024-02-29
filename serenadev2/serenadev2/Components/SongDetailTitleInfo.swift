@@ -13,6 +13,7 @@ struct SongDetailTitleInfo: View {
     var title: String
     var author: String
     var fontColor: Color
+    var isMetaDataDisplayed: Bool
     var receivedAction: () -> Void
     
     // MARK: - Body
@@ -40,7 +41,12 @@ struct SongDetailTitleInfo: View {
                     .font(.title3)
             }
             .buttonStyle(.plain)
+            .padding(5)
+            .background(isMetaDataDisplayed ? .white : .clear)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
             .padding([.leading, .top, .bottom])
+            .foregroundStyle(isMetaDataDisplayed ? .black : .white)
+            
         }
         .padding(.horizontal)
         .foregroundStyle(fontColor)
@@ -48,7 +54,7 @@ struct SongDetailTitleInfo: View {
 }
 
 #Preview {
-    SongDetailTitleInfo(title: "Save your tears", author: "The weeknd", fontColor: .white){
+    SongDetailTitleInfo(title: "Save your tears", author: "The weeknd", fontColor: .white, isMetaDataDisplayed: false){
         print("Hello")
     }
 }
