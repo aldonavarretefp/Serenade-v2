@@ -71,7 +71,7 @@ struct SearchView: View {
                     .frame(height: 50)
                     
                     ScrollView {
-                        LazyVStack(spacing: 0) {
+                        VStack(spacing: 0) {
                             ForEach(filteredResults) { value in
                                 
                                 ItemSmall(item: value, showArrow: false)
