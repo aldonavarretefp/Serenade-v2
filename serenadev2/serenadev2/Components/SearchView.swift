@@ -30,6 +30,7 @@ struct SearchView: View {
     ]
     
     var body: some View {
+        
         NavigationStack {
             GeometryReader { geometry in
                 VStack(spacing: 0) {
