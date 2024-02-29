@@ -45,7 +45,7 @@ extension Post {
             let postType = TypeRec(rawValue: postTypeString),
             let sender = record[PostRecordKeys.sender.rawValue] as? CKRecord.Reference,
             let receiver = record[PostRecordKeys.receiver.rawValue] as? CKRecord.Reference?,
-            let caption = record[PostRecordKeys.caption.rawValue] as? String,
+            let caption = record[PostRecordKeys.caption.rawValue] as? String?,
             let songId = record[PostRecordKeys.songId.rawValue] as? String,
             let date = record[PostRecordKeys.date.rawValue] as? Date,
             let isAnonymous = record[PostRecordKeys.isAnonymous.rawValue] as? Bool,

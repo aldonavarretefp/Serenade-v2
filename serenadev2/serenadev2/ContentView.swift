@@ -32,6 +32,15 @@ struct ContentView: View {
                     Label("Profile", systemImage: "person.fill")
                 }
         }
+        .task {
+            userViewModel.fetchUserFromAccountID(accountID: CKRecord.ID(recordName: "_af000b8fe1c7918a2f1594aa3b366436")) { returnedUser in
+                if let user = returnedUser {
+                        print(user)
+                    } else {
+                        print("Error")
+                    }
+            }
+        }
     }
 }
 

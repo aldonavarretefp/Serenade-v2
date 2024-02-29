@@ -35,7 +35,7 @@ struct User: Hashable, CloudKitableProtocol {
 
 extension User {
     init?(record: CKRecord) {
-        guard let accountID = record[UserRecordKeys.accountID.rawValue] as? CKRecord.Reference,
+        guard let accountID = record[UserRecordKeys.accountID.rawValue] as? CKRecord.Reference?,
               let name = record[UserRecordKeys.name.rawValue] as? String,
               let tagName = record[UserRecordKeys.tagName.rawValue] as? String,
               let email = record[UserRecordKeys.email.rawValue] as? String,

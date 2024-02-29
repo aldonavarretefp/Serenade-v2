@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct PostView: View {
-    
+    var body: some View {
+        Text("")
+    }
+/*
     @Environment(\.colorScheme) var colorScheme
     @State var isSongInfoDisplayed: Bool = false
     @EnvironmentObject var userViewModel: UserViewModel
@@ -107,6 +110,7 @@ struct PostView: View {
         }
         .font(.subheadline)
     }
+ */
 }
 
 //#Preview {

@@ -59,11 +59,6 @@ class UserViewModel: ObservableObject {
             
             } receiveValue: { [weak self] returnedID in
                 self?.userID = returnedID
-                // AQUI CAMBIEN
-                guard let userID = self?.userID else { return }
-                print(userID)
-                let reference = CKRecord.Reference(recordID: userID, action: .none)
-                self?.createUser(user: User(accountID: reference,name: "Aldo Navarrete", tagName: "hello", email: "aaldiitoo@gmail.com", streak: 10, profilePicture: "", isActive: true))
                 self?.fetchMainUser()
             }
             .store(in: &cancellables)
@@ -81,17 +76,7 @@ class UserViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 
-            } receiveValue: { [weak self] (returnedUsers: [User]?) in 
-                // If user does not exist, create a new user
-                guard let returnedUsersArray = returnedUsers else { return }
-                if returnedUsersArray.isEmpty {
-                    let newUser = User(accountID: CKRecord.Reference(recordID: userID, action: .none), name: "New User", tagName: "newuser", email: "newUser@gmail.com", streak: 0, profilePicture: "", isActive: true)
-                    
-                    
-                    self?.createUser(user: newUser)
-                    self?.user = newUser
-                    return 
-                } 
+            } receiveValue: { [weak self] (returnedUsers: [User]?) in
                 let users: [User]? = returnedUsers
                 guard let user = users?[0] else { return }
                 self?.user = user
@@ -101,24 +86,24 @@ class UserViewModel: ObservableObject {
     
     //MARK: CRUD Functions
     
-    func fetchUserFromAccountID(accountID: CKRecord.ID) -> User?{
-        guard let userID = self.userID else {return nil}
-        let recordToMatch = CKRecord.Reference(recordID: userID, action: .none)
+    func fetchUserFromAccountID(accountID: CKRecord.ID, completion: @escaping (User?) -> Void) {
+        let recordToMatch = CKRecord.Reference(recordID: accountID, action: .none)
         let predicate = NSPredicate(format: "accountID == %@ && isActive == 1", recordToMatch)
         let recordType = UserRecordKeys.type.rawValue
-        print(recordType)
-        var user: User? = nil
+
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
             .receive(on: DispatchQueue.main)
             .sink { _ in
-                
+                completion(nil) // Llamada asincrónica fallida, devolver nil
             } receiveValue: { returnedUsers in
                 let users: [User]? = returnedUsers
-                guard let userR = users?[0] else { return }
-                user = userR
+                guard let userR = users?[0] else {
+                    completion(nil) // Llamada asincrónica exitosa pero sin usuarios devueltos
+                    return
+                }
+                completion(userR) // Llamada asincrónica exitosa con usuario devuelto
             }
             .store(in: &cancellables)
-        return user
     }
     
     func createUser(user: User){
