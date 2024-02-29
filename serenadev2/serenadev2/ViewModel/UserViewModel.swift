@@ -94,7 +94,7 @@ class UserViewModel: ObservableObject {
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
             .receive(on: DispatchQueue.main)
             .sink { _ in
-                completion(nil) // Llamada asincrónica fallida, devolver nil
+                //completion(nil) // Llamada asincrónica fallida, devolver nil
             } receiveValue: { returnedUsers in
                 let users: [User]? = returnedUsers
                 guard let userR = users?[0] else {
@@ -140,8 +140,7 @@ class UserViewModel: ObservableObject {
         self.user = nil
     }
     
-    func searchFriends(tagname: String) -> [User]? {
-        var friends: [User]? = nil
+    func searchUsers(tagname: String, completion: @escaping ([User]?) -> Void) {
         let predicate = NSPredicate(format: "tagname == %@", tagname)
         let recordType = UserRecordKeys.type.rawValue
 
@@ -150,11 +149,14 @@ class UserViewModel: ObservableObject {
             .sink { _ in
                 
             } receiveValue: { returnedUsers in
-                friends = returnedUsers
+                let friends: [User]? = returnedUsers
+                guard let friendss = friends else {
+                    completion(nil)
+                    return
+                }
+                completion(friendss)
             }
             .store(in: &cancellables)
-        
-        return friends
     }
     
     // TODO

@@ -33,12 +33,19 @@ struct ContentView: View {
                 }
         }
         .task {
-            userViewModel.fetchUserFromAccountID(accountID: CKRecord.ID(recordName: "_af000b8fe1c7918a2f1594aa3b366436")) { returnedUser in
-                if let user = returnedUser {
-                        print(user)
-                    } else {
-                        print("Error")
-                    }
+//            userViewModel.fetchUserFromAccountID(accountID: CKRecord.ID(recordName: "_4be12f743d4fce557a754ffe697f5908")) { returnedUser in
+//                if let user = returnedUser {
+//                    print(user)
+//                } else {
+//                    print("Error")
+//                }
+//            }
+            userViewModel.searchUsers(tagname: "sebatoo") { friends in
+                if let friendss = friends {
+                    print(friendss)
+                } else {
+                    print("Error")
+                }
             }
         }
     }
