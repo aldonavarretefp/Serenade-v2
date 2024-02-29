@@ -64,27 +64,76 @@ struct PostView: View {
                         .padding(.top, 2)
                         .padding(.bottom, 2)
                 }
-                Image("") //MISSING MAKE ASYNC!
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 95)
-                    .blur(radius: 20.0)
-                    .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                
+                // Back card song cover art
+                AsyncImage(url: post.song?.artworkUrlSmall, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                    switch phase {
+                    case .empty:
+                        Rectangle()
+                            .fill(Color((post.song?.bgColor)!))
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                            .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                    case .failure(_):
+                        Rectangle()
+                            .fill(Color((post.song?.bgColor)!))
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                    default:
+                        Rectangle()
+                            .fill(Color((post.song?.bgColor)!))
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                    }
+                }
             }
             ZStack(alignment: .leading) {
                 UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0))
-                    // .fill((post.song?.color.opacity(0.5))!) Try adding the color of each album
+//                    .fill(Color((post.song?.bgColor)!).opacity(0.5))
                     .fill(.card.opacity(0.7))
                     .frame(height: 95)
                 
                 HStack {
-                    
-                    Image("") //MISSING MAKE ASYNC!
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 70, height: 70)
-                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                        .padding()
+                    AsyncImage(url: post.song?.artworkUrlSmall, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                        switch phase {
+                        case .empty:
+                            Rectangle()
+                                .fill(Color((post.song?.bgColor)!))
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                                .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                        case .failure(_):
+                            Rectangle()
+                                .fill(Color((post.song?.bgColor)!))
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                        default:
+                            Rectangle()
+                                .fill(Color((post.song?.bgColor)!))
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                        }
+                    }
                     
                     
                     VStack(alignment: .leading) {

@@ -22,12 +22,36 @@ struct DailyPosted: View {
         HStack{
             
             // Art work of the passed song
-            Image("") //MISSING
-                .resizable()
-                .frame(width: 50, height: 50)
-                .scaledToFit()
-                .clipShape(RoundedRectangle(cornerRadius: 5))
-                .padding(.trailing, 5)
+            AsyncImage(url: song.artworkUrlSmall, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                switch phase {
+                case .empty:
+                    Rectangle()
+                        .fill(Color((song.bgColor)!))
+                        .frame(width: 50, height: 50)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .padding(.trailing, 5)
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .padding(.trailing, 5)
+                        .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                case .failure(_):
+                    Rectangle()
+                        .fill(Color((song.bgColor)!))
+                        .frame(width: 50, height: 50)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .padding(.trailing, 5)
+                default:
+                    Rectangle()
+                        .fill(Color((song.bgColor)!))
+                        .frame(width: 50, height: 50)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .padding(.trailing, 5)
+                }
+            }
             
             VStack(alignment: .leading){
                 Text("Your daily song")
