@@ -92,6 +92,7 @@ class SearchViewModel: ObservableObject {
                                 terColor: $0.artwork?.tertiaryTextColor,
                                 quaColor: $0.artwork?.quaternaryTextColor,
                                 previewUrl:$0.previewAssets?[0].url,
+                                albumTitle: $0.albumTitle,
                                 duration: $0.duration,
                                 composerName: $0.composerName,
                                 genreNames: $0.genreNames,

@@ -20,9 +20,9 @@ struct SongModel: Identifiable, Hashable {
     let terColor: CGColor?
     let quaColor: CGColor?
     let previewUrl: URL?
+    let albumTitle: String?
     let duration: TimeInterval?
     let composerName: String?
     let genreNames: [String]
     let releaseDate: Date?
-    
 }
