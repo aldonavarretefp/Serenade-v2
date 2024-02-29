@@ -17,8 +17,13 @@ struct SongDetailView: View {
     var song: SongModel
     var seconds: Double = 15.0
     
+    @State var metaDataOpacity = 0.0
+    
     // MARK: - Body
     var body: some View {
+        
+        let screenWidth = UIScreen.main.bounds.width
+        
         NavigationStack{
             ZStack{
                 
@@ -36,10 +41,29 @@ struct SongDetailView: View {
                 
                 VStack{
                     // Art work of the passed song
-                    SongDetailCoverArt(coverArt: song.artworkUrlLarge!, mainColor: Color(song.bgColor!))
+                    ZStack{
+                        SongDetailCoverArt(coverArt: song.artworkUrlLarge!, mainColor: Color(song.bgColor!))
+                        
+                        ZStack{
+                            Rectangle()
+                                .fill(Color(song.bgColor!).opacity(0.7))
+                                .background(.ultraThinMaterial)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                            
+                            SongMetaData(song: song)
+                                .padding(.top, 10)
+                        }
+                        .frame(height: screenWidth - 32)
+                        .padding(.horizontal)
+                        .opacity(metaDataOpacity)
+                    }
                     
                     // Info of the passed song
-                    SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff))
+                    SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff)){
+                        withAnimation {
+                            metaDataOpacity = metaDataOpacity == 0.0 ? 1.0 : 0.0
+                        }
+                    }
                     
                     Spacer()
                     
@@ -65,6 +89,7 @@ struct SongDetailView: View {
                     
                 }
             }
+            .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar{
                 // Add the xmark at top trailing
                 ToolbarItem(placement: .topBarTrailing){
@@ -97,7 +122,7 @@ struct SongDetailView: View {
         secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
         terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
         quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
-        previewUrl: URL(string: "https://example.com/preview.mp3"),
+        previewUrl: URL(string: "https://example.com/preview.mp3"), albumTitle: "The 1975",
         duration: 295.502,
         composerName: "Greg Kurstin & Adele Adkins",
         genreNames: ["Pop"],
