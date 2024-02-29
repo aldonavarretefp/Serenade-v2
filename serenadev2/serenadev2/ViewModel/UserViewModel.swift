@@ -21,6 +21,7 @@ class UserViewModel: ObservableObject {
         getiCloudStatus()
         requestPermission()
         fetchMainUserIDFromiCloud()
+        
     }
     
     //MARK: iCloud Connection
@@ -58,6 +59,11 @@ class UserViewModel: ObservableObject {
             
             } receiveValue: { [weak self] returnedID in
                 self?.userID = returnedID
+                // AQUI CAMBIEN
+                guard let userID = self?.userID else { return }
+                print(userID)
+                let reference = CKRecord.Reference(recordID: userID, action: .none)
+                self?.createUser(user: User(accountID: reference,name: "Aldo Navarrete", tagName: "hello", email: "aaldiitoo@gmail.com", streak: 10, profilePicture: "", isActive: true))
                 self?.fetchMainUser()
             }
             .store(in: &cancellables)
@@ -75,7 +81,17 @@ class UserViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 
-            } receiveValue: { [weak self] returnedUsers in
+            } receiveValue: { [weak self] (returnedUsers: [User]?) in 
+                // If user does not exist, create a new user
+                guard let returnedUsersArray = returnedUsers else { return }
+                if returnedUsersArray.isEmpty {
+                    let newUser = User(accountID: CKRecord.Reference(recordID: userID, action: .none), name: "New User", tagName: "newuser", email: "newUser@gmail.com", streak: 0, profilePicture: "", isActive: true)
+                    
+                    
+                    self?.createUser(user: newUser)
+                    self?.user = newUser
+                    return 
+                } 
                 let users: [User]? = returnedUsers
                 guard let user = users?[0] else { return }
                 self?.user = user

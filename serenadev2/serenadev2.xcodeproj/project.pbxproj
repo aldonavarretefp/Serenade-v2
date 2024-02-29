@@ -40,10 +40,13 @@
 		F137D2482B839A84006264C1 /* serenadev2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2472B839A84006264C1 /* serenadev2Tests.swift */; };
 		F137D2522B839A84006264C1 /* serenadev2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2512B839A84006264C1 /* serenadev2UITests.swift */; };
 		F137D2542B839A84006264C1 /* serenadev2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */; };
-		F1B4ED6A2B8FCF58007F2C4F /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B4ED692B8FCF58007F2C4F /* PostViewModel.swift */; };
 		F1FC0FD82B8E1DB300FD50CB /* CloudKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FC0FD72B8E1DB300FD50CB /* CloudKitUtility.swift */; };
+		F709F6C22B90CA0000B60216 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F709F6C12B90CA0000B60216 /* PostViewModel.swift */; };
 		F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */; };
 		F7207CA22B85055D00E383E6 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207CA12B85055D00E383E6 /* UserService.swift */; };
+		F7AE69222B90B45E003C6A7C /* SongViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69212B90B45E003C6A7C /* SongViewModel.swift */; };
+		F7AE69252B90B5C5003C6A7C /* FriendRequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */; };
+		F7AE69272B90B61A003C6A7C /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69262B90B61A003C6A7C /* FriendRequest.swift */; };
 		F7F9285E2B878AAF00050926 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F9285D2B878AAF00050926 /* SongService.swift */; };
 		F7F928622B878D8E00050926 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F928612B878D8E00050926 /* UserViewModel.swift */; };
 		F7F928652B879FAF00050926 /* MockedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F928642B879FAF00050926 /* MockedUser.swift */; };
@@ -105,12 +108,15 @@
 		F137D24D2B839A84006264C1 /* serenadev2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = serenadev2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F137D2512B839A84006264C1 /* serenadev2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITests.swift; sourceTree = "<group>"; };
 		F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITestsLaunchTests.swift; sourceTree = "<group>"; };
-		F1B4ED692B8FCF58007F2C4F /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		F1FC0FD72B8E1DB300FD50CB /* CloudKitUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitUtility.swift; sourceTree = "<group>"; };
+		F709F6C12B90CA0000B60216 /* PostViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitConfig.swift; sourceTree = "<group>"; };
 		F7207CA12B85055D00E383E6 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		F7AE69212B90B45E003C6A7C /* SongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SongViewModel.swift; path = serenadev2/ViewModel/SongViewModel.swift; sourceTree = SOURCE_ROOT; };
+		F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsViewModel.swift; sourceTree = "<group>"; };
+		F7AE69262B90B61A003C6A7C /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		F7F9285D2B878AAF00050926 /* SongService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongService.swift; sourceTree = "<group>"; };
-		F7F928612B878D8E00050926 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserViewModel.swift; path = serenadev2/Model/UserViewModel.swift; sourceTree = SOURCE_ROOT; };
+		F7F928612B878D8E00050926 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserViewModel.swift; path = serenadev2/ViewModel/UserViewModel.swift; sourceTree = SOURCE_ROOT; };
 		F7F928642B879FAF00050926 /* MockedUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockedUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -168,21 +174,13 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
-		EA9BC9E32B83A29F00292705 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				F7F928612B878D8E00050926 /* UserViewModel.swift */,
-				F1B4ED692B8FCF58007F2C4F /* PostViewModel.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
 		EA9BC9E42B83A2AD00292705 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				EA9BC9EF2B87861C00292705 /* Post.swift */,
 				EA9BC9F12B87861C00292705 /* Song.swift */,
 				EA9BC9F02B87861C00292705 /* User.swift */,
+				F7AE69262B90B61A003C6A7C /* FriendRequest.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -226,6 +224,7 @@
 		F137D2312B839A82006264C1 /* serenadev2 */ = {
 			isa = PBXGroup;
 			children = (
+				F7AE69232B90B586003C6A7C /* ViewModel */,
 				F1FC0FD62B8E1D6B00FD50CB /* Utilities */,
 				F7F928632B879FA400050926 /* Mock */,
 				C40C09B42B863C82009BE4C5 /* ViewExtensions */,
@@ -233,7 +232,6 @@
 				F7207C9B2B84E4A200E383E6 /* Service */,
 				EA9BC9E52B83A2B300292705 /* View */,
 				EA9BC9E42B83A2AD00292705 /* Model */,
-				EA9BC9E32B83A29F00292705 /* ViewModel */,
 				EA9BC9E22B83A28D00292705 /* Components */,
 				F137D2322B839A82006264C1 /* serenadev2App.swift */,
 				F137D2342B839A82006264C1 /* ContentView.swift */,
@@ -295,9 +293,21 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		F7AE69232B90B586003C6A7C /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				F7F928612B878D8E00050926 /* UserViewModel.swift */,
+				F7AE69212B90B45E003C6A7C /* SongViewModel.swift */,
+				F709F6C12B90CA0000B60216 /* PostViewModel.swift */,
+				F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		F7F9285A2B865E4800050926 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
+				F1B4ED692B8FCF58007F2C4F /* PostViewModel.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -440,9 +450,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F709F6C22B90CA0000B60216 /* PostViewModel.swift in Sources */,
 				E0F6F8372B879FC5009B35B1 /* OpenWithView.swift in Sources */,
 				EA9BC9F42B87861C00292705 /* Song.swift in Sources */,
 				F7F928652B879FAF00050926 /* MockedUser.swift in Sources */,
+				F7AE69272B90B61A003C6A7C /* FriendRequest.swift in Sources */,
 				F137D2352B839A82006264C1 /* ContentView.swift in Sources */,
 				EA9BC9F62B87960900292705 /* ProfileView.swift in Sources */,
 				EA9BC9E82B83A44800292705 /* ProfileBar.swift in Sources */,
@@ -464,10 +476,11 @@
 				EA9BC9F32B87861C00292705 /* User.swift in Sources */,
 				C402E7D72B8CD42D004EC79C /* CustomTabBar.swift in Sources */,
 				C402E7DD2B8CD4E7004EC79C /* FeedView.swift in Sources */,
-				F1B4ED6A2B8FCF58007F2C4F /* PostViewModel.swift in Sources */,
 				EA9BC9EA2B84EF8100292705 /* UnfriendSheet.swift in Sources */,
+				F7AE69222B90B45E003C6A7C /* SongViewModel.swift in Sources */,
 				C49B42122B87869800FD66F9 /* SearchView.swift in Sources */,
 				C40C09B62B863CA2009BE4C5 /* Extensions.swift in Sources */,
+				F7AE69252B90B5C5003C6A7C /* FriendRequestsViewModel.swift in Sources */,
 				EA9BC9F22B87861C00292705 /* Post.swift in Sources */,
 				F7207CA22B85055D00E383E6 /* UserService.swift in Sources */,
 				F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */,
