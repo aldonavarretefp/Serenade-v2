@@ -33,7 +33,7 @@ struct ContentView: View {
                 }
         }
         .task {
-            //userViewModel.createUser(user: User(accountID: CKRecord.Reference(recordID: CKRecord.ID(recordName: "_207b96a29dba0d0a6b555c0c4b4e3d57"), action: .none),name: "diego", tagName: "x", email: "diego@gmail.com", friends: nil, posts: nil, streak: 100, profilePicture: "", isActive: true))
+            userViewModel.createUser(user: User(name: "diego", tagName: "x", email: "diego@gmail.com", friends: nil, posts: nil, streak: 100, profilePicture: "", isActive: true))
             //print(userViewModel.users)
         }
         

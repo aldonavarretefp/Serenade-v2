@@ -9,7 +9,6 @@ import Foundation
 import CloudKit
 import Combine
 
-
 class UserViewModel: ObservableObject {
     @Published var user: User?
     @Published var permissionStatus: Bool = false
@@ -21,9 +20,10 @@ class UserViewModel: ObservableObject {
     init(){
         getiCloudStatus()
         requestPermission()
-        fetchUserIDFromiCloud()
+        fetchMainUserIDFromiCloud()
     }
     
+    //MARK: iCloud Connection
     private func getiCloudStatus() {
         CloudKitUtility.getiCloudStatus()
             .receive(on: DispatchQueue.main)
@@ -51,28 +51,26 @@ class UserViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func createUser(user: User){
-        CloudKitUtility.add(item: user) { _ in }
-    }
-    
-    private func fetchUserIDFromiCloud(){
+    private func fetchMainUserIDFromiCloud(){
         CloudKitUtility.discoverUserID()
             .receive(on: DispatchQueue.main)
             .sink { _ in
             
             } receiveValue: { [weak self] returnedID in
                 self?.userID = returnedID
-                self?.fetchUser()
+                self?.fetchMainUser()
             }
             .store(in: &cancellables)
     }
     
-    private func fetchUser(){
+    private func fetchMainUser(){
         guard let userID = self.userID else {return}
         let recordToMatch = CKRecord.Reference(recordID: userID, action: .none)
+        
         let predicate = NSPredicate(format: "accountID == %@ && isActive == 1", recordToMatch)
+        
         let recordType = UserRecordKeys.type.rawValue
-        print(recordType)
+        
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
             .receive(on: DispatchQueue.main)
             .sink { _ in
@@ -83,6 +81,34 @@ class UserViewModel: ObservableObject {
                 self?.user = user
             }
             .store(in: &cancellables)
+    }
+    
+    //MARK: CRUD Functions
+    
+    func fetchUserFromAccountID(accountID: CKRecord.ID) -> User?{
+        guard let userID = self.userID else {return nil}
+        let recordToMatch = CKRecord.Reference(recordID: userID, action: .none)
+        let predicate = NSPredicate(format: "accountID == %@ && isActive == 1", recordToMatch)
+        let recordType = UserRecordKeys.type.rawValue
+        print(recordType)
+        var user: User? = nil
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                
+            } receiveValue: { returnedUsers in
+                let users: [User]? = returnedUsers
+                guard let userR = users?[0] else { return }
+                user = userR
+            }
+            .store(in: &cancellables)
+        return user
+    }
+    
+    func createUser(user: User){
+        let recordToMatch = CKRecord.Reference(recordID: userID!, action: .none)
+        let newUser = User(accountID: recordToMatch, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive)
+        CloudKitUtility.add(item: newUser) { _ in }
     }
     
     func updateUser(newUser: User){
@@ -108,4 +134,35 @@ class UserViewModel: ObservableObject {
         user?.friends = newUserFriends
         updateUser(newUser: user!)
     }
+    
+    func logOut(){
+        self.user = nil
+    }
+    
+    func searchFriends(tagname: String) -> [User]? {
+        var friends: [User]? = nil
+        let predicate = NSPredicate(format: "tagname == %@", tagname)
+        let recordType = UserRecordKeys.type.rawValue
+
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                
+            } receiveValue: { returnedUsers in
+                friends = returnedUsers
+            }
+            .store(in: &cancellables)
+        
+        return friends
+    }
+    
+    // TODO
+    func sendFriendRequest(){
+        
+    }
+    
+    func cancelFriendRequest(){
+        
+    }
 }
+

@@ -64,6 +64,9 @@ extension User {
         record[UserRecordKeys.profilePicture.rawValue] = profilePicture
         record[UserRecordKeys.isActive.rawValue] = isActive
         return record
-        
+    }
+    
+    var id: String {
+        (accountID?.recordID.recordName)!
     }
 }

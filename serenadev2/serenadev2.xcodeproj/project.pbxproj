@@ -40,6 +40,7 @@
 		F137D2482B839A84006264C1 /* serenadev2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2472B839A84006264C1 /* serenadev2Tests.swift */; };
 		F137D2522B839A84006264C1 /* serenadev2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2512B839A84006264C1 /* serenadev2UITests.swift */; };
 		F137D2542B839A84006264C1 /* serenadev2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */; };
+		F1B4ED6A2B8FCF58007F2C4F /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B4ED692B8FCF58007F2C4F /* PostViewModel.swift */; };
 		F1FC0FD82B8E1DB300FD50CB /* CloudKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FC0FD72B8E1DB300FD50CB /* CloudKitUtility.swift */; };
 		F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */; };
 		F7207CA22B85055D00E383E6 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207CA12B85055D00E383E6 /* UserService.swift */; };
@@ -104,6 +105,7 @@
 		F137D24D2B839A84006264C1 /* serenadev2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = serenadev2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F137D2512B839A84006264C1 /* serenadev2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITests.swift; sourceTree = "<group>"; };
 		F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F1B4ED692B8FCF58007F2C4F /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		F1FC0FD72B8E1DB300FD50CB /* CloudKitUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitUtility.swift; sourceTree = "<group>"; };
 		F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitConfig.swift; sourceTree = "<group>"; };
 		F7207CA12B85055D00E383E6 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				F7F928612B878D8E00050926 /* UserViewModel.swift */,
+				F1B4ED692B8FCF58007F2C4F /* PostViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -461,6 +464,7 @@
 				EA9BC9F32B87861C00292705 /* User.swift in Sources */,
 				C402E7D72B8CD42D004EC79C /* CustomTabBar.swift in Sources */,
 				C402E7DD2B8CD4E7004EC79C /* FeedView.swift in Sources */,
+				F1B4ED6A2B8FCF58007F2C4F /* PostViewModel.swift in Sources */,
 				EA9BC9EA2B84EF8100292705 /* UnfriendSheet.swift in Sources */,
 				C49B42122B87869800FD66F9 /* SearchView.swift in Sources */,
 				C40C09B62B863CA2009BE4C5 /* Extensions.swift in Sources */,

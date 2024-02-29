@@ -9,6 +9,12 @@ import SwiftUI
 
 struct FeedView: View {
     
+    var body: some View {
+        var post: Post
+        Text("")
+    }
+    
+    /*
     // MARK: - Environment properties
     // Color scheme of the phone
     @Environment(\.colorScheme) var colorScheme
@@ -201,7 +207,7 @@ struct FeedView: View {
                 .ignoresSafeArea(edges: .top)
                 .frame(height: 0)
         }
-    }
+    } */
 }
 
 // MARK: - Swipe direction
@@ -214,3 +220,4 @@ enum SwipeDriection{
 #Preview {
     FeedView()
 }
+

@@ -9,6 +9,10 @@ import SwiftUI
 
 struct ProfileView: View {
     var body: some View {
+        Text("")
+    }
+    /*
+    var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
                 Color.viewBackground
@@ -31,6 +35,7 @@ struct ProfileView: View {
             }
         }
     }
+    */
 }
 
 #Preview {
