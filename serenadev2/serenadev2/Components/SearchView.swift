@@ -110,10 +110,12 @@ struct SearchView: View {
                 }
             }
             .searchable(text: $viewModel.searchText)
+            .disableAutocorrection(true)
         }
         .onChange(of: viewModel.searchText) {
             viewModel.fetchMusic(with: viewModel.searchText)
         }
+        
         .fullScreenCover(item: $selectedSong){ item in
             SongDetailView(song: item.song!)
         }

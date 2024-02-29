@@ -11,9 +11,11 @@ import AVKit
 struct PreviewPlayer: View {
     
     // MARK: - Init
-    init(mainColor: Color, audioURL: URL, seconds: Double = 15.0) {
+    init(mainColor: Color, audioURL: URL, fontColor: Color, secondaryColor: Color, seconds: Double = 15.0) {
         self.mainColor = mainColor
         self.audioURL = audioURL
+        self.fontColor = fontColor
+        self.secondaryColor = secondaryColor
         
         self.endTime = calculateEndTime(tiempo: seconds)
     }
@@ -26,6 +28,8 @@ struct PreviewPlayer: View {
     @State private var isPlaying = false
     var mainColor: Color
     var audioURL: URL
+    var fontColor: Color
+    var secondaryColor: Color
     @State private var seconds: Double = 0
     @State private var timer: Timer? = nil
     
@@ -50,11 +54,11 @@ struct PreviewPlayer: View {
                         .background(
                             ZStack(alignment: .leading){
                                 // Rectangle used as background
-                                mainColor.adjustedForContrast()
-                                    .opacity(0.2)
+                                secondaryColor
+                                    .opacity(0.1)
                                 
                                 // Fill the rectanble background depending on the time of the song
-                                mainColor.adjustedForContrast()
+                                secondaryColor.adjustedForContrast()
                                     .frame(width: CGFloat(seconds) / CGFloat(endTime.seconds) * 20)
                                 
                             }
@@ -62,11 +66,23 @@ struct PreviewPlayer: View {
                         .shadow(color: .black.opacity(0.13), radius: 25, x: 0, y: 8)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     
+//                    Image("player-lines-middle")
+//                        .renderingMode(.template)
+//                        .foregroundColor(mainColor)
+//                        .mask(
+//                            HStack{
+//                                Rectangle()
+//                                    .frame(width: (CGFloat(seconds) / CGFloat(endTime.seconds) * 20))
+//                                Spacer()
+//                            }
+//                        )
+//                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    
                     // Play / pause icon
                     Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
                         .font(.largeTitle)
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(mainColor.adjustedForContrast(), .white)
+                        .foregroundStyle(secondaryColor.adjustedForContrast(), .white)
                 }
                 .onTapGesture {
                     if self.isPlaying {
@@ -94,7 +110,6 @@ struct PreviewPlayer: View {
             }
             
             // Configure the AVPlayer with the audio URL
-//            let playerItem = AVPlayerItem(url: self.audioURL)
             let playerItem = AVPlayerItem(url: audioURL)
             playerItem.seek(to: initialTime, completionHandler: nil)
             playerItem.forwardPlaybackEndTime = endTime
@@ -148,5 +163,5 @@ struct PreviewPlayer: View {
 }
 
 #Preview {
-    PreviewPlayer(mainColor: Color(hex: 0x202020), audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, seconds: 15.0)
+    PreviewPlayer(mainColor: Color(hex: 0x202020), audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, fontColor: Color(hex: 0x000000), secondaryColor: Color(hex: 0x111111), seconds: 15.0)
 }

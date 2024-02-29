@@ -43,12 +43,19 @@ struct SongDetailCoverArt: View {
                         .scaleEffect(1.1)
                         .transition(.opacity.animation(.easeIn(duration: 0.5)))
                 case .failure(_):
-                    EmptyView()
+                    Rectangle()
+                        .fill(mainColor.opacity(0.5))
+                        .frame(width: screenWidth, height: screenWidth)
+                        .blur(radius: 30)
+                        .scaleEffect(1.1)
                 default:
-                    EmptyView()
+                    Rectangle()
+                        .fill(mainColor.opacity(0.5))
+                        .frame(width: screenWidth, height: screenWidth)
+                        .blur(radius: 30)
+                        .scaleEffect(1.1)
                 }
             }
-            
             
             // Front song cover art
             AsyncImage(url: coverArt, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
@@ -71,9 +78,15 @@ struct SongDetailCoverArt: View {
                         .padding()
                         .transition(.opacity.animation(.easeIn(duration: 0.5)))
                 case .failure(_):
-                    EmptyView()
+                    Rectangle()
+                        .fill(mainColor.opacity(0.8))
+                        .frame(width: screenWidth - 32, height: screenWidth - 32)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                 default:
-                    EmptyView()
+                    Rectangle()
+                        .fill(mainColor.opacity(0.8))
+                        .frame(width: screenWidth - 32, height: screenWidth - 32)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
         }
