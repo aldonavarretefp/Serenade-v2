@@ -98,7 +98,7 @@ struct DailyPosted: View {
         secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
         terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
         quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
-        previewUrl: URL(string: "https://example.com/preview.mp3"),
+        previewUrl: URL(string: "https://example.com/preview.mp3"), albumTitle: "",
         duration: 295.502,
         composerName: "Greg Kurstin & Adele Adkins",
         genreNames: ["Pop"],
