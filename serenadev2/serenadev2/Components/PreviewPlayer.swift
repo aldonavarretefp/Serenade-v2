@@ -66,18 +66,6 @@ struct PreviewPlayer: View {
                         .shadow(color: .black.opacity(0.13), radius: 25, x: 0, y: 8)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     
-//                    Image("player-lines-middle")
-//                        .renderingMode(.template)
-//                        .foregroundColor(mainColor)
-//                        .mask(
-//                            HStack{
-//                                Rectangle()
-//                                    .frame(width: (CGFloat(seconds) / CGFloat(endTime.seconds) * 20))
-//                                Spacer()
-//                            }
-//                        )
-//                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                    
                     // Play / pause icon
                     Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
                         .font(.largeTitle)

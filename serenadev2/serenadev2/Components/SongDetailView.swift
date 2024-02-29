@@ -17,16 +17,13 @@ struct SongDetailView: View {
     var song: SongModel
     var seconds: Double = 15.0
     
-    @State var metaDataOpacity = 0.0
+    @State var isMetaDataDisplayed = false
     
     // MARK: - Body
     var body: some View {
         
-        let screenWidth = UIScreen.main.bounds.width
-        
         NavigationStack{
             ZStack{
-                
                 // Gradients to add the art work color to the background
                 LinearGradient(gradient: Gradient(colors: [Color(song.bgColor!), Color(hex: 0x101010)]),
                                startPoint: .top,
@@ -41,29 +38,30 @@ struct SongDetailView: View {
                 
                 VStack{
                     // Art work of the passed song
-                    ZStack{
-                        SongDetailCoverArt(coverArt: song.artworkUrlLarge!, mainColor: Color(song.bgColor!))
-                        
-                        ZStack{
-                            Rectangle()
-                                .fill(Color(song.bgColor!).opacity(0.7))
-                                .background(.ultraThinMaterial)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                            
-                            SongMetaData(song: song)
-                                .padding(.top, 10)
-                        }
-                        .frame(height: screenWidth - 32)
-                        .padding(.horizontal)
-                        .opacity(metaDataOpacity)
-                    }
+                    SongDetailCoverArt(song: song, isMetaDataDisplayed: $isMetaDataDisplayed)
                     
                     // Info of the passed song
-                    SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff), isMetaDataDisplayed: metaDataOpacity == 0.0 ? false : true){
-                        withAnimation {
-                            metaDataOpacity = metaDataOpacity == 0.0 ? 1.0 : 0.0
+                    HStack{
+                        SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff))
+                        
+                        Spacer()
+                        
+                        Button(){
+                            withAnimation{
+                                isMetaDataDisplayed.toggle()
+                            }
+                        } label: {
+                            Image(systemName: "info.circle")
+                                .font(.title3)
                         }
+                        .buttonStyle(.plain)
+                        .padding(5)
+                        .background(isMetaDataDisplayed == true ? .white : .clear)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .padding([.leading, .top, .bottom])
+                        .foregroundStyle(isMetaDataDisplayed == true ? .black : .white)
                     }
+                    .padding(.horizontal)
                     
                     Spacer()
                     
@@ -109,6 +107,7 @@ struct SongDetailView: View {
         }
     }
 }
+
 
 #Preview {
     SongDetailView(song: SongModel(
