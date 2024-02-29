@@ -35,6 +35,7 @@ class SongService {
                 terColor: song.artwork?.tertiaryTextColor,
                 quaColor: song.artwork?.quaternaryTextColor,
                 previewUrl: song.previewAssets?.first?.url,
+                albumTitle: song.albumTitle,
                 duration: song.duration,
                 composerName: song.composerName,
                 genreNames: song.genreNames,
