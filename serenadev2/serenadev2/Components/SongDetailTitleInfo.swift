@@ -21,14 +21,18 @@ struct SongDetailTitleInfo: View {
                 
                 // Song of the song
                 Text(title)
-                    .font(.title3)
+                    .font(.headline)
                     .bold()
+                    .lineLimit(2)
                 
                 // Author of the song
                 Text(author)
+                    .font(.subheadline)
+                    .lineLimit(1)
             }
             
             Spacer()
+                
             
             Button{
                 // Add view with the song info if needed
@@ -37,6 +41,7 @@ struct SongDetailTitleInfo: View {
                     .font(.title3)
             }
             .buttonStyle(.plain)
+            .padding([.leading, .top, .bottom])
         }
         .padding(.horizontal)
         .foregroundStyle(fontColor)
@@ -44,5 +49,5 @@ struct SongDetailTitleInfo: View {
 }
 
 #Preview {
-    SongDetailTitleInfo(title: "Save your tears", author: "The weeknd", fontColor: .black)
+    SongDetailTitleInfo(title: "Save your tears", author: "The weeknd", fontColor: .white)
 }
