@@ -64,30 +64,82 @@ struct PostView: View {
                         .padding(.top, 2)
                         .padding(.bottom, 2)
                 }
-                Image(post.song!.coverArt)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 95)
-                    .blur(radius: 20.0)
-                    .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                
+                // Back card song cover art
+                AsyncImage(url: post.song?.artworkUrlSmall, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                    switch phase {
+                    case .empty:
+                        Rectangle()
+                            .fill(Color((post.song?.bgColor)!))
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                            .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                    case .failure(_):
+                        Rectangle()
+                            .fill(Color((post.song?.bgColor)!))
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                    default:
+                        Rectangle()
+                            .fill(Color((post.song?.bgColor)!))
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                    }
+                }
             }
             ZStack(alignment: .leading) {
                 UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0))
-                    // .fill((post.song?.color.opacity(0.5))!) Try adding the color of each album
+//                    .fill(Color((post.song?.bgColor)!).opacity(0.5))
                     .fill(.card.opacity(0.7))
                     .frame(height: 95)
                 
                 HStack {
-                    Image(post.song!.coverArt)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 70, height: 70)
-                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                        .padding()
+                    AsyncImage(url: post.song?.artworkUrlSmall, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                        switch phase {
+                        case .empty:
+                            Rectangle()
+                                .fill(Color((post.song?.bgColor)!))
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                                .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                        case .failure(_):
+                            Rectangle()
+                                .fill(Color((post.song?.bgColor)!))
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                        default:
+                            Rectangle()
+                                .fill(Color((post.song?.bgColor)!))
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                        }
+                    }
+                    
+                    
                     VStack(alignment: .leading) {
                         Text(post.song!.title)
                             .fontWeight(.bold)
-                        Text(post.song!.artist)
+                        Text(post.song!.artists)
                             .font(.footnote)
                             .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
                     }
@@ -101,7 +153,7 @@ struct PostView: View {
                 isSongInfoDisplayed = true
             }
             .fullScreenCover(isPresented: $isSongInfoDisplayed){
-                SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, song: post.song!)
+                SongDetailView(song: post.song!)
             }
         }
         .font(.subheadline)
@@ -110,9 +162,21 @@ struct PostView: View {
 
 #Preview {
     ScrollView {
-        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!! Give it a listen right now, you won't regret it!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears", artist: "The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
+        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!! Give it a listen right now, you won't regret it!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(
+            id: "1",
+            title: "Robbers",
+            artists: "The 1975",
+            artworkUrlSmall: URL(string: "https://example.com/small.jpg"),
+            artworkUrlLarge: URL(string: "https://is5-ssl.mzstatic.com/image/thumb/Music124/v4/f4/bc/71/f4bc7194-a92a-8f73-1b81-154adc503ecb/00602537497119.rgb.jpg/1500x1500bb.jpg"),
+            bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
+            priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),
+            secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
+            terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
+            quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
+            previewUrl: URL(string: "https://example.com/preview.mp3"),
+            duration: 295.502,
+            composerName: "Greg Kurstin & Adele Adkins",
+            genreNames: ["Pop"],
+            releaseDate: Date(timeIntervalSince1970: 1445558400))), profileImg: "AfterHoursCoverArt")
     }
 }

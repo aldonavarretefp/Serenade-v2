@@ -31,25 +31,22 @@ struct FeedView: View {
     
     // Posts array to see some hardcoded posts
     let posts: [PostView] = [
-        PostView(post: Post(id: "1", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "1", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt"),
-        
-        PostView(post: Post(id: "2", type: .daily, sender: "John", receiver: "receiver", caption: "Check out this amazing song!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "2", title: "Entropy", artist: "The Beach Bunny", album: "Unknown", coverArt: "entropy", color: Color(hex: 0xAEA6F6), fontColor: Color(hex: 0x202020))), profileImg: "entropy"),
-        
-        PostView(post: Post(id: "3", type: .daily, sender: "Emily", receiver: "receiver", caption: "Missing Mac Miller!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "3", title: "Love Lost", artist: "Mac Miller", album: "Unknown", coverArt: "mac", color: Color(hex: 0xFEE6E1), fontColor: Color(hex: 0xFF0506))), profileImg: "mac"),
-        
-        PostView(post: Post(id: "4", type: .daily, sender: "Michael", receiver: "receiver", caption: "Classic vibes!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "4", title: "Robbers", artist: "The 1975", album: "Unknown", coverArt: "the19", color: Color(hex: 0x333333), fontColor: Color(hex: 0xffffff))), profileImg: "the19"),
-        
-        PostView(post: Post(id: "5", type: .daily, sender: "Sophia", receiver: "receiver", caption: "Throwback!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "5", title: "See you again (feat. Kali Uchis)", artist: "Tyler, The Creator, Kali Uchis", album: "Flowerboy", coverArt: "tyler", color: Color(hex: 0xD5881C), fontColor: Color(hex: 0xffffff))), profileImg: "tyler"),
-        
-        PostView(post: Post(id: "6", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "1", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0xA28860), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt"),
-        
-        PostView(post: Post(id: "7", type: .daily, sender: "John", receiver: "receiver", caption: "Check out this amazing song!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "2", title: "Entropy", artist: "The Beach Bunny", album: "Unknown", coverArt: "entropy", color: Color(hex: 0xAEA6F6), fontColor: Color(hex: 0x202020))), profileImg: "entropy"),
-        
-        PostView(post: Post(id: "8", type: .daily, sender: "Emily", receiver: "receiver", caption: "Missing Mac Miller!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "3", title: "Love Lost", artist: "Mac Miller", album: "Unknown", coverArt: "mac", color: Color(hex: 0xFEE6E1), fontColor: Color(hex: 0xFF0506))), profileImg: "mac"),
-        
-        PostView(post: Post(id: "9", type: .daily, sender: "Michael", receiver: "receiver", caption: "Classic vibes!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "4", title: "Robbers", artist: "The 1975", album: "Unknown", coverArt: "the19", color: Color(hex: 0x333333), fontColor: Color(hex: 0xffffff))), profileImg: "the19"),
-        
-        PostView(post: Post(id: "10", type: .daily, sender: "Sophia", receiver: "receiver", caption: "Throwback!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "5", title: "See you again (feat. Kali Uchis)", artist: "Tyler, The Creator, Kali Uchis", album: "Flowerboy", coverArt: "tyler", color: Color(hex: 0xD5881C), fontColor: Color(hex: 0xffffff))), profileImg: "tyler")
+        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(
+            id: "1",
+            title: "Hello",
+            artists: "Adele",
+            artworkUrlSmall: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/75x75bb.jpg"),
+            artworkUrlLarge: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/500x500bb.jpg"),
+            bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
+            priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),
+            secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
+            terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
+            quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
+            previewUrl: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5e/46/de/5e46de64-70d7-01a9-438f-8395a0e41b58/mzaf_15694838464598234027.plus.aac.p.m4a"),
+            duration: 295.502,
+            composerName: "Greg Kurstin & Adele Adkins",
+            genreNames: ["Pop"],
+            releaseDate: Date(timeIntervalSince1970: 1445558400))), profileImg: "AfterHoursCoverArt")
     ]
     
     // MARK: - Body
@@ -154,7 +151,22 @@ struct FeedView: View {
                             
                             // If the daily post has already been made, show the user's post
                             if isDailyPosted {
-                                DailyPosted(song: Song(id: "2", title: "Entropy", artist: "The Beach Bunny", album: "Unknown", coverArt: "entropy", color: Color(hex: 0xAEA6F6), fontColor: Color(hex: 0x202020)))
+                                DailyPosted(song: SongModel(
+                                    id: "1",
+                                    title: "Hello",
+                                    artists: "Adele",
+                                    artworkUrlSmall: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/75x75bb.jpg"),
+                                    artworkUrlLarge: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/500x500bb.jpg"),
+                                    bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
+                                    priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),
+                                    secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
+                                    terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
+                                    quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
+                                    previewUrl: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5e/46/de/5e46de64-70d7-01a9-438f-8395a0e41b58/mzaf_15694838464598234027.plus.aac.p.m4a"),
+                                    duration: 295.502,
+                                    composerName: "Greg Kurstin & Adele Adkins",
+                                    genreNames: ["Pop"],
+                                    releaseDate: Date(timeIntervalSince1970: 1445558400)))
                             }
                             
                             Divider()
