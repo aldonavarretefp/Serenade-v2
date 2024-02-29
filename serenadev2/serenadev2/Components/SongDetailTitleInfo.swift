@@ -13,6 +13,7 @@ struct SongDetailTitleInfo: View {
     var title: String
     var author: String
     var fontColor: Color
+    var receivedAction: () -> Void
     
     // MARK: - Body
     var body: some View {
@@ -34,9 +35,7 @@ struct SongDetailTitleInfo: View {
             Spacer()
                 
             
-            Button{
-                // Add view with the song info if needed
-            } label: {
+            Button(action: receivedAction){
                 Image(systemName: "info.circle")
                     .font(.title3)
             }
@@ -49,5 +48,7 @@ struct SongDetailTitleInfo: View {
 }
 
 #Preview {
-    SongDetailTitleInfo(title: "Save your tears", author: "The weeknd", fontColor: .white)
+    SongDetailTitleInfo(title: "Save your tears", author: "The weeknd", fontColor: .white){
+        print("Hello")
+    }
 }
