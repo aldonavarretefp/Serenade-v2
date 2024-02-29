@@ -44,7 +44,7 @@ struct ProfileView: View {
                                 duration: 295.502,
                                 composerName: "Greg Kurstin & Adele Adkins",
                                 genreNames: ["Pop"],
-                                releaseDate: Date(timeIntervalSince1970: 1445558400))), profileImg: "AfterHourCoverArt")
+                                releaseDate: Date(timeIntervalSince1970: 1445558400))), profileImg: "AfterHoursCoverArt")
                             
                         }
                         .padding(.top, headerHeight)
