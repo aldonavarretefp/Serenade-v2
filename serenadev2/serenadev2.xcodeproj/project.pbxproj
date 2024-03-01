@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4447C0562B920FD100593AF5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4447C0552B920FD100593AF5 /* NotificationsView.swift */; };
 		446800292B90C87D00A858F1 /* SongMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446800282B90C87D00A858F1 /* SongMetaData.swift */; };
 		44D1A4212B91DAC200BE6F92 /* NotificationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */; };
 		44D1A4232B91DB3100BE6F92 /* NotificationActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */; };
@@ -74,6 +75,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4447C0552B920FD100593AF5 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		446800282B90C87D00A858F1 /* SongMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongMetaData.swift; sourceTree = "<group>"; };
 		44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationItem.swift; sourceTree = "<group>"; };
 		44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationActionButton.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				C402E7DC2B8CD4E7004EC79C /* FeedView.swift */,
 				EAB0C0D72B8CEC5A004F47F6 /* EditProfileView.swift */,
 				EA36A1A62B8F7900007F56FD /* AppInfoSheet.swift */,
+				4447C0552B920FD100593AF5 /* NotificationsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -472,6 +475,7 @@
 				C4D5111E2B8FBF6D00E95549 /* SongService.swift in Sources */,
 				E0F6F8372B879FC5009B35B1 /* OpenWithView.swift in Sources */,
 				EAB0C0DC2B8CF489004F47F6 /* ConfirmationSheet.swift in Sources */,
+				4447C0562B920FD100593AF5 /* NotificationsView.swift in Sources */,
 				C4D511192B8E67F000E95549 /* SearchViewModel.swift in Sources */,
 				F7F928652B879FAF00050926 /* MockedUser.swift in Sources */,
 				F137D2352B839A82006264C1 /* ContentView.swift in Sources */,

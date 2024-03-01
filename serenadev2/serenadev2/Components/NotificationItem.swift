@@ -8,19 +8,41 @@
 import SwiftUI
 
 struct NotificationItem: View {
+    
+    // MARK: - Properties
+    var user: User
+    
+    // MARK: - Body
     var body: some View {
         HStack{
-            NotificationActionButton(icon: "checkmark"){
-                print("Check")
-            }
+            Image(user.profilePicture)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 50)
+                .clipShape(Circle())
+                .padding(.trailing, 5)
             
-            NotificationActionButton(icon: "xmark"){
-                print("xmark")
+            Text(user.tagName)
+                .fontWeight(.semibold)
+                .font(.subheadline)
+            + Text(" wants to be your friend")
+            
+            Spacer()
+            
+            HStack{
+                NotificationActionButton(icon: "checkmark"){
+                    print("Check")
+                }
+                
+                NotificationActionButton(icon: "xmark"){
+                    print("xmark")
+                }
             }
+            .padding(.leading)
         }
     }
 }
 
 #Preview {
-    NotificationItem()
+    NotificationItem(user: User(name: "Sebastian Leon", email: "mail@domain.com", streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true, tagName: "sebatoo"))
 }

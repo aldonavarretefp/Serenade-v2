@@ -93,7 +93,6 @@ struct SettingsView: View {
                         })
                     }
                 }
-                .toolbarBackground(.black)
                 .padding()
                 .font(.subheadline)
                 .navigationTitle("Settings")
