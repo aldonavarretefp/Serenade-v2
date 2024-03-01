@@ -24,7 +24,7 @@ struct NotificationActionButton: View {
         .bold()
         .font(.footnote)
         .padding(.vertical, icon == "xmark" ? 12 : 10)
-        .padding(.horizontal, icon == "xmark" ? 16 : 15)
+        .padding(.horizontal, icon == "xmark" ? 20 : 18)
         .background(icon == "xmark" ? .secondaryButton : .accentColor)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .buttonStyle(.plain)

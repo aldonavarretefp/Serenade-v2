@@ -30,12 +30,12 @@ struct NotificationItem: View {
             Spacer()
             
             HStack{
-                NotificationActionButton(icon: "checkmark"){
-                    print("Check")
-                }
-                
                 NotificationActionButton(icon: "xmark"){
                     print("xmark")
+                }
+                
+                NotificationActionButton(icon: "checkmark"){
+                    print("Check")
                 }
             }
             .padding(.leading)
