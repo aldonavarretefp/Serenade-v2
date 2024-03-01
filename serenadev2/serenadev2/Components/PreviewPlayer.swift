@@ -49,7 +49,12 @@ struct PreviewPlayer: View {
     
     var body: some View {
         // Button to play/pause audio
-        VStack{
+        VStack(spacing: 5){
+            
+            Text(isPlaying ? "Touch to pause preview" : "Touch to play preview")
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.7))
+            
             ZStack{
                 // Image to show the lines at the device width
                 Image("player-lines-full")
@@ -87,7 +92,9 @@ struct PreviewPlayer: View {
                         self.player.play()
                         
                     }
-                    self.isPlaying.toggle()
+                    withAnimation{
+                        self.isPlaying.toggle()
+                    }
                 }
             }
         }
