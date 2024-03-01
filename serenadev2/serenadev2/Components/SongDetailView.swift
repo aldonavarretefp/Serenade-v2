@@ -13,14 +13,24 @@ struct SongDetailView: View {
     @Environment(\.dismiss) var dismiss
     
     // MARK: - Properties
-    // Audio URL (will be added to Song)?
     var song: SongModel
     var seconds: Double = 15.0
     
-    @State var isMetaDataDisplayed = false
+    @State var metaDataOpacity = 0.0
+    
+    // Create an instance of PreviewPlayer once
+    let previewPlayer: PreviewPlayer
+    
+    // Initialization of the preview player
+    init(song: SongModel) {
+        self.song = song
+        self.previewPlayer = PreviewPlayer(mainColor: Color(song.bgColor!), audioURL: song.previewUrl!, fontColor: Color(song.priColor!), secondaryColor: Color(song.secColor!), seconds: 15)
+    }
     
     // MARK: - Body
     var body: some View {
+        
+        let screenWidth = UIScreen.main.bounds.width
         
         NavigationStack{
             ZStack{
@@ -37,36 +47,37 @@ struct SongDetailView: View {
                 
                 
                 VStack{
-                    // Art work of the passed song
-                    SongDetailCoverArt(song: song, isMetaDataDisplayed: $isMetaDataDisplayed)
+                    ZStack{
+                        // Art work of the passed song
+                        SongDetailCoverArt(song: song)
+                        
+                        // Song meta data
+                        ZStack{
+                            Rectangle()
+                                .fill(Color(song.bgColor!).opacity(0.7))
+                                .background(.ultraThinMaterial)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                            
+                            SongMetaData(song: song)
+                                .padding([.top, .bottom], 10)
+                        }
+                        .opacity(metaDataOpacity)
+                        .frame(height: screenWidth - 32)
+                        .padding(.horizontal)
+                    }
                     
                     // Info of the passed song
-                    HStack{
-                        SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff))
-                        
-                        Spacer()
-                        
-                        Button(){
-                            withAnimation{
-                                isMetaDataDisplayed.toggle()
-                            }
-                        } label: {
-                            Image(systemName: "info.circle")
-                                .font(.title3)
+                    SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff), isMetaDataDisplayed: metaDataOpacity == 1.0 ? true : false){
+                        withAnimation(.linear(duration: 0.3)){
+                            metaDataOpacity = metaDataOpacity == 1.0 ? 0.0 : 1.0
                         }
-                        .buttonStyle(.plain)
-                        .padding(5)
-                        .background(isMetaDataDisplayed == true ? .white : .clear)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .padding([.leading, .top, .bottom])
-                        .foregroundStyle(isMetaDataDisplayed == true ? .black : .white)
                     }
                     .padding(.horizontal)
                     
                     Spacer()
                     
                     // View to play the preview of the passed song
-                    PreviewPlayer(mainColor: Color(song.bgColor!), audioURL: song.previewUrl!, fontColor: Color(song.priColor!), secondaryColor: Color(song.secColor!), seconds: seconds)
+                    previewPlayer
                     
                     Spacer()
                     
@@ -114,7 +125,7 @@ struct SongDetailView: View {
         id: "1",
         title: "Robbers",
         artists: "The 1975",
-        artworkUrlSmall: URL(string: "https://example.com/small.jpg"),
+        artworkUrlSmall: URL(string: "https://example.com/small.jpg"), artworkUrlMedium: URL(string: "https://example.com/small.jpg"),
         artworkUrlLarge: URL(string: "https://is5-ssl.mzstatic.com/image/thumb/Music124/v4/f4/bc/71/f4bc7194-a92a-8f73-1b81-154adc503ecb/00602537497119.rgb.jpg/1500x1500bb.jpg"),
         bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
         priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),

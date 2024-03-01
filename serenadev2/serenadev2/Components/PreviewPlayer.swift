@@ -1,28 +1,35 @@
 //
 //  PreviewPlayer.swift
-//  prueba
+//  serenadev2
 //
-//  Created by Alejandro Oliva Ochoa on 21/02/24.
+//  Created by Alejandro Oliva Ochoa on 29/02/24.
 //
 
 import SwiftUI
-import AVKit
+import AVFoundation
 
 struct PreviewPlayer: View {
     
-    // MARK: - Init
+    var player: AVPlayer!
+    
     init(mainColor: Color, audioURL: URL, fontColor: Color, secondaryColor: Color, seconds: Double = 15.0) {
         self.mainColor = mainColor
         self.audioURL = audioURL
         self.fontColor = fontColor
         self.secondaryColor = secondaryColor
-        
         self.endTime = calculateEndTime(tiempo: seconds)
+        
+        // Creamos el reproductor de audio con la URL proporcionada
+        self.player = AVPlayer(url: audioURL)
+        
+        // This audio session configuration must be done before starting audio playback
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Error setting up audio session: \(error.localizedDescription)")
+        }
     }
-    
-    // MARK: - Properties
-    // AVPlayer to play the audio
-    let player = AVPlayer()
     
     //Variable to track playback status
     @State private var isPlaying = false
@@ -31,6 +38,7 @@ struct PreviewPlayer: View {
     var fontColor: Color
     var secondaryColor: Color
     @State private var seconds: Double = 0
+    
     @State private var timer: Timer? = nil
     
     // Initial time of the song
@@ -39,12 +47,10 @@ struct PreviewPlayer: View {
     // When the song ends (max 30 seconds)
     var endTime: CMTime = CMTime(seconds: 15, preferredTimescale: 1)
     
-    // MARK: - Body
     var body: some View {
         // Button to play/pause audio
         VStack{
             ZStack{
-                
                 // Image to show the lines at the device width
                 Image("player-lines-full")
                 
@@ -83,25 +89,7 @@ struct PreviewPlayer: View {
                     }
                     self.isPlaying.toggle()
                 }
-                
             }
-            
-        }
-        .onAppear {
-            
-            // This audio session configuration must be done before starting audio playback
-            do {
-                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-                try AVAudioSession.sharedInstance().setActive(true)
-            } catch {
-                print("Error setting up audio session: \(error.localizedDescription)")
-            }
-            
-            // Configure the AVPlayer with the audio URL
-            let playerItem = AVPlayerItem(url: audioURL)
-            playerItem.seek(to: initialTime, completionHandler: nil)
-            playerItem.forwardPlaybackEndTime = endTime
-            self.player.replaceCurrentItem(with: playerItem)
         }
         .onDisappear {
             // Reset the timer and the song when the view disappears
@@ -123,13 +111,12 @@ struct PreviewPlayer: View {
                         }
                     } else {
                         // Restart playback from the beginning
-                        player.seek(to: self.initialTime, toleranceBefore: .zero, toleranceAfter: .zero) { _ in
-                            withAnimation{
-                                seconds = 0
-                            }
-                            self.isPlaying = false
-                            self.stopTimer()
-                            self.player.pause()
+                        player.seek(to: CMTime.zero)
+                        self.isPlaying = false
+                        self.stopTimer()
+                        self.player.pause()
+                        withAnimation{
+                            seconds = 0
                         }
                     }
                 }
@@ -151,5 +138,5 @@ struct PreviewPlayer: View {
 }
 
 #Preview {
-    PreviewPlayer(mainColor: Color(hex: 0x202020), audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, fontColor: Color(hex: 0x000000), secondaryColor: Color(hex: 0x111111), seconds: 15.0)
+    PreviewPlayer(mainColor: Color(hex: 0x202020), audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, fontColor: Color(hex: 0x000000), secondaryColor: Color(hex: 0x111111), seconds: 5)
 }
