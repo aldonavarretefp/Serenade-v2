@@ -13,6 +13,7 @@ struct SongModel: Identifiable, Hashable {
     let title: String
     let artists: String
     let artworkUrlSmall: URL?
+    let artworkUrlMedium: URL?
     let artworkUrlLarge: URL?
     let bgColor: CGColor?
     let priColor: CGColor?

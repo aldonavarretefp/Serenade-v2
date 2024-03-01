@@ -84,8 +84,9 @@ class SearchViewModel: ObservableObject {
                                 id: $0.id.rawValue,
                                 title: $0.title,
                                 artists: $0.artistName,
-                                artworkUrlSmall: $0.artwork?.url(width: 75, height: 75),
-                                artworkUrlLarge: $0.artwork?.url(width: 500, height: 500),
+                                artworkUrlSmall: $0.artwork?.url(width: 100, height: 100),
+                                artworkUrlMedium: $0.artwork?.url(width: 800, height: 800),
+                                artworkUrlLarge: $0.artwork?.url(width: 1000, height: 1000),
                                 bgColor: $0.artwork?.backgroundColor,
                                 priColor: $0.artwork?.primaryTextColor,
                                 secColor: $0.artwork?.secondaryTextColor,
@@ -102,25 +103,25 @@ class SearchViewModel: ObservableObject {
                         
                     }
                     // After updating the songs list, check if there's at least one song and print its previewUrl.
-                    if let firstSong = self.songs.first {
-                            print("ID: \(firstSong.id)")
-                            print("Title: \(firstSong.title)")
-                            print("Artists: \(firstSong.artists)")
-                            print("Artwork URL (Small): \(String(describing: firstSong.artworkUrlSmall))")
-                            print("Artwork URL (Large): \(String(describing: firstSong.artworkUrlLarge))")
-                            print("Background Color: \(String(describing: firstSong.bgColor))")
-                            print("Primary Color: \(String(describing: firstSong.priColor))")
-                            print("Secondary Color: \(String(describing: firstSong.secColor))")
-                            print("Tertiary Color: \(String(describing: firstSong.terColor))")
-                            print("Quaternary Color: \(String(describing: firstSong.quaColor))")
-                            print("Preview URL: \(String(describing: firstSong.previewUrl))")
-                            print("Duration: \(String(describing: firstSong.duration))")
-                            print("Composers Name: \(String(describing: firstSong.composerName))")
-                            print("Genre Names: \(firstSong.genreNames.joined(separator: ", "))")
-                            print("Release Date: \(String(describing: firstSong.releaseDate))")
-                        } else {
-                            print("No songs found or no preview available")
-                        }
+//                    if let firstSong = self.songs.first {
+//                            print("ID: \(firstSong.id)")
+//                            print("Title: \(firstSong.title)")
+//                            print("Artists: \(firstSong.artists)")
+//                            print("Artwork URL (Small): \(String(describing: firstSong.artworkUrlSmall))")
+//                            print("Artwork URL (Large): \(String(describing: firstSong.artworkUrlLarge))")
+//                            print("Background Color: \(String(describing: firstSong.bgColor))")
+//                            print("Primary Color: \(String(describing: firstSong.priColor))")
+//                            print("Secondary Color: \(String(describing: firstSong.secColor))")
+//                            print("Tertiary Color: \(String(describing: firstSong.terColor))")
+//                            print("Quaternary Color: \(String(describing: firstSong.quaColor))")
+//                            print("Preview URL: \(String(describing: firstSong.previewUrl))")
+//                            print("Duration: \(String(describing: firstSong.duration))")
+//                            print("Composers Name: \(String(describing: firstSong.composerName))")
+//                            print("Genre Names: \(firstSong.genreNames.joined(separator: ", "))")
+//                            print("Release Date: \(String(describing: firstSong.releaseDate))")
+//                        } else {
+//                            print("No songs found or no preview available")
+//                        }
                     
                 } catch {
                     // Handles errors that occur during the search operation.
