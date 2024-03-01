@@ -40,7 +40,7 @@ struct SongDetailTitleInfo: View {
             }
             .buttonStyle(.plain)
             .padding(5)
-            .background(isMetaDataDisplayed == true ? .white : .clear)
+            .background(isMetaDataDisplayed == true ? .white.opacity(0.7) : .clear)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .padding([.leading, .top, .bottom])
             .foregroundStyle(isMetaDataDisplayed == true ? .black : .white)
@@ -50,7 +50,7 @@ struct SongDetailTitleInfo: View {
 }
 
 #Preview {
-    SongDetailTitleInfo(title: "Save your tears", author: "The weeknd", fontColor: .white, isMetaDataDisplayed: false){
+    SongDetailTitleInfo(title: "Save your tears", author: "The weeknd", fontColor: .white, isMetaDataDisplayed: true){
         print("Hello")
     }
 }
