@@ -13,24 +13,31 @@ struct ContentView: View {
     // MARK: - Properties
     @State var selectedTab: Tabs = .feed
     @EnvironmentObject var userViewModel: UserViewModel
+    @Environment(\.colorScheme) var colorScheme
     
     // MARK: - Body
     var body: some View {
         
         TabView {
-            FeedView()
-                .tabItem {
-                    Image("feed.fill")
-                    Text("Feed")
-                }
-            SearchView()
-                .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
-                }
-            ProfileView()
-                .tabItem {
-                    Label("Profile", systemImage: "person.fill")
-                }
+            Group{
+                FeedView()
+                    .tabItem {
+                        Image("feed.fill")
+                        Text("Feed")
+                    }
+                SearchView()
+                    .tabItem {
+                        Label("Search", systemImage: "magnifyingglass")
+                    }
+                
+                ProfileView()
+                    .tabItem {
+                        Label("Profile", systemImage: "person.fill")
+                    }
+            }
+            .toolbarBackground(.visible, for: .tabBar)
+            .toolbarBackground(colorScheme == .light ? .white : .black, for: .tabBar)
+            
         }
         .task {
 //            userViewModel.fetchUserFromAccountID(accountID: CKRecord.ID(recordName: "_4be12f743d4fce557a754ffe697f5908")) { returnedUser in

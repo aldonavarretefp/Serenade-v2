@@ -13,39 +13,71 @@ struct SongDetailView: View {
     @Environment(\.dismiss) var dismiss
     
     // MARK: - Properties
-    // Audio URL (will be added to Song)?
-    var audioURL: URL
-    var song: Song
+    var song: SongModel
     var seconds: Double = 15.0
+    
+    @State var metaDataOpacity = 0.0
+    
+    // Create an instance of PreviewPlayer once
+    let previewPlayer: PreviewPlayer
+    
+    // Initialization of the preview player
+    init(song: SongModel) {
+        self.song = song
+        self.previewPlayer = PreviewPlayer(mainColor: Color(song.bgColor!), audioURL: song.previewUrl!, fontColor: Color(song.priColor!), secondaryColor: Color(song.secColor!), seconds: 15)
+    }
     
     // MARK: - Body
     var body: some View {
+        
+        let screenWidth = UIScreen.main.bounds.width
+        
         NavigationStack{
             ZStack{
-                
                 // Gradients to add the art work color to the background
-                LinearGradient(gradient: Gradient(colors: [song.color, Color(hex: 0x101010)]),
+                LinearGradient(gradient: Gradient(colors: [Color(song.bgColor!), Color(hex: 0x101010)]),
                                startPoint: .top,
                                endPoint: .bottom)
                 .ignoresSafeArea()
                 
-                LinearGradient(gradient: Gradient(colors: [song.color, Color(hex: 0x101010).opacity(0)]),
+                LinearGradient(gradient: Gradient(colors: [Color(song.bgColor!), Color(hex: 0x101010).opacity(0)]),
                                startPoint: .top,
                                endPoint: .bottom)
                 .ignoresSafeArea()
                 
                 
                 VStack{
-                    // Art work of the passed song
-                    SongDetailCoverArt(covertArt: song.coverArt, mainColor: song.color)
+                    ZStack{
+                        // Art work of the passed song
+                        SongDetailCoverArt(song: song)
+                        
+                        // Song meta data
+                        ZStack{
+                            Rectangle()
+                                .fill(Color(song.bgColor!).opacity(0.7))
+                                .background(.ultraThinMaterial)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                            
+                            SongMetaData(song: song)
+                                .padding([.top, .bottom], 10)
+                        }
+                        .opacity(metaDataOpacity)
+                        .frame(height: screenWidth - 32)
+                        .padding(.horizontal)
+                    }
                     
                     // Info of the passed song
-                    SongDetailTitleInfo(title: song.title, author: song.artist, fontColor: Color(hex: 0xffffff))
+                    SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff), isMetaDataDisplayed: metaDataOpacity == 1.0 ? true : false){
+                        withAnimation(.linear(duration: 0.3)){
+                            metaDataOpacity = metaDataOpacity == 1.0 ? 0.0 : 1.0
+                        }
+                    }
+                    .padding(.horizontal)
                     
                     Spacer()
                     
                     // View to play the preview of the passed song
-                    PreviewPlayer(mainColor: song.color, audioURL: audioURL, seconds: seconds)
+                    previewPlayer
                     
                     Spacer()
                     
@@ -58,7 +90,7 @@ struct SongDetailView: View {
                         }
                         
                         // Open with button
-                        ActionButton(label: "Open with", symbolName: "arrow.up.forward.circle.fill", fontColor: song.fontColor, backgroundColor: song.color, isShareDaily: false) {
+                        ActionButton(label: "Open with", symbolName: "arrow.up.forward.circle.fill", fontColor: Color(song.priColor!), backgroundColor: Color(song.bgColor!), isShareDaily: false) {
                             print("Daily button tapped")
                         }
                     }
@@ -66,6 +98,7 @@ struct SongDetailView: View {
                     
                 }
             }
+            .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar{
                 // Add the xmark at top trailing
                 ToolbarItem(placement: .topBarTrailing){
@@ -86,6 +119,22 @@ struct SongDetailView: View {
     }
 }
 
+
 #Preview {
-    SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, song: Song(id: "id", title: "Robbers", artist: "The 1975", album: "After Hours", coverArt: "the19", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff)))
+    SongDetailView(song: SongModel(
+        id: "1",
+        title: "Robbers",
+        artists: "The 1975",
+        artworkUrlSmall: URL(string: "https://example.com/small.jpg"), artworkUrlMedium: URL(string: "https://example.com/small.jpg"),
+        artworkUrlLarge: URL(string: "https://is5-ssl.mzstatic.com/image/thumb/Music124/v4/f4/bc/71/f4bc7194-a92a-8f73-1b81-154adc503ecb/00602537497119.rgb.jpg/1500x1500bb.jpg"),
+        bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
+        priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),
+        secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
+        terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
+        quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
+        previewUrl: URL(string: "https://example.com/preview.mp3"), albumTitle: "The 1975",
+        duration: 295.502,
+        composerName: "Greg Kurstin & Adele Adkins",
+        genreNames: ["Pop"],
+        releaseDate: Date(timeIntervalSince1970: 1445558400)))
 }

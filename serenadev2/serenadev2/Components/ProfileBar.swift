@@ -77,18 +77,6 @@ struct ProfileBar: View {
                                     .resizable()
                                     .frame(width: 25, height: 25)
                             }
-//                            Button(action: {
-//                                isSettingsSheetDisplayed = true
-//                            }, label: {
-//                                Image(systemName: "gearshape.fill")
-//                                    .resizable()
-//                                    .frame(width: 25, height: 25)
-//                            })
-//                            
-//                            .sheet(isPresented: $isSettingsSheetDisplayed) {
-////                                SettingsView(passedDarkMode: $darkModeToggle)
-//                                EmptyView()
-//                            }
                             .padding(5)
                             .foregroundStyle(.primary)
                         }
@@ -149,8 +137,11 @@ struct ProfileBar: View {
                                     }
                                 })
                                 .sheet(isPresented: $isUnfriendSheetDisplayed, content: {
-                                    UnfriendSheet(isFriend: $isFriend, user: user)
-                                        .presentationDetents([.fraction(0.3)])
+                                    ConfirmationSheet(title: Text("Unfriend ") + Text(user.tagName).fontWeight(.semibold) + Text("?"), text: Text("Are you sure you want to delete ") + Text(user.tagName).fontWeight(.semibold) + Text(" from your friend list?"), action: {
+//                                        removeFriend()
+                                        isFriend = false
+                                    }, buttonLabel: "Delete friend")
+                                            .presentationDetents([.fraction(0.3)])
                                 })
                             }
                         }
@@ -166,5 +157,5 @@ struct ProfileBar: View {
 }
 
 #Preview {
-    ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: sebastian)
+    ProfileBar(isFriendRequestSent: false, isCurrentUser: false, isFriend: true, user: sebastian)
 }

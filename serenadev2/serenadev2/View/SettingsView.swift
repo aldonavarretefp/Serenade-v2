@@ -9,8 +9,12 @@ import SwiftUI
 
 struct SettingsView: View {
     
+    @Environment(\.colorScheme) var colorScheme
+    
     @State var isStreamingServiceSheetDisplayed: Bool = false
     @State var isInfoSheetDisplayed: Bool = false
+    @State var isLogOutSheetDisplayed: Bool = false
+    @State var isDeleteAccountSheetDisplayed: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -19,7 +23,7 @@ struct SettingsView: View {
                     .ignoresSafeArea()
                 VStack(spacing: 10) {
                     GroupBox {
-                        NavigationLink(destination: EmptyView(), label: {
+                        NavigationLink(destination: EditProfileView(user: sebastian).toolbarRole(.editor), label: {
                             Image(systemName: "square.and.pencil")
                                 .foregroundStyle(.accent)
                             Text("Edit profile")
@@ -38,12 +42,40 @@ struct SettingsView: View {
                             Text("Favorite streaming apps")
                             Spacer()
                         })
-//                        .sheet(isPresented: $isStreamingServiceSheetDisplayed, content: {
-//                            EmptyView()
-//                        })
+                        .sheet(isPresented: $isStreamingServiceSheetDisplayed, content: {
+                            StreamingAppPickerSheet()
+                                .presentationDetents([.fraction(0.85)])
+                        })
                     }
                     .backgroundStyle(.card)
                     .foregroundStyle(.primary)
+                    Spacer()
+                    GroupBox {
+                        Button(action: { isLogOutSheetDisplayed = true }, label: {
+                            Spacer()
+                            Text("Log out")
+                            Spacer()
+                        })
+                        .sheet(isPresented: $isLogOutSheetDisplayed, content: {
+                            ConfirmationSheet(title: Text("Log out").fontWeight(.semibold), string: "Are you sure you want to log out?", action: {/*logOut()*/}, buttonLabel: "Log out")
+                                .presentationDetents([.fraction(0.3)])
+                        })
+                    }
+                    .backgroundStyle(.card)
+                    .foregroundStyle(.primary)
+                    
+                    GroupBox {
+                        Button(role: .destructive, action: { isDeleteAccountSheetDisplayed = true }, label: {
+                            Spacer()
+                            Text("Delete account")
+                            Spacer()
+                        })
+                        .sheet(isPresented: $isDeleteAccountSheetDisplayed, content: {
+                            ConfirmationSheet(title: Text("Delete account").fontWeight(.semibold), text: Text("Deleting your account is permanent. You will not be able to recover your data. Are you sure you want to ") + Text("delete your account").fontWeight(.semibold) + Text("?"), action: {/*deleteAccount()*/}, buttonLabel: "Delete account", buttonColor: .red)
+                                .presentationDetents([.fraction(0.3)])
+                        })
+                    }
+                    .backgroundStyle(.card)
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
@@ -55,16 +87,19 @@ struct SettingsView: View {
                                 .fontWeight(.bold)
                         })
                         .foregroundStyle(.primary)
-//                        .sheet(isPresented: $isInfoSheetDisplayed, content: {
-//                            EmptyView()
-//                        })
+                        .sheet(isPresented: $isInfoSheetDisplayed, content: {
+                            AppInfoSheet()
+                                .presentationDetents([.fraction(0.7)])
+                        })
                     }
                 }
-                .toolbarBackground(.black)
                 .padding()
                 .font(.subheadline)
                 .navigationTitle("Settings")
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarBackground(colorScheme == .light ? .white : .black,for: .navigationBar)
                 .navigationBarTitleDisplayMode(.inline)
+
             }
         }
     }

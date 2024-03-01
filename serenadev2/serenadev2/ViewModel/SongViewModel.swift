@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class SongViewModel: ObservableObject {
-    @Published var songs = [Song]()
+    @Published var songs = [SongModel]()
     
     init() {}
 }

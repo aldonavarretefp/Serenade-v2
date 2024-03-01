@@ -74,10 +74,42 @@ struct PostView: View {
 //                    .frame(height: 95)
 //                    .blur(radius: 20.0)
 //                    .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                
+                // Back card song cover art
+                AsyncImage(url: post.song?.artworkUrlMedium, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                    switch phase {
+                    case .empty:
+                        Rectangle()
+                            .fill(Color((post.song?.bgColor)!))
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                            .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                    case .failure(_):
+                        Rectangle()
+                            .fill(Color((post.song?.bgColor)!))
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                    default:
+                        Rectangle()
+                            .fill(Color((post.song?.bgColor)!))
+                            .frame(height: 95)
+                            .blur(radius: 20.0)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                    }
+                }
             }
             ZStack(alignment: .leading) {
                 UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0))
-                    // .fill((post.song?.color.opacity(0.5))!) Try adding the color of each album
+//                    .fill(Color((post.song?.bgColor)!).opacity(0.5))
                     .fill(.card.opacity(0.7))
                     .frame(height: 95)
                 
@@ -94,6 +126,44 @@ struct PostView: View {
 //                        Text(post.song!.artist)
 //                            .font(.footnote)
 //                            .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
+                    AsyncImage(url: post.song?.artworkUrlMedium, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                        switch phase {
+                        case .empty:
+                            Rectangle()
+                                .fill(Color((post.song?.bgColor)!))
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                                .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                        case .failure(_):
+                            Rectangle()
+                                .fill(Color((post.song?.bgColor)!))
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                        default:
+                            Rectangle()
+                                .fill(Color((post.song?.bgColor)!))
+                                .frame(width: 70, height: 70)
+                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                .padding()
+                        }
+                    }
+                    
+                    
+                    VStack(alignment: .leading) {
+                        Text(post.song!.title)
+                            .fontWeight(.bold)
+                        Text(post.song!.artists)
+                            .font(.footnote)
+                            .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
                     }
                     .padding(.trailing)
                     .lineLimit(2)
@@ -106,6 +176,7 @@ struct PostView: View {
             }
             .fullScreenCover(isPresented: $isSongInfoDisplayed){
 //                SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, song: post.song!)
+                SongDetailView(song: post.song!)
             }
         }
         .font(.subheadline)
@@ -121,3 +192,8 @@ struct PostView: View {
 //        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
 //    }
 //}
+#Preview {
+    ScrollView {
+        PostView()
+    }
+}
