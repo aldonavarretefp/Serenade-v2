@@ -13,21 +13,15 @@ struct NotificationsView: View {
     
     var body: some View {
         NavigationStack{
-            ZStack{
-                Color.viewBackground
-                    .ignoresSafeArea()
-                
-                VStack{
-                    ScrollView{
-                        VStack(spacing: 35){
-                            NotificationItem(user: User(name: "Sebastian Leon", email: "mail@domain.com", streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true, tagName: "sebatoo"))
-                            
-                            NotificationItem(user: User(name: "Sebastian Leon", email: "mail@domain.com", streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true, tagName: "sebatoo"))
-                        }
-                        .padding()
+            VStack{
+                ScrollView{
+                    VStack(spacing: 35){
+                        NotificationItem(user: User(name: "Sebastian Leon", email: "mail@domain.com", streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true, tagName: "sebatoo"))
+                        
+                        NotificationItem(user: User(name: "Sebastian Leon", email: "mail@domain.com", streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true, tagName: "sebatoo"))
                     }
+                    .padding()
                 }
-                .toolbarBackground(.black)
             }
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(colorScheme == .light ? .white : .black,for: .navigationBar)

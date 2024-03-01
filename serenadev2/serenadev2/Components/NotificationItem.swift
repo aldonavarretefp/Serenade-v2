@@ -29,7 +29,7 @@ struct NotificationItem: View {
             
             Spacer()
             
-            HStack{
+            HStack(spacing: 5){
                 NotificationActionButton(icon: "xmark"){
                     print("xmark")
                 }
