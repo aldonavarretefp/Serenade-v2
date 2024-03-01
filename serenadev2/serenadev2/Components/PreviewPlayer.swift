@@ -37,7 +37,7 @@ struct PreviewPlayer: View {
     var audioURL: URL
     var fontColor: Color
     var secondaryColor: Color
-    @State private var seconds: Double = 0
+    @State private var miliseconds: Double = 0
     
     @State private var timer: Timer? = nil
     
@@ -65,7 +65,7 @@ struct PreviewPlayer: View {
                                 
                                 // Fill the rectanble background depending on the time of the song
                                 secondaryColor.adjustedForContrast()
-                                    .frame(width: CGFloat(seconds) / CGFloat(endTime.seconds) * 20)
+                                    .frame(width: CGFloat(miliseconds) / CGFloat(endTime.seconds) * 20)
                                 
                             }
                         )
@@ -104,10 +104,10 @@ struct PreviewPlayer: View {
         if timer == nil {
             self.timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
                 if self.isPlaying {
-                    if self.seconds < (endTime.seconds * 10) {
+                    if self.miliseconds < (endTime.seconds * 10) {
                         // increase seconds with animation
                         withAnimation{
-                            self.seconds += 1
+                            self.miliseconds += 1
                         }
                     } else {
                         // Restart playback from the beginning
@@ -116,7 +116,7 @@ struct PreviewPlayer: View {
                         self.stopTimer()
                         self.player.pause()
                         withAnimation{
-                            seconds = 0
+                            miliseconds = 0
                         }
                     }
                 }
