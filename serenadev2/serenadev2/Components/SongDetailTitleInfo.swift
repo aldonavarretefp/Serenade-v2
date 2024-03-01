@@ -13,6 +13,8 @@ struct SongDetailTitleInfo: View {
     var title: String
     var author: String
     var fontColor: Color
+    var isMetaDataDisplayed: Bool
+    var receivedAction: () -> Void
     
     // MARK: - Body
     var body: some View {
@@ -21,28 +23,34 @@ struct SongDetailTitleInfo: View {
                 
                 // Song of the song
                 Text(title)
-                    .font(.title3)
+                    .font(.headline)
                     .bold()
+                    .lineLimit(2)
                 
                 // Author of the song
                 Text(author)
+                    .font(.subheadline)
+                    .lineLimit(1)
             }
-            
             Spacer()
             
-            Button{
-                // Add view with the song info if needed
-            } label: {
+            Button(action: receivedAction){
                 Image(systemName: "info.circle")
                     .font(.title3)
             }
             .buttonStyle(.plain)
+            .padding(5)
+            .background(isMetaDataDisplayed == true ? .white : .clear)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .padding([.leading, .top, .bottom])
+            .foregroundStyle(isMetaDataDisplayed == true ? .black : .white)
         }
-        .padding(.horizontal)
         .foregroundStyle(fontColor)
     }
 }
 
 #Preview {
-    SongDetailTitleInfo(title: "Save your tears", author: "The weeknd", fontColor: .black)
+    SongDetailTitleInfo(title: "Save your tears", author: "The weeknd", fontColor: .white, isMetaDataDisplayed: false){
+        print("Hello")
+    }
 }

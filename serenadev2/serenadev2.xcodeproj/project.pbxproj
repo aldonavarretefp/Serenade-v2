@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		446800292B90C87D00A858F1 /* SongMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446800282B90C87D00A858F1 /* SongMetaData.swift */; };
 		C402E7D72B8CD42D004EC79C /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402E7D62B8CD42D004EC79C /* CustomTabBar.swift */; };
 		C402E7D92B8CD444004EC79C /* TabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402E7D82B8CD444004EC79C /* TabBarItem.swift */; };
 		C402E7DD2B8CD4E7004EC79C /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402E7DC2B8CD4E7004EC79C /* FeedView.swift */; };
@@ -71,6 +72,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		446800282B90C87D00A858F1 /* SongMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongMetaData.swift; sourceTree = "<group>"; };
 		C402E7D62B8CD42D004EC79C /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		C402E7D82B8CD444004EC79C /* TabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItem.swift; sourceTree = "<group>"; };
 		C402E7DC2B8CD4E7004EC79C /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 				EAB0C0DB2B8CF489004F47F6 /* ConfirmationSheet.swift */,
 				EA216FC72B8E3FAC00A715EB /* StreamingAppPickerSheet.swift */,
 				EA216FC92B8F6B6800A715EB /* ChecklistItem.swift */,
+				446800282B90C87D00A858F1 /* SongMetaData.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -490,6 +493,7 @@
 				C402E7D72B8CD42D004EC79C /* CustomTabBar.swift in Sources */,
 				C402E7DD2B8CD4E7004EC79C /* FeedView.swift in Sources */,
 				C49B42122B87869800FD66F9 /* SearchView.swift in Sources */,
+				446800292B90C87D00A858F1 /* SongMetaData.swift in Sources */,
 				C40C09B62B863CA2009BE4C5 /* Extensions.swift in Sources */,
 				EA216FC82B8E3FAC00A715EB /* StreamingAppPickerSheet.swift in Sources */,
 				EA9BC9F22B87861C00292705 /* Post.swift in Sources */,

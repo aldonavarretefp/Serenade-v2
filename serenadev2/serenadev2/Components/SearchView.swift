@@ -69,9 +69,10 @@ struct SearchView: View {
                         alignment: .bottomLeading
                     )
                     .frame(height: 50)
+                    .background()
                     
                     ScrollView {
-                        LazyVStack(spacing: 0) {
+                        VStack(spacing: 0) {
                             ForEach(filteredResults) { value in
                                 
                                 ItemSmall(item: value, showArrow: false)
@@ -82,33 +83,37 @@ struct SearchView: View {
                             }
                         }
                     }
-                    .background(.viewBackground)
-                    .overlay {
-                        // Check if the selected tab is Music before showing the overlay
-                        if selectedTab == "Music" {
-                            if viewModel.isLoading {
-                                // Display a loading indicator or view when music is being fetched
-                                ProgressView()
-                                    .progressViewStyle(.circular)
-                            } else if viewModel.searchText.isEmpty {
-                                // Display this when no search has been made yet (for Music tab only)
-                                ContentUnavailableView(label: {
-                                    Label("Search for music ", systemImage: "music.note")
-                                }, description: {
-                                    Text("Search for your favorite songs, artists or albums")
-                                })
-                            } else if filteredResults.isEmpty {
-                                // Display this when there are no results (for Music tab only)
-                                ContentUnavailableView(label: {
-                                    Label("No Matches Found ", systemImage: "exclamationmark")
-                                }, description: {
-                                    Text("We couldn't find anything for your search. Try different keywords or check for typos.")
-                                })
-                            }
-                        }
-                    }
                 }
             }
+            .overlay {
+                // Check if the selected tab is Music before showing the overlay
+                if selectedTab == "Music" {
+                    if viewModel.isLoading {
+                        // Display a loading indicator or view when music is being fetched
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                    } else if viewModel.searchText.isEmpty {
+                        // Display this when no search has been made yet (for Music tab only)
+                        ContentUnavailableView(label: {
+                            Label("Search for music ", systemImage: "music.note")
+                        }, description: {
+                            Text("Search for your favorite songs, artists or albums")
+                        })
+                        
+                    } else if filteredResults.isEmpty {
+                        // Display this when there are no results (for Music tab only)
+                        ContentUnavailableView(label: {
+                            Label("No Matches Found ", systemImage: "exclamationmark")
+                        }, description: {
+                            Text("We couldn't find anything for your search. Try different keywords or check for typos.")
+                        })
+                        
+                    }
+                    
+                }
+                
+            }
+            .background(.viewBackground)
             .searchable(text: $viewModel.searchText)
             .disableAutocorrection(true)
         }
