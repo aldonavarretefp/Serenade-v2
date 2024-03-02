@@ -33,6 +33,7 @@
 		C4F14A7D2B88FBD800D7111E /* CreatePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F14A7C2B88FBD800D7111E /* CreatePasswordView.swift */; };
 		E0540C732B8E703A001A7561 /* DailySongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0540C722B8E703A001A7561 /* DailySongView.swift */; };
 		E0540C772B8E71AF001A7561 /* SelectSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0540C762B8E71AF001A7561 /* SelectSongView.swift */; };
+		E0C891572B9387D70065234F /* OpenWithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C891562B9387D70065234F /* OpenWithView.swift */; };
 		E0F6F8332B879BAC009B35B1 /* BrandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F6F8322B879BAC009B35B1 /* BrandButton.swift */; };
 		E0F6F8352B879D11009B35B1 /* BrandsGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F6F8342B879D11009B35B1 /* BrandsGrid.swift */; };
 		EA216FC82B8E3FAC00A715EB /* StreamingAppPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA216FC72B8E3FAC00A715EB /* StreamingAppPickerSheet.swift */; };
@@ -105,6 +106,7 @@
 		C4F14A7C2B88FBD800D7111E /* CreatePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePasswordView.swift; sourceTree = "<group>"; };
 		E0540C722B8E703A001A7561 /* DailySongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailySongView.swift; sourceTree = "<group>"; };
 		E0540C762B8E71AF001A7561 /* SelectSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSongView.swift; sourceTree = "<group>"; };
+		E0C891562B9387D70065234F /* OpenWithView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWithView.swift; sourceTree = "<group>"; };
 		E0F6F8322B879BAC009B35B1 /* BrandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandButton.swift; sourceTree = "<group>"; };
 		E0F6F8342B879D11009B35B1 /* BrandsGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandsGrid.swift; sourceTree = "<group>"; };
 		EA216FC72B8E3FAC00A715EB /* StreamingAppPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingAppPickerSheet.swift; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 				EAB0C0D72B8CEC5A004F47F6 /* EditProfileView.swift */,
 				EA36A1A62B8F7900007F56FD /* AppInfoSheet.swift */,
 				4447C0552B920FD100593AF5 /* NotificationsView.swift */,
+				E0C891562B9387D70065234F /* OpenWithView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -492,7 +495,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4D5111E2B8FBF6D00E95549 /* SongService.swift in Sources */,
-				E0F6F8372B879FC5009B35B1 /* OpenWithView.swift in Sources */,
 				EAB0C0DC2B8CF489004F47F6 /* ConfirmationSheet.swift in Sources */,
 				4447C0562B920FD100593AF5 /* NotificationsView.swift in Sources */,
 				C4D511192B8E67F000E95549 /* SearchViewModel.swift in Sources */,
@@ -518,6 +520,7 @@
 				44D1A4212B91DAC200BE6F92 /* NotificationItem.swift in Sources */,
 				EAB0C0D82B8CEC5A004F47F6 /* EditProfileView.swift in Sources */,
 				44D1A4232B91DB3100BE6F92 /* NotificationActionButton.swift in Sources */,
+				E0C891572B9387D70065234F /* OpenWithView.swift in Sources */,
 				C4F14A7B2B88FBC800D7111E /* CreateUsernameView.swift in Sources */,
 				EA9BC9EC2B8501ED00292705 /* PostView.swift in Sources */,
 				E0540C732B8E703A001A7561 /* DailySongView.swift in Sources */,

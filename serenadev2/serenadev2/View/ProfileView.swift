@@ -13,7 +13,7 @@ struct ProfileView: View {
     @State var headerHeight: CGFloat = 0
     @State var headerOffset: CGFloat = 0
     @State var lastHeaderOffset: CGFloat = 0
-    @State var direction: SwipeDriection = .none
+    @State var direction: SwipeDirection = .none
     @State var shiftOffset: CGFloat = 0
     
     // Opacity variables for the button and the header
