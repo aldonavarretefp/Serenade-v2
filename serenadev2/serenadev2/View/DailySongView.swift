@@ -17,7 +17,7 @@ struct DailySongView: View {
     @State var  characterLimit = 100
     @State private var isPresentingSearchSong = false //for modal presentation of SearchSong
     
-    @State var song: Song? // Optional to handle the case where no song is selected
+    @State var song: SongModel? // Optional to handle the case where no song is selected
     
     var isSongFromDaily : Bool
     
@@ -33,16 +33,18 @@ struct DailySongView: View {
                         .foregroundStyle(.callout)
                     
                     if let song = song  {
+                        
                         if isSongFromDaily {
                             Button(action: {
                                 // This will toggle the state variable to present the sheet
+                                printSong(song: song)
                                 isPresentingSearchSong = true
                             }) {
                                 VStack(alignment: .leading) {
                                     HStack {
                                         Text("Selected song")
                                             .font(.callout)
-                                            
+                                        
                                         Spacer()
                                         Text("Change song")
                                             .font(.footnote)
@@ -53,9 +55,10 @@ struct DailySongView: View {
                                         Rectangle()
                                             .fill(.ultraThickMaterial)
                                         
-                                        ItemSmall(item: ContentItem(imageUrl: URL(string: song.coverArt), title: song.title, subtitle: song.artist, isPerson: false), showArrow: false)
+                                        ItemSmall(item: ContentItem(isPerson: false, song: song), showArrow: false)
                                             .padding(.horizontal, 5)
                                     }
+                                    //.background(.viewBackground)
                                     .frame(maxHeight: 60)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                 }
@@ -69,23 +72,23 @@ struct DailySongView: View {
                         }
                         else{
                             
-                                VStack(alignment: .leading) {
-                                    HStack {
-                                        Text("Selected song")
-                                            .font(.callout)
-                                            
-                                    }
-                                    ZStack {
-                                        Rectangle()
-                                            .fill(.ultraThickMaterial)
-                                        
-                                        ItemSmall(item: ContentItem(imageUrl: URL(string: song.coverArt), title: song.title, subtitle: song.artist, isPerson: false), showArrow: false)
-                                            .padding(.horizontal, 5)
-                                    }
-                                    .frame(maxHeight: 60)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Text("Selected song")
+                                        .font(.callout)
+                                    
                                 }
-                                
+                                ZStack {
+                                    Rectangle()
+                                        .fill(.ultraThickMaterial)
+                                    
+                                    ItemSmall(item: ContentItem(isPerson: false, song: song), showArrow: false)
+                                        .padding(.horizontal, 5)
+                                }
+                                .frame(maxHeight: 60)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                            }
+                            
                             
                         }
                         
@@ -112,7 +115,7 @@ struct DailySongView: View {
                                 .font(.callout)
                                 .foregroundColor(caption.count < characterLimit ? (colorScheme == .dark ? .white : .black) : .red)
                         }
-                        CaptionView(caption: $caption, characterLimit: $characterLimit)
+                        CaptionView(caption: $caption, characterLimit: $characterLimit, isSongFromDaily: false)
                     }
                     Spacer()
                     // Enable the 'Daily' button only if a song is selected
@@ -152,43 +155,58 @@ struct DailySongView: View {
 }
 
 
-
+func printSong (song: SongModel){
+    print("THIS IS THE RECEIVED SONG \(song)")
+}
 
 struct CaptionView: View {
     @Binding var caption: String
-    @Binding var characterLimit : Int
+    @Binding var characterLimit: Int
+    var isSongFromDaily: Bool
     @FocusState private var isTextFieldFocused: Bool
-
+    
     var body: some View {
-        GeometryReader{geo in
-            ZStack(alignment: .topLeading){
-                
-                Rectangle()
-                .fill(.card) //THIS SHOULD BE THE ACTUAL COLOR
-                
-                TextField("Let your friends know your melody of the day...", text: $caption, axis: .vertical)
-                    .font(.subheadline)
-                    .padding()
-                    .foregroundColor(.white) // Text color
-                    .focused($isTextFieldFocused)
-                    .onSubmit {
-                           // This will dismiss the keyboard
-                           isTextFieldFocused = false
-                       }
-                    .onReceive(caption.publisher.collect()) {
-                        self.caption = String($0.prefix(characterLimit))
-                        
-                    }
-                
-                
+        GeometryReader { geo in
+            Button(action: {
+                isTextFieldFocused = true
+            }) {
+                ZStack(alignment: .topLeading) {
+                    Rectangle()
+                        .fill(Color.card) // Change to the actual color
+                    
+                    TextField("Let your friends know your melody of the day...", text: $caption)
+                                .multilineTextAlignment(.leading)
+                                .font(.subheadline)
+                                .padding()
+                                .foregroundColor(.white) // Adjust as needed; white text may not be visible on a light background
+                                .focused($isTextFieldFocused)
+                                .onSubmit {
+                                    // This will dismiss the keyboard
+                                    isTextFieldFocused = false
+                                }
+                                .onReceive(caption.publisher.collect()) {
+                                    self.caption = String($0.prefix(characterLimit))
+                                }
+                                .toolbar {
+                                    // The toolbar is conditionally added based on the focus state
+                                    if isTextFieldFocused {
+                                        ToolbarItemGroup(placement: .keyboard) {
+                                            Spacer()
+                                            Button("Done") {
+                                                isTextFieldFocused = false
+                                            }
+                                            .foregroundColor(.accentColor)
+                                        }
+                                    }
+                                }
+                }
             }
-            .frame(width: geo.size.width, height: geo.size.height * 2/7)
-            
+            .frame(width: geo.size.width, height: isSongFromDaily ? geo.size.height * 2/7 : max(geo.size.height * 2/7, 100)) // Adjust the minimum height as needed
             .cornerRadius(10)
         }
-        
     }
 }
+
 
 
 
@@ -236,12 +254,12 @@ struct DailyFromSongView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             // Preview without a song
-         // DailySongView()
-               // .previewDisplayName("No Song Selected")
+            // DailySongView()
+            // .previewDisplayName("No Song Selected")
             
             // Preview with a song
-            DailySongView(song: Song(id: "1", title: "See you again (feat. Kali Uchis)", artist: "Tyler, The Creator, Kali Uchis", album: "Example Album", coverArt: "https://i.scdn.co/image/ab67616d0000b2738940ac99f49e44f59e6f7fb3"), isSongFromDaily: true)
-               // .previewDisplayName("With Song Selected")
+            // DailySongView(song: Song(id: "1", title: "See you again (feat. Kali Uchis)", artist: "Tyler, The Creator, Kali Uchis", album: "Example Album", coverArt: "https://i.scdn.co/image/ab67616d0000b2738940ac99f49e44f59e6f7fb3"), isSongFromDaily: true)
+            // .previewDisplayName("With Song Selected")
         }
     }
 }

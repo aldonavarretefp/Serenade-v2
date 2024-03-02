@@ -14,14 +14,9 @@ struct SelectSongView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) var dismiss
     @State private var searchText = ""
-    @Binding var song: Song?
-    
-    
-    let musicList = [
-        ContentItem(imageUrl: URL(string: "https://i.scdn.co/image/ab67616d0000b2738940ac99f49e44f59e6f7fb3"), title: "See you again (feat. Kali Uchis)", subtitle: "Tyler, The Creator, Kali Uchis", isPerson: false),
-        ContentItem(imageUrl: URL(string: "https://i.scdn.co/image/ab67616d00001e02baf2a68126739ff553f2930a"), title: "Runaway", subtitle: "Kanye West", isPerson: false),
-        ContentItem(imageUrl: URL(string: "https://i.scdn.co/image/ab67616d0000b273dafad44c40c08d3fbfcce20f"), title: "Entropy", subtitle: "Beach Bunny", isPerson: false)
-    ]
+    @Binding var song: SongModel?
+    @StateObject private var viewModel = SearchViewModel() // Initialize the view model
+    @State private var selectedSong: ContentItem?
     
     var body: some View {
         NavigationStack {
@@ -29,48 +24,107 @@ struct SelectSongView: View {
                 Rectangle()
                     .fill(.ultraThickMaterial)
                     .ignoresSafeArea()
-                List(filteredResults, id: \.title) { item in
-                    ItemSmall(item: item, showArrow: false)
-                        
-                        .onTapGesture {
-                            updateSelectedSong(from: item)
-                            presentationMode.wrappedValue.dismiss()
+                VStack(spacing: 0) {
+                    
+                    List(filteredResults) { value in
+                        ItemSmall(item: value, showArrow: false)
+                            //.padding()
+                            .onTapGesture {
+                                print("THIS IS THE SONG : \(value)")
+                                updateSelectedSong(from: value)
+                                presentationMode.wrappedValue.dismiss()
+                                selectedSong = value
+                            }
+                            .background(.clear)
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                    }
+                    .listStyle(.plain)
+                    .background(.viewBackground)
+                    .overlay {
+                            if viewModel.isLoading {
+                                // Display a loading indicator or view when music is being fetched
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                            } else if viewModel.searchText.isEmpty {
+                                // Display this when no search has been made yet
+                                ContentUnavailableView(label: {
+                                    Label("Search for music ", systemImage: "music.note")
+                                }, description: {
+                                    Text("Search for your favorite songs, artists or albums")
+                                })
+                            } else if filteredResults.isEmpty {
+                                // Display this when there are no results (for Music tab only)
+                                ContentUnavailableView(label: {
+                                    Label("No Matches Found ", systemImage: "exclamationmark")
+                                }, description: {
+                                    Text("We couldn't find anything for your search. Try different keywords or check for typos.")
+                                })
+                            
                         }
-                        .background(.clear)
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color.clear)
+                    }
                 }
                 
-                .listStyle(.plain)
+                .searchable(text: $viewModel.searchText)
+                .disableAutocorrection(true)
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
-            
-           .navigationTitle("Select Song")
-            .navigationBarTitleDisplayMode(.inline)
-
+            .onChange(of: viewModel.searchText) {
+                viewModel.fetchMusic(with: viewModel.searchText)
+            }
+            .navigationTitle("Select Song")
+                        .navigationBarTitleDisplayMode(.inline)
         }
     }
     
     var filteredResults: [ContentItem] {
-        musicList.filter {
-            $0.title.localizedCaseInsensitiveContains(searchText) ||
-            $0.subtitle.localizedCaseInsensitiveContains(searchText) ||
-            searchText.isEmpty
-        }
+            var contentitems = viewModel.songs.map { song in
+                ContentItem(isPerson: false, song: song)
+            }
+        print(contentitems.count)
+        return contentitems
+        
     }
     
     func updateSelectedSong(from item: ContentItem) {
-        let newSong = Song(id: UUID().uuidString,
-                           title: item.title,
-                           artist: item.subtitle,
-                           album: "",
-                           coverArt: item.imageUrl?.absoluteString ?? "")
+        // Attempt to unwrap `item.song` safely
+        guard let songDetails = item.song else {
+            print("Failed to unwrap item.song")
+            // Handle the failure case, e.g., return or set a default value
+            return
+        }
+        
+        // Since `songDetails` is now safely unwrapped, use it directly without optional chaining
+        let newSong = SongModel(
+            id: songDetails.id,
+            title: songDetails.title,
+            artists: songDetails.artists,
+            artworkUrlSmall: songDetails.artworkUrlSmall,
+            artworkUrlLarge: songDetails.artworkUrlLarge,
+            bgColor: songDetails.bgColor,
+            priColor: songDetails.priColor,
+            secColor: songDetails.secColor,
+            terColor: songDetails.terColor,
+            quaColor: songDetails.quaColor,
+            previewUrl: songDetails.previewUrl,
+            duration: songDetails.duration,
+            composerName: songDetails.composerName,
+            genreNames: songDetails.genreNames ?? [],
+            releaseDate: songDetails.releaseDate
+        )
+        
+        print("This is the deeeddeddede\(newSong)")
         self.song = newSong
+        print(" SI ESTA PASANDO LA CANCION \(song)")
     }
+
 }
 
 struct SelectSongView_Previews: PreviewProvider {
     static var previews: some View {
-        SelectSongView(song: .constant(nil as Song?))
+        SelectSongView(song: .constant(nil as SongModel?))
     }
 }
+
+
+
+
