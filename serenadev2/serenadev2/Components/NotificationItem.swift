@@ -25,7 +25,7 @@ struct NotificationItem: View {
             Text(user.tagName)
                 .fontWeight(.semibold)
                 .font(.subheadline)
-            + Text(" wants to be your friend")
+            + Text(LocalizedStringKey("FriendRequest"))
             
             Spacer()
             

@@ -198,7 +198,7 @@ struct FeedView: View {
                     
                     // If the daily post has not yet been made, show the button to do it
                     if !isDailyPosted {
-                        ActionButton(label: "Share daily song", symbolName: "waveform", fontColor: .white, backgroundColor: .purple, isShareDaily: true) {
+                        ActionButton(label: LocalizedStringKey("ShareDailyButton"), symbolName: "waveform", fontColor: .white, backgroundColor: .purple, isShareDaily: true) {
                             print("Daily button tapped")
                         }
                         .opacity(dailyButtonOpacity)

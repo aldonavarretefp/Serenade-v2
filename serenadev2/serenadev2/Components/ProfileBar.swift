@@ -89,12 +89,14 @@ struct ProfileBar: View {
                     HStack {
                         VStack {
                             
-                            Text("Posts")
+                            Text(LocalizedStringKey("Posts"))
                         }
+                        .font(.caption)
                         VStack {
                             
-                            Text("Friends")
+                            Text(LocalizedStringKey("Friends"))
                         }
+                        .font(.caption)
                         .padding(.horizontal)
                         Spacer()
                         if !isCurrentUser {
@@ -106,7 +108,7 @@ struct ProfileBar: View {
                                     }, label: {
                                         ZStack {
                                             Capsule()
-                                            Text("Add friend")
+                                            Text(LocalizedStringKey("AddFriendButton"))
                                                 .foregroundStyle(.white)
                                                 .fontWeight(.bold)
                                                 .font(.headline)
@@ -117,7 +119,7 @@ struct ProfileBar: View {
                                     ZStack {
                                         Capsule()
                                             .fill(.secondaryButton)
-                                        Text("Pending")
+                                        Text(LocalizedStringKey("PendingFriend"))
                                         //                                        .foregroundStyle(.callout)
                                             .fontWeight(.bold)
                                             .font(.subheadline)
@@ -137,11 +139,11 @@ struct ProfileBar: View {
                                     }
                                 })
                                 .sheet(isPresented: $isUnfriendSheetDisplayed, content: {
-                                    ConfirmationSheet(title: Text("Unfriend ") + Text(user.tagName).fontWeight(.semibold) + Text("?"), text: Text("Are you sure you want to delete ") + Text(user.tagName).fontWeight(.semibold) + Text(" from your friend list?"), action: {
-//                                        removeFriend()
+                                    
+                                    ConfirmationSheet(titleStart: LocalizedStringKey("UnfriendTitleStart"), titleEnd: LocalizedStringKey("UnfriendTitleEnd"), user: "alex10liva", descriptionStart: LocalizedStringKey("UnfriendDescriptionStart"), descriptionEnd: LocalizedStringKey("UnfriendDescriptionEnd"), buttonLabel: "DeleteFriend"){
                                         isFriend = false
-                                    }, buttonLabel: "Delete friend")
-                                            .presentationDetents([.fraction(0.3)])
+                                    }
+                                    .presentationDetents([.fraction(0.3)])
                                 })
                             }
                         }
@@ -157,5 +159,6 @@ struct ProfileBar: View {
 }
 
 #Preview {
-    ProfileBar(isFriendRequestSent: false, isCurrentUser: false, isFriend: true, user: sebastian)
+    ProfileBar(isFriendRequestSent: false, isCurrentUser: false, isFriend: false, user: sebastian)
+        .environment(\.locale, .init(identifier: "it"))
 }

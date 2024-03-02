@@ -26,7 +26,7 @@ struct SettingsView: View {
                         NavigationLink(destination: EditProfileView(user: sebastian).toolbarRole(.editor), label: {
                             Image(systemName: "square.and.pencil")
                                 .foregroundStyle(.accent)
-                            Text("Edit profile")
+                            Text(LocalizedStringKey("EditProfile"))
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(.callout)
@@ -39,7 +39,7 @@ struct SettingsView: View {
                         Button(action: { isStreamingServiceSheetDisplayed = true }, label: {
                             Image(systemName: "star")
                                 .foregroundStyle(.accent)
-                            Text("Favorite streaming apps")
+                            Text(LocalizedStringKey("FavoriteStreamingApps"))
                             Spacer()
                         })
                         .sheet(isPresented: $isStreamingServiceSheetDisplayed, content: {
@@ -53,12 +53,15 @@ struct SettingsView: View {
                     GroupBox {
                         Button(action: { isLogOutSheetDisplayed = true }, label: {
                             Spacer()
-                            Text("Log out")
+                            Text(LocalizedStringKey("LogOut"))
                             Spacer()
                         })
                         .sheet(isPresented: $isLogOutSheetDisplayed, content: {
-                            ConfirmationSheet(title: Text("Log out").fontWeight(.semibold), string: "Are you sure you want to log out?", action: {/*logOut()*/}, buttonLabel: "Log out")
-                                .presentationDetents([.fraction(0.3)])
+                            
+                            ConfirmationSheet(titleStart: LocalizedStringKey("LogOut"), descriptionStart: LocalizedStringKey("LogOutMessage"), buttonLabel: LocalizedStringKey("LogOut")){
+//                                isFriend = false
+                            }
+                            .presentationDetents([.fraction(0.3)])
                         })
                     }
                     .backgroundStyle(.card)
@@ -67,12 +70,15 @@ struct SettingsView: View {
                     GroupBox {
                         Button(role: .destructive, action: { isDeleteAccountSheetDisplayed = true }, label: {
                             Spacer()
-                            Text("Delete account")
+                            Text(LocalizedStringKey("DeleteAccount"))
                             Spacer()
                         })
                         .sheet(isPresented: $isDeleteAccountSheetDisplayed, content: {
-                            ConfirmationSheet(title: Text("Delete account").fontWeight(.semibold), text: Text("Deleting your account is permanent. You will not be able to recover your data. Are you sure you want to ") + Text("delete your account").fontWeight(.semibold) + Text("?"), action: {/*deleteAccount()*/}, buttonLabel: "Delete account", buttonColor: .red)
-                                .presentationDetents([.fraction(0.3)])
+                            
+                            ConfirmationSheet(titleStart: LocalizedStringKey("DeleteAccount"), descriptionStart: LocalizedStringKey("DeleteAccountDescriptionStart"), boldMessage: LocalizedStringKey("DeleteAccountBoldMessage"), descriptionEnd: LocalizedStringKey("DeleteAccountDescriptionEnd"), buttonLabel: LocalizedStringKey("DeleteAccount"), buttonColor: .red){
+                                /*deleteAccount()*/
+                            }
+                            .presentationDetents([.fraction(0.3)])
                         })
                     }
                     .backgroundStyle(.card)
@@ -95,7 +101,7 @@ struct SettingsView: View {
                 }
                 .padding()
                 .font(.subheadline)
-                .navigationTitle("Settings")
+                .navigationTitle(LocalizedStringKey("Settings"))
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarBackground(colorScheme == .light ? .white : .black,for: .navigationBar)
                 .navigationBarTitleDisplayMode(.inline)

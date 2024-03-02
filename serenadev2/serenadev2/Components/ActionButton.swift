@@ -15,7 +15,7 @@ struct ActionButton: View {
     
     
     // Properties for the button
-    var label: String                // Text to display on the button
+    var label: LocalizedStringKey    // Text to display on the button
     var symbolName: String           // Name of the SF Symbol to display on the button
     var fontColor: Color             // Color of the text on the button
     var backgroundColor: Color      // Background color of the button

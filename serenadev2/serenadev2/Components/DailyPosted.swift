@@ -54,7 +54,7 @@ struct DailyPosted: View {
             }
             
             VStack(alignment: .leading){
-                Text("Your daily song")
+                Text(LocalizedStringKey("YourDailySong"))
                     .font(.caption2)
                     .foregroundStyle(.callout)
                 

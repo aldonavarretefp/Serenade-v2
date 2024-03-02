@@ -51,7 +51,7 @@ struct PreviewPlayer: View {
         // Button to play/pause audio
         VStack(spacing: 5){
             
-            Text(isPlaying ? "Touch to pause preview" : "Touch to play preview")
+            Text(isPlaying ? LocalizedStringKey("TapToPausePreview") :LocalizedStringKey("TapToPlayPreview"))
                 .font(.caption)
                 .foregroundStyle(.white.opacity(0.7))
             

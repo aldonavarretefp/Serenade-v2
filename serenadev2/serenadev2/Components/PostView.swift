@@ -17,17 +17,17 @@ struct PostView: View {
     // Quitar despues
     var profileImg: String
     
-    var formattedDate: String {
+    var formattedDate: Text {
         let calendar = Calendar.current
         
         if calendar.isDateInToday(post.date) {
-            return "Today"
+            return Text(LocalizedStringKey("Today"))
         } else if calendar.isDateInYesterday(post.date) {
-            return "Yesterday"
+            return Text(LocalizedStringKey("Yesterday"))
         } else {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMM d, yyyy"
-            return dateFormatter.string(from: post.date)
+            return Text(dateFormatter.string(from: post.date))
         }
     }
     
@@ -48,10 +48,9 @@ struct PostView: View {
                         .frame(height: 28)
                     
                     
-                    Text(post.sender).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text("'s daily song")
+                    Text(post.sender).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
                     Spacer()
-                    Text(formattedDate)
-                        .font(.footnote)
+                    formattedDate
                 }
                 .foregroundStyle(.callout)
                 .padding([.top, .leading, .trailing])
@@ -99,7 +98,7 @@ struct PostView: View {
             }
             ZStack(alignment: .leading) {
                 UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0))
-//                    .fill(Color((post.song?.bgColor)!).opacity(0.5))
+                //                    .fill(Color((post.song?.bgColor)!).opacity(0.5))
                     .fill(.card.opacity(0.7))
                     .frame(height: 95)
                 

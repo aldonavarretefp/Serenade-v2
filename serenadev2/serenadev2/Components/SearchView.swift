@@ -8,12 +8,15 @@
 import SwiftUI
 import MusicKit
 
-
+enum selectedTab {
+    case music
+    case people
+}
 struct SearchView: View {
     @Environment(\.colorScheme) private var colorScheme
     @StateObject private var viewModel = SearchViewModel() // Initialize the view model
     
-    @State private var selectedTab = "Music"
+    @State private var selectedTab: selectedTab = .music
     @State private var underlineOffset: CGFloat = 0
     @State var isSongInfoDisplayed: Bool = false
     
@@ -36,27 +39,29 @@ struct SearchView: View {
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
                         // Music tab
-                        Text("Music")
+                        Text(LocalizedStringKey("Music"))
                             .padding(.vertical)
                             .frame(maxWidth: .infinity)
-                            .foregroundColor(selectedTab == "Music" ? colorScheme == .dark ? .white : .black : .callout)
+                            .background()
+                            .foregroundColor(selectedTab == .music ? colorScheme == .dark ? .white : .black : .callout)
                             .fontWeight(.semibold)
                             .onTapGesture {
                                 withAnimation(.easeOut(duration: animationDuration)) {
-                                    selectedTab = "Music"
+                                    selectedTab = .music
                                     underlineOffset = 0  // Reset offset for the Music tab
                                 }
                             }
                         
                         // People tab
-                        Text("People")
+                        Text(LocalizedStringKey("People"))
                             .padding(.vertical)
                             .frame(maxWidth: .infinity)
+                            .background()
                             .fontWeight(.semibold)
-                            .foregroundColor(selectedTab == "People" ? colorScheme == .dark ? .white : .black : .callout)
+                            .foregroundColor(selectedTab == .people ? colorScheme == .dark ? .white : .black : .callout)
                             .onTapGesture {
                                 withAnimation(.easeOut(duration: animationDuration)) {
-                                    selectedTab = "People"
+                                    selectedTab = .people
                                     underlineOffset = geometry.size.width / 2 // Set offset for the People tab
                                 }
                             }
@@ -88,7 +93,7 @@ struct SearchView: View {
             }
             .overlay {
                 // Check if the selected tab is Music before showing the overlay
-                if selectedTab == "Music" {
+                if selectedTab == .music {
                     if viewModel.isLoading {
                         // Display a loading indicator or view when music is being fetched
                         ProgressView()
@@ -96,17 +101,17 @@ struct SearchView: View {
                     } else if viewModel.searchText.isEmpty {
                         // Display this when no search has been made yet (for Music tab only)
                         ContentUnavailableView(label: {
-                            Label("Search for music ", systemImage: "music.note")
+                            Label(LocalizedStringKey("SearchForMusic"), systemImage: "music.note")
                         }, description: {
-                            Text("Search for your favorite songs, artists or albums")
+                            Text(LocalizedStringKey("SearchDescription"))
                         })
                         
                     } else if filteredResults.isEmpty {
                         // Display this when there are no results (for Music tab only)
                         ContentUnavailableView(label: {
-                            Label("No Matches Found ", systemImage: "exclamationmark")
+                            Label(LocalizedStringKey("NoMatchesFound"), systemImage: "exclamationmark")
                         }, description: {
-                            Text("We couldn't find anything for your search. Try different keywords or check for typos.")
+                            Text(LocalizedStringKey("NoMatchesDescription"))
                         })
                         
                     }
@@ -129,7 +134,7 @@ struct SearchView: View {
     
     
     var filteredResults: [ContentItem] {
-        if selectedTab == "Music" {
+        if selectedTab == .music {
             return viewModel.songs.map { song in
                 ContentItem(isPerson: false, song: song)
             }
@@ -146,5 +151,6 @@ struct SearchView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView()
+            
     }
 }

@@ -85,12 +85,12 @@ struct SongDetailView: View {
                     VStack(spacing: 15){
                         
                         // Daily button
-                        ActionButton(label: "Daily", symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false) {
+                        ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false) {
                             print("Daily button tapped")
                         }
                         
                         // Open with button
-                        ActionButton(label: "Open with", symbolName: "arrow.up.forward.circle.fill", fontColor: Color(song.priColor!), backgroundColor: Color(song.bgColor!), isShareDaily: false) {
+                        ActionButton(label: LocalizedStringKey("OpenWith"), symbolName: "arrow.up.forward.circle.fill", fontColor: Color(song.priColor!), backgroundColor: Color(song.bgColor!), isShareDaily: false) {
                             print("Daily button tapped")
                         }
                     }
