@@ -1,28 +1,35 @@
 //
 //  PreviewPlayer.swift
-//  prueba
+//  serenadev2
 //
-//  Created by Alejandro Oliva Ochoa on 21/02/24.
+//  Created by Alejandro Oliva Ochoa on 29/02/24.
 //
 
 import SwiftUI
-import AVKit
+import AVFoundation
 
 struct PreviewPlayer: View {
     
-    // MARK: - Init
+    var player: AVPlayer!
+    
     init(mainColor: Color, audioURL: URL, fontColor: Color, secondaryColor: Color, seconds: Double = 15.0) {
         self.mainColor = mainColor
         self.audioURL = audioURL
         self.fontColor = fontColor
         self.secondaryColor = secondaryColor
-        
         self.endTime = calculateEndTime(tiempo: seconds)
+        
+        // Creamos el reproductor de audio con la URL proporcionada
+        self.player = AVPlayer(url: audioURL)
+        
+        // This audio session configuration must be done before starting audio playback
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Error setting up audio session: \(error.localizedDescription)")
+        }
     }
-    
-    // MARK: - Properties
-    // AVPlayer to play the audio
-    let player = AVPlayer()
     
     //Variable to track playback status
     @State private var isPlaying = false
@@ -30,7 +37,8 @@ struct PreviewPlayer: View {
     var audioURL: URL
     var fontColor: Color
     var secondaryColor: Color
-    @State private var seconds: Double = 0
+    @State private var miliseconds: Double = 0
+    
     @State private var timer: Timer? = nil
     
     // Initial time of the song
@@ -39,12 +47,15 @@ struct PreviewPlayer: View {
     // When the song ends (max 30 seconds)
     var endTime: CMTime = CMTime(seconds: 15, preferredTimescale: 1)
     
-    // MARK: - Body
     var body: some View {
         // Button to play/pause audio
-        VStack{
+        VStack(spacing: 5){
+            
+            Text(isPlaying ? LocalizedStringKey("TapToPausePreview") :LocalizedStringKey("TapToPlayPreview"))
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.7))
+            
             ZStack{
-                
                 // Image to show the lines at the device width
                 Image("player-lines-full")
                 
@@ -59,24 +70,12 @@ struct PreviewPlayer: View {
                                 
                                 // Fill the rectanble background depending on the time of the song
                                 secondaryColor.adjustedForContrast()
-                                    .frame(width: CGFloat(seconds) / CGFloat(endTime.seconds) * 20)
+                                    .frame(width: CGFloat(miliseconds) / CGFloat(endTime.seconds) * 20)
                                 
                             }
                         )
                         .shadow(color: .black.opacity(0.13), radius: 25, x: 0, y: 8)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                    
-//                    Image("player-lines-middle")
-//                        .renderingMode(.template)
-//                        .foregroundColor(mainColor)
-//                        .mask(
-//                            HStack{
-//                                Rectangle()
-//                                    .frame(width: (CGFloat(seconds) / CGFloat(endTime.seconds) * 20))
-//                                Spacer()
-//                            }
-//                        )
-//                        .clipShape(RoundedRectangle(cornerRadius: 10))
                     
                     // Play / pause icon
                     Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
@@ -93,27 +92,11 @@ struct PreviewPlayer: View {
                         self.player.play()
                         
                     }
-                    self.isPlaying.toggle()
+                    withAnimation{
+                        self.isPlaying.toggle()
+                    }
                 }
-                
             }
-            
-        }
-        .onAppear {
-            
-            // This audio session configuration must be done before starting audio playback
-            do {
-                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-                try AVAudioSession.sharedInstance().setActive(true)
-            } catch {
-                print("Error setting up audio session: \(error.localizedDescription)")
-            }
-            
-            // Configure the AVPlayer with the audio URL
-            let playerItem = AVPlayerItem(url: audioURL)
-            playerItem.seek(to: initialTime, completionHandler: nil)
-            playerItem.forwardPlaybackEndTime = endTime
-            self.player.replaceCurrentItem(with: playerItem)
         }
         .onDisappear {
             // Reset the timer and the song when the view disappears
@@ -128,20 +111,19 @@ struct PreviewPlayer: View {
         if timer == nil {
             self.timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
                 if self.isPlaying {
-                    if self.seconds < (endTime.seconds * 10) {
+                    if self.miliseconds < (endTime.seconds * 10) {
                         // increase seconds with animation
                         withAnimation{
-                            self.seconds += 1
+                            self.miliseconds += 1
                         }
                     } else {
                         // Restart playback from the beginning
-                        player.seek(to: self.initialTime, toleranceBefore: .zero, toleranceAfter: .zero) { _ in
-                            withAnimation{
-                                seconds = 0
-                            }
-                            self.isPlaying = false
-                            self.stopTimer()
-                            self.player.pause()
+                        player.seek(to: CMTime.zero)
+                        self.isPlaying = false
+                        self.stopTimer()
+                        self.player.pause()
+                        withAnimation{
+                            miliseconds = 0
                         }
                     }
                 }
@@ -163,5 +145,5 @@ struct PreviewPlayer: View {
 }
 
 #Preview {
-    PreviewPlayer(mainColor: Color(hex: 0x202020), audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, fontColor: Color(hex: 0x000000), secondaryColor: Color(hex: 0x111111), seconds: 15.0)
+    PreviewPlayer(mainColor: Color(hex: 0x202020), audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, fontColor: Color(hex: 0x000000), secondaryColor: Color(hex: 0x111111), seconds: 5)
 }

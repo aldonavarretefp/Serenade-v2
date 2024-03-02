@@ -14,41 +14,73 @@ struct ConfirmationSheet: View {
     
     typealias Action = () -> Void
     
-    var title: Text?    //  For using Text() concatenations and modifiers
-    var titleString: String?
-    var text: Text?    //  For using Text() concatenations and modifiers
-    var string: String?
-    var action: Action? //  Action to be performed by the primary button
-    var buttonLabel: String
+    var titleStart: LocalizedStringKey
+    var titleEnd: LocalizedStringKey?
+    var user: String?
+    var descriptionStart: LocalizedStringKey
+    var boldMessage: LocalizedStringKey?
+    var descriptionEnd: LocalizedStringKey?
+    var buttonLabel: LocalizedStringKey
     var buttonColor: Color?
+    var action: Action? //  Action to be performed by the primary button
     
     var body: some View {
         VStack {
             Spacer()
-            HStack {
-                if title != nil {
-                    title
-                }
-                else if titleString != nil {
-                    Text(titleString!)
-                }
-                else {
-                    Text("Sheet title")
+            
+            HStack{
+                if let user = user {
+                    if let titleEnd = titleEnd {
+                        Text(titleStart)
+                        
+                        + Text(user)
+                            .fontWeight(.semibold)
+                        + Text(titleEnd)
+                    } else {
+                        Text(titleStart)
+                        
+                        + Text(user)
+                            .fontWeight(.semibold)
+                    }
+                } else {
+                    Text(titleStart)
+                        .fontWeight(.semibold)
                 }
             }
             .font(.title3)
             .padding()
-            if string != nil {
-                Text(string!)
-                    .padding(.horizontal)
+            
+            if let user = user {
+                if let descriptionEnd = descriptionEnd {
+                    Text(descriptionStart)
+                        + Text(user)
+                            .bold()
+                        + Text(descriptionEnd)
+                } else {
+                    Text(descriptionStart)
+                        + Text(user)
+                            .bold()
+                }
+            } else if let boldMessage = boldMessage {
+                if let descriptionEnd = descriptionEnd {
+                    Text(descriptionStart)
+                        + Text(boldMessage)
+                            .bold()
+                        + Text(descriptionEnd)
+                } else {
+                    Text(descriptionStart)
+                        + Text(boldMessage)
+                            .bold()
+                }
+            } else {
+                if let descriptionEnd = descriptionEnd {
+                    Text(descriptionStart)
+                        + Text(descriptionEnd)
+                } else {
+                    Text(descriptionStart)
+                }
             }
-            else if text != nil {
-                text
-                    .padding(.horizontal)
-            }
-            else {
-                Text("Sheet text")
-            }
+            
             Spacer()
             HStack {
                 Button(action: {dismiss()}, label: {
@@ -84,11 +116,11 @@ struct ConfirmationSheet: View {
             .padding()
         }
         .multilineTextAlignment(.center)
-//        .frame(maxWidth: 350)
+        //        .frame(maxWidth: 350)
         .padding(.horizontal)
         .font(.subheadline)    }
 }
 
 #Preview {
-    ConfirmationSheet(title: Text("Unfriend ") + Text("user.tagName").fontWeight(.semibold) + Text("?"), string: "hello", buttonLabel: "delete", buttonColor: .red)
+    ConfirmationSheet(titleStart: LocalizedStringKey("UnfriendTitleStart"), titleEnd: LocalizedStringKey("UnfriendTitleEnd"), user: "alex10liva", descriptionStart: LocalizedStringKey("UnfriendDescriptionStart"), descriptionEnd: LocalizedStringKey("UnfriendDescriptionEnd"), buttonLabel: "DeleteFriend")
 }

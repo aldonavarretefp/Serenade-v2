@@ -15,23 +15,30 @@ struct StreamingAppPickerSheet: View {
     @State var selectedAmazonMusic: Bool = true
     
     var body: some View {
-        ZStack(alignment: .top) {
-            Color.viewBackground
-                .ignoresSafeArea()
-            VStack(alignment: .leading) {
-                Text("Favorite streaming apps")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                Text("Select your favorite streaming apps to play music.")
-                    .foregroundStyle(.callout)
-                    .font(.body)
-                ChecklistItem(selected: selectedAppleMusic, image: "AppleMusicAppIcon", label: "Apple Music")
-                ChecklistItem(selected: selectedSpotify, image: "SpotifyAppIcon", label: "Spotify")
-                ChecklistItem(selected: selectedYouTubeMusic, image: "YouTubeMusicAppIcon", label: "YouTube Music")
-                ChecklistItem(selected: selectedAmazonMusic, image: "AmazonMusicAppIcon", label: "Amazon Music")
-//                Spacer()
+        NavigationStack{
+            ZStack(alignment: .top) {
+                Color.viewBackground
+                    .ignoresSafeArea()
+                VStack(alignment: .leading) {
+                    Text(LocalizedStringKey("FavoriteAppsDescription"))
+                        .fontWeight(.light)
+                        .foregroundStyle(.callout)
+                        .padding(.bottom)
+                    ChecklistItem(selected: selectedAppleMusic, image: "AppleMusicAppIcon", label: "Apple Music")
+                    ChecklistItem(selected: selectedSpotify, image: "SpotifyAppIcon", label: "Spotify")
+                    ChecklistItem(selected: selectedYouTubeMusic, image: "YouTubeMusicAppIcon", label: "YouTube Music")
+                    ChecklistItem(selected: selectedAmazonMusic, image: "AmazonMusicAppIcon", label: "Amazon Music")
+                    //                Spacer()
+                }
+                .padding(.horizontal)
             }
-            .padding()
+            .toolbar{
+                ToolbarItem(placement: .topBarLeading){
+                    Text(LocalizedStringKey("FavoriteStreamingApps"))
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                }
+            }
         }
     }
     
