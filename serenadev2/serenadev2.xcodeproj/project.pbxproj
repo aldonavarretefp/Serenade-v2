@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4447C0562B920FD100593AF5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4447C0552B920FD100593AF5 /* NotificationsView.swift */; };
+		4447C05A2B92223700593AF5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4447C05C2B92223700593AF5 /* Localizable.strings */; };
 		446800292B90C87D00A858F1 /* SongMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446800282B90C87D00A858F1 /* SongMetaData.swift */; };
 		44D1A4212B91DAC200BE6F92 /* NotificationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */; };
 		44D1A4232B91DB3100BE6F92 /* NotificationActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */; };
@@ -76,6 +77,9 @@
 
 /* Begin PBXFileReference section */
 		4447C0552B920FD100593AF5 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
+		4447C05B2B92223700593AF5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4447C05D2B92223900593AF5 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4447C05E2B92223900593AF5 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		446800282B90C87D00A858F1 /* SongMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongMetaData.swift; sourceTree = "<group>"; };
 		44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationItem.swift; sourceTree = "<group>"; };
 		44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationActionButton.swift; sourceTree = "<group>"; };
@@ -155,6 +159,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4447C0572B9221E100593AF5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4447C05C2B92223700593AF5 /* Localizable.strings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		C40C09B42B863C82009BE4C5 /* ViewExtensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,6 +257,7 @@
 		F137D2262B839A81006264C1 = {
 			isa = PBXGroup;
 			children = (
+				4447C0572B9221E100593AF5 /* Resources */,
 				C4D5111C2B8FBF6200E95549 /* Service */,
 				C4D511172B8E67DA00E95549 /* ViewModel */,
 				F137D2312B839A82006264C1 /* serenadev2 */,
@@ -428,6 +441,8 @@
 			knownRegions = (
 				en,
 				Base,
+				"es-419",
+				it,
 			);
 			mainGroup = F137D2262B839A81006264C1;
 			productRefGroup = F137D2302B839A82006264C1 /* Products */;
@@ -447,6 +462,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F137D23C2B839A84006264C1 /* Preview Assets.xcassets in Resources */,
+				4447C05A2B92223700593AF5 /* Localizable.strings in Resources */,
 				F137D2392B839A84006264C1 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -550,6 +566,19 @@
 			targetProxy = F137D24E2B839A84006264C1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4447C05C2B92223700593AF5 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4447C05B2B92223700593AF5 /* en */,
+				4447C05D2B92223900593AF5 /* it */,
+				4447C05E2B92223900593AF5 /* es-419 */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		F137D2552B839A84006264C1 /* Debug */ = {
