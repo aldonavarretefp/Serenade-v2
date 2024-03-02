@@ -26,7 +26,6 @@
 		C4F14A7D2B88FBD800D7111E /* CreatePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F14A7C2B88FBD800D7111E /* CreatePasswordView.swift */; };
 		E0540C732B8E703A001A7561 /* DailySongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0540C722B8E703A001A7561 /* DailySongView.swift */; };
 		E0540C772B8E71AF001A7561 /* SelectSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0540C762B8E71AF001A7561 /* SelectSongView.swift */; };
-		E0D1985F2B90BEE000B804E6 /* OpenWithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D1985E2B90BEE000B804E6 /* OpenWithView.swift */; };
 		E0F6F8332B879BAC009B35B1 /* BrandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F6F8322B879BAC009B35B1 /* BrandButton.swift */; };
 		E0F6F8352B879D11009B35B1 /* BrandsGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F6F8342B879D11009B35B1 /* BrandsGrid.swift */; };
 		EA216FC82B8E3FAC00A715EB /* StreamingAppPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA216FC72B8E3FAC00A715EB /* StreamingAppPickerSheet.swift */; };
@@ -90,7 +89,6 @@
 		C4F14A7C2B88FBD800D7111E /* CreatePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePasswordView.swift; sourceTree = "<group>"; };
 		E0540C722B8E703A001A7561 /* DailySongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailySongView.swift; sourceTree = "<group>"; };
 		E0540C762B8E71AF001A7561 /* SelectSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSongView.swift; sourceTree = "<group>"; };
-		E0D1985E2B90BEE000B804E6 /* OpenWithView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OpenWithView.swift; path = serenadev2/View/OpenWithView.swift; sourceTree = SOURCE_ROOT; };
 		E0F6F8322B879BAC009B35B1 /* BrandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandButton.swift; sourceTree = "<group>"; };
 		E0F6F8342B879D11009B35B1 /* BrandsGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandsGrid.swift; sourceTree = "<group>"; };
 		EA216FC72B8E3FAC00A715EB /* StreamingAppPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingAppPickerSheet.swift; sourceTree = "<group>"; };
@@ -207,7 +205,6 @@
 				EA5A43DD2B88F66800F6F04C /* SettingsView.swift */,
 				C402E7DC2B8CD4E7004EC79C /* FeedView.swift */,
 				E0540C722B8E703A001A7561 /* DailySongView.swift */,
-				E0D1985E2B90BEE000B804E6 /* OpenWithView.swift */,
 				E0540C762B8E71AF001A7561 /* SelectSongView.swift */,
 				EAB0C0D72B8CEC5A004F47F6 /* EditProfileView.swift */,
 				EA36A1A62B8F7900007F56FD /* AppInfoSheet.swift */,
@@ -447,7 +444,6 @@
 				EAB0C0DC2B8CF489004F47F6 /* ConfirmationSheet.swift in Sources */,
 				C4D511192B8E67F000E95549 /* SearchViewModel.swift in Sources */,
 				F7F928652B879FAF00050926 /* MockedUser.swift in Sources */,
-				E0D1985F2B90BEE000B804E6 /* OpenWithView.swift in Sources */,
 				F137D2352B839A82006264C1 /* ContentView.swift in Sources */,
 				EA9BC9F62B87960900292705 /* ProfileView.swift in Sources */,
 				EA9BC9E82B83A44800292705 /* ProfileBar.swift in Sources */,
