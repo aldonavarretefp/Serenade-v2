@@ -14,7 +14,10 @@ struct OpenWithView : View {
     // Property to receive an array of ButtonType.
     // which specifies the different types of buttons that can be displayed in the BrandsGrid.
     var buttonTypes: [ButtonType]
-
+    var songTitle : String
+    var songArtist: String
+    var songId: String
+    
     var body: some View {
        
         NavigationStack {
@@ -31,7 +34,7 @@ struct OpenWithView : View {
                     
                     // This is where the BrandsGrid view is placed, passing in the buttonTypes array.
                     // BrandsGrid is a custom view responsible for displaying the buttons.
-                    BrandsGrid(buttonTypes: buttonTypes)
+                    BrandsGrid(buttonTypes: buttonTypes, songTitle: songTitle, songArtist: songArtist, songId: songId)
                     
                     // A spacer is used to push all preceding content to the top.
                     Spacer()
@@ -67,6 +70,6 @@ struct OpenWithView : View {
 }
 
 #Preview {
-    OpenWithView(buttonTypes: [.appleMusic, .spotify, .youtubeMusic, .amazonMusic, .spotify])
+    OpenWithView(buttonTypes: [.appleMusic, .spotify, .youtubeMusic, .amazonMusic, .spotify], songTitle: "Runaway", songArtist: "Ye", songId: "")
 }
 
