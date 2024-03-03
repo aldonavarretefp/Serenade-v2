@@ -15,4 +15,4 @@ import CloudKit
 //var mockedUser2: User = .init(name: "Aldo Navarrete", email: "aaldiitoo@gmail.com", streak: 10, profilePicture: "https://lh3.googleusercontent.com/a/ACg8ocIlKulfr3ErDewen2yMpLEMFn5MuiOn-OjohQZckLjLrrjk=s96-c", isActive: true, tagName: "aaldiitoo", friendRequestSent: [CKRecord.Reference](), friendRequestReceived: [CKRecord.Reference]())
 
 
-let mockedUser: User = .init(name: "ExampleUser", tagName: "exampleuser", email: "example@example.com", streak: 1, profilePicture: "", isActive: true)
+

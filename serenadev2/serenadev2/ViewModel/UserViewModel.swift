@@ -13,6 +13,7 @@ class UserViewModel: ObservableObject {
     @Published var user: User?
     @Published var permissionStatus: Bool = false
     @Published var userID: CKRecord.ID?
+
     @Published var isSignedInToiCloud: Bool = false
     @Published var error: String = ""
     var cancellables = Set<AnyCancellable>()
@@ -21,7 +22,6 @@ class UserViewModel: ObservableObject {
         getiCloudStatus()
         requestPermission()
         fetchMainUserIDFromiCloud()
-        
     }
     
     //MARK: iCloud Connection
@@ -66,12 +66,10 @@ class UserViewModel: ObservableObject {
     
     private func fetchMainUser(){
         guard let userID = self.userID else {return}
+        
         let recordToMatch = CKRecord.Reference(recordID: userID, action: .none)
-        
         let predicate = NSPredicate(format: "accountID == %@ && isActive == 1", recordToMatch)
-        
         let recordType = UserRecordKeys.type.rawValue
-        
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
             .receive(on: DispatchQueue.main)
             .sink { _ in
@@ -108,7 +106,7 @@ class UserViewModel: ObservableObject {
     
     func createUser(user: User){
         let recordToMatch = CKRecord.Reference(recordID: userID!, action: .none)
-        let newUser = User(accountID: recordToMatch, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive)
+        let newUser = User(accountID: recordToMatch, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, record: user.record)
         CloudKitUtility.add(item: newUser) { _ in }
     }
     
@@ -121,10 +119,34 @@ class UserViewModel: ObservableObject {
         updateUser(newUser: user!)
     }
     
-    func addFriend(friend: User){
-        guard let friendAccountID = friend.accountID else {return}
-        user?.friends?.append(friendAccountID)
-        updateUser(newUser: user!)
+    func makeFriends(withId user: User, friendId: CKRecord.ID){
+        var updatedUser = user
+        
+        let referenceToFriend = CKRecord.Reference(recordID: friendId, action: .none)
+        let referencetoUser = CKRecord.Reference(recordID: user.record.recordID, action: .none)
+        
+//        guard var friend: User = User(record: .init(recordType: UserRecordKeys.type.rawValue, recordID: friendId)) else {
+//            print("It was not possible to fetch the friend to make them friends")
+//            return
+//        }
+        
+        let recordToMatch = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: friendId)
+        let predicate = NSPredicate(format: "recordID = %@", recordToMatch)
+        let recordType: CKRecord.RecordType = UserRecordKeys.type.rawValue
+        
+        
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType) as Future<[User], Error>
+//            .sink { _ in
+//                
+//            } receiveValue: { returnedUser in
+//                let user: User? = returnedUser
+////                updatedUser.friends?.append(referenceToFriend)
+////                friend.friends?.append(referencetoUser)
+////                
+////                updateUser(newUser: updatedUser)
+////                updateUser(newUser: friend)
+//            }
+//            .store(in: &cancellables)
     }
     
     func deleteFriend(friend: User){
