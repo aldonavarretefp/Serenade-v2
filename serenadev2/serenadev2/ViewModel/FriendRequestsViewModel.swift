@@ -10,10 +10,14 @@ import SwiftUI
 import CloudKit
 import Combine
 
-class FriendRequestsViewModel: ObservableObject {
+class FriendRequestsViewModel {
     
     @Published var friendRequests = [FriendRequest]()
     var cancellables = Set<AnyCancellable>()
+    
+    init(user: User) {
+        fetchFriendRequestsForUser(user: user)
+    }
     
     /**
      Fetches the friend requests for the user.
@@ -21,10 +25,12 @@ class FriendRequestsViewModel: ObservableObject {
         - user: The user to fetch the friend requests for.
      */
     func fetchFriendRequestsForUser(user: User) {
-        let userID = user.record.recordID
-        let recordToMatch = CKRecord.Reference(recordID: userID, action: .none)
+        let userID = CKRecord.ID(recordName: "87E3D069-576C-4DF4-A297-C5A15D231511")
+        
+        let recordToMatch = CKRecord.Reference(recordID: CKRecord.ID(recordName: "87E3D069-576C-4DF4-A297-C5A15D231511"), action: .none)
         let predicate = NSPredicate(format: "receiver == %@", recordToMatch)
-        let recordType = FriendRecordKeys.type.rawValue
+        let recordType = FriendRequestsRecordKeys.type.rawValue
+        print(recordToMatch)
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
             .receive(on: DispatchQueue.main)
             .sink { _ in
@@ -46,15 +52,18 @@ class FriendRequestsViewModel: ObservableObject {
         
         let senderReference = CKRecord.Reference(recordID: senderID, action: .none)
         let receiverReference = CKRecord.Reference(recordID: receiverID, action: .none)
+        let requestStatus: FriendRequestStatus = .pending
+        let timeStamp: Date = .now
         
-        let friendRequest = FriendRequest(sender: senderReference, receiver: receiverReference, status: .pending, date: .now)
+        let friendRequest = FriendRequest(sender: senderReference, receiver: receiverReference, status: requestStatus, timeStamp: timeStamp, record: CKRecord(recordType: FriendRequestsRecordKeys.type.rawValue))
         
         CloudKitUtility.add(item: friendRequest) { result in
             switch result {
             case .success(_):
                 print("Success sending friend request!")
                 break;
-            case .failure(_):
+            case .failure(let error):
+                print(error.localizedDescription)
                 break;
             }
         }
@@ -65,15 +74,16 @@ class FriendRequestsViewModel: ObservableObject {
         - Parameters:
             - friendRequest: The friend request to accept.
     */
-    func acceptFriendRequest(friendRequest: FriendRequest) {
-        var updatedFriendRequest = friendRequest
-        updatedFriendRequest.status = .accepted
-        CloudKitUtility.update(item: updatedFriendRequest) { result in
+    func acceptFriendRequest(friendRequest: FriendRequest, completionHandler: @escaping () -> Void) {
+        friendRequest.record["status"] = FriendRequestStatus.accepted.rawValue
+        CloudKitUtility.update(item: friendRequest) { result in
             switch result {
             case .success(_):
                 print("Success accepting friend request!")
+                completionHandler()
                 break;
-            case .failure(_):
+            case .failure(let error):
+                print("Error while accepting the friend request", error.localizedDescription)
                 break;
             }
         }
@@ -85,13 +95,14 @@ class FriendRequestsViewModel: ObservableObject {
             - friendRequest: The friend request to decline.
     */
     func declineFriendRequest(friendRequest: FriendRequest) {
-        var updatedFriendRequest = friendRequest
-        updatedFriendRequest.status = .rejected
-        CloudKitUtility.update(item: updatedFriendRequest) { result in
+        friendRequest.record["status"] = FriendRequestStatus.rejected.rawValue
+        CloudKitUtility.update(item: friendRequest) { result in
             switch result {
             case .success(_):
+                print("Updated succesfully")
                 break;
-            case .failure(_):
+            case .failure(let error):
+                print("Failure", error.localizedDescription)
                 break;
             }
         }

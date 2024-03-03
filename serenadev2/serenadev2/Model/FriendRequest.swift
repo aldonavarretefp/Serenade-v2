@@ -8,12 +8,12 @@
 import Foundation
 import CloudKit
 
-enum FriendRecordKeys: String {
+enum FriendRequestsRecordKeys: String {
     case type = "FriendRequest"
     case sender
     case receiver
     case status
-    case date
+    case timeStamp
 }
 
 enum FriendRequestStatus: String {
@@ -26,33 +26,28 @@ struct FriendRequest: Hashable, CloudKitableProtocol {
     var sender: CKRecord.Reference
     var receiver: CKRecord.Reference
     var status: FriendRequestStatus
-    var date: Date
+    var timeStamp: Date
+    var record: CKRecord
     
 }
 
 extension FriendRequest {
     init?(record: CKRecord) {
-        guard let sender = record[FriendRecordKeys.sender.rawValue] as? CKRecord.Reference,
-              let receiver = record[FriendRecordKeys.receiver.rawValue] as? CKRecord.Reference,
-              let status = record[FriendRecordKeys.status.rawValue] as? String,
-                let date = record[FriendRecordKeys.date.rawValue] as? Date
+        guard let sender = record[FriendRequestsRecordKeys.sender.rawValue] as? CKRecord.Reference,
+              let receiver = record[FriendRequestsRecordKeys.receiver.rawValue] as? CKRecord.Reference,
+              let status = record[FriendRequestsRecordKeys.status.rawValue] as? String,
+                let timeStamp = record[FriendRequestsRecordKeys.timeStamp.rawValue] as? Date
                 else {
             return nil
         }
         
-        self.init(sender: sender, receiver: receiver, status: FriendRequestStatus(rawValue: status) ?? .pending, date: date)
+        self.init(sender: sender, receiver: receiver, status: FriendRequestStatus(rawValue: status) ?? .pending, timeStamp: timeStamp, record: record)
         
     }
 }
 
 extension FriendRequest {
-    var record: CKRecord {
-        let record = CKRecord(recordType: FriendRecordKeys.type.rawValue)
-        record[FriendRecordKeys.sender.rawValue] = sender
-        record[FriendRecordKeys.receiver.rawValue] = receiver
-        record[FriendRecordKeys.status.rawValue] = status.rawValue
-        return record
-    }
+    
     var id: String {
         record.recordID.recordName
     }

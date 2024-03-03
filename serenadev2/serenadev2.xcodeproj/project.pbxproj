@@ -54,7 +54,6 @@
 		F1FC0FD82B8E1DB300FD50CB /* CloudKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FC0FD72B8E1DB300FD50CB /* CloudKitUtility.swift */; };
 		F709F6C22B90CA0000B60216 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F709F6C12B90CA0000B60216 /* PostViewModel.swift */; };
 		F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */; };
-		F7207CA22B85055D00E383E6 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207CA12B85055D00E383E6 /* UserService.swift */; };
 		F7AE69222B90B45E003C6A7C /* SongViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69212B90B45E003C6A7C /* SongViewModel.swift */; };
 		F7AE69252B90B5C5003C6A7C /* FriendRequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */; };
 		F7AE69272B90B61A003C6A7C /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69262B90B61A003C6A7C /* FriendRequest.swift */; };
@@ -132,7 +131,6 @@
 		F1FC0FD72B8E1DB300FD50CB /* CloudKitUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitUtility.swift; sourceTree = "<group>"; };
 		F709F6C12B90CA0000B60216 /* PostViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitConfig.swift; sourceTree = "<group>"; };
-		F7207CA12B85055D00E383E6 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		F7AE69212B90B45E003C6A7C /* SongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SongViewModel.swift; path = serenadev2/ViewModel/SongViewModel.swift; sourceTree = SOURCE_ROOT; };
 		F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsViewModel.swift; sourceTree = "<group>"; };
 		F7AE69262B90B61A003C6A7C /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
@@ -334,7 +332,6 @@
 		F7207C9B2B84E4A200E383E6 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				F7207CA12B85055D00E383E6 /* UserService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -544,7 +541,6 @@
 				F7AE69252B90B5C5003C6A7C /* FriendRequestsViewModel.swift in Sources */,
 				EA216FC82B8E3FAC00A715EB /* StreamingAppPickerSheet.swift in Sources */,
 				EA9BC9F22B87861C00292705 /* Post.swift in Sources */,
-				F7207CA22B85055D00E383E6 /* UserService.swift in Sources */,
 				F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */,
 				F1FC0FD82B8E1DB300FD50CB /* CloudKitUtility.swift in Sources */,
 				F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */,

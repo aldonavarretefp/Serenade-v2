@@ -31,40 +31,53 @@ struct User: Hashable, CloudKitableProtocol {
     var streak: Int
     var profilePicture: String
     var isActive: Bool
+    var record: CKRecord
 }
 
 extension User {
     init?(record: CKRecord) {
-        guard let accountID = record[UserRecordKeys.accountID.rawValue] as? CKRecord.Reference?,
-              let name = record[UserRecordKeys.name.rawValue] as? String,
-              let tagName = record[UserRecordKeys.tagName.rawValue] as? String,
-              let email = record[UserRecordKeys.email.rawValue] as? String,
-              let friends = record[UserRecordKeys.friends.rawValue] as? [CKRecord.Reference]?,
-              let posts = record[UserRecordKeys.posts.rawValue] as? [CKRecord.Reference]?,
-              let streak = record[UserRecordKeys.streak.rawValue] as? Int,
-              let profilePicture = record[UserRecordKeys.profilePicture.rawValue] as? String,
-              let isActive = record[UserRecordKeys.isActive.rawValue] as? Bool else {
+        print(record)
+        guard let accountID = record[UserRecordKeys.accountID.rawValue] as? CKRecord.Reference? else {
+            return nil
+        }
+        guard let name = record[UserRecordKeys.name.rawValue] as? String else {
+            print("Didn't find property name")
+            return nil
+        }
+        guard let tagName = record[UserRecordKeys.tagName.rawValue] as? String else {
+            print("Didn't find property tagName")
+            return nil
+        }
+        guard let email = record[UserRecordKeys.email.rawValue] as? String else {
+            print("Didn't find property email")
+            return nil
+        }
+        guard let friends = record[UserRecordKeys.friends.rawValue] as? [CKRecord.Reference]? else {
+            print("Didn't find property friends")
+            return nil
+        }
+        guard let posts = record[UserRecordKeys.posts.rawValue] as? [CKRecord.Reference]? else {
+            print("Didn't find property posts")
+            return nil
+        }
+        guard let streak = record[UserRecordKeys.streak.rawValue] as? Int else {
+            print("Didn't find property streak")
+            return nil
+        }
+        guard let profilePicture = record[UserRecordKeys.profilePicture.rawValue] as? String else {
+            print("Didn't find property profilePicture")
+            return nil
+        }
+        guard let isActive = record[UserRecordKeys.isActive.rawValue] as? Bool else {
+            print("Didn't find property isActive")
             return nil
         }
         
-        self.init(accountID: accountID, name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive)
+        self.init(accountID: accountID, name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, record: record)
     }
 }
 
 extension User {
-    var record: CKRecord {
-        let record = CKRecord(recordType: UserRecordKeys.type.rawValue)
-        record[UserRecordKeys.accountID.rawValue] = accountID
-        record[UserRecordKeys.name.rawValue] = name
-        record[UserRecordKeys.tagName.rawValue] = tagName
-        record[UserRecordKeys.email.rawValue] = email
-        record[UserRecordKeys.friends.rawValue] = friends
-        record[UserRecordKeys.posts.rawValue] = posts
-        record[UserRecordKeys.streak.rawValue] = streak
-        record[UserRecordKeys.profilePicture.rawValue] = profilePicture
-        record[UserRecordKeys.isActive.rawValue] = isActive
-        return record
-    }
     
     var id: String {
         (accountID?.recordID.recordName)!
