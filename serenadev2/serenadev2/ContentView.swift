@@ -13,6 +13,7 @@ struct ContentView: View {
     // MARK: - Properties
     @State var selectedTab: Tabs = .feed
     @EnvironmentObject var userViewModel: UserViewModel
+    @EnvironmentObject var postViewModel: PostViewModel
     @Environment(\.colorScheme) var colorScheme
     
     // MARK: - Body
@@ -47,13 +48,23 @@ struct ContentView: View {
 //                    print("Error")
 //                }
 //            }
-            userViewModel.searchUsers(tagname: "sebatoo") { friends in
-                if let friendss = friends {
-                    print(friendss)
-                } else {
-                    print("Error")
-                }
+//            userViewModel.searchUsers(tagName: "sebatoo") { user in
+//                if var userR = user {
+//                    print(userR)
+//                } else {
+//                    print("Error")
+//                }
+//            }
+            
+            let post = Post(postType: TypeRec(rawValue: "daily")!, sender: userViewModel.user?.accountID, caption: "This is a test", songId: "hello", date: Date(), isAnonymous: false, isActive: true)
+            postViewModel.createAPost(post: post)
+            print("userViewModel.user: \(userViewModel.user)")
+            print("userViewModel.user?.accountID: \(userViewModel.user?.accountID)")
+            
+            postViewModel.bringAllPostFromUserID(id: CKRecord(recordID: CKRecord.ID(recordName: "_798464902c8d85f4c1b288fe738f5cb5"))) { returnedPosts in
+                    print(returnedPosts)
             }
+
         }
     }
 }

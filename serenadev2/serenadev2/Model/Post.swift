@@ -29,7 +29,7 @@ enum TypeRec: String, CaseIterable, Decodable {
 // MARK: - Post model
 struct Post: Hashable, CloudKitableProtocol {
     var postType: TypeRec
-    var sender: CKRecord.Reference
+    var sender: CKRecord.Reference?
     var receiver: CKRecord.Reference?
     var caption: String?
     var songId: String
@@ -43,7 +43,7 @@ extension Post {
         guard
             let postTypeString = record[PostRecordKeys.postType.rawValue] as? String,
             let postType = TypeRec(rawValue: postTypeString),
-            let sender = record[PostRecordKeys.sender.rawValue] as? CKRecord.Reference,
+            let sender = record[PostRecordKeys.sender.rawValue] as? CKRecord.Reference?,
             let receiver = record[PostRecordKeys.receiver.rawValue] as? CKRecord.Reference?,
             let caption = record[PostRecordKeys.caption.rawValue] as? String?,
             let songId = record[PostRecordKeys.songId.rawValue] as? String,
@@ -67,6 +67,8 @@ extension Post {
         record[PostRecordKeys.caption.rawValue] = caption
         record[PostRecordKeys.songId.rawValue] = songId
         record[PostRecordKeys.isAnonymous.rawValue] = isAnonymous
+        record[PostRecordKeys.isActive.rawValue] = isActive
+        record[PostRecordKeys.date.rawValue] = date
         return record
     }
     

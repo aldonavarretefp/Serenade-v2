@@ -11,10 +11,12 @@ import SwiftData
 @main
 struct serenadev2App: App {
     @StateObject var userViewModel: UserViewModel = UserViewModel()
+    @StateObject var postViewModel: PostViewModel = PostViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(userViewModel)
+                .environmentObject(postViewModel)
         }
     }
 }

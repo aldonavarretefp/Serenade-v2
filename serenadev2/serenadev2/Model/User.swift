@@ -47,7 +47,7 @@ extension User {
             return nil
         }
         
-        self.init(accountID: accountID,name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive)
+        self.init(accountID: accountID, name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive)
     }
 }
 
