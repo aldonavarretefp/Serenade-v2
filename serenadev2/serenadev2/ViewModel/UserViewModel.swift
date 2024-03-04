@@ -110,8 +110,16 @@ class UserViewModel: ObservableObject {
         CloudKitUtility.add(item: newUser) { _ in }
     }
     
-    func updateUser(newUser: User){
-        CloudKitUtility.update(item: newUser) { _ in }
+    func updateUser(newUser: User) {
+        CloudKitUtility.update(item: newUser) { result in
+            switch result {
+            case .success(_):
+                break;
+            case .failure(let error):
+                print("Error while updating the user ", error.localizedDescription)
+                break;
+            }
+        }
     }
     
     func deleteUser(){
@@ -125,28 +133,37 @@ class UserViewModel: ObservableObject {
         let referenceToFriend = CKRecord.Reference(recordID: friendId, action: .none)
         let referencetoUser = CKRecord.Reference(recordID: user.record.recordID, action: .none)
         
-//        guard var friend: User = User(record: .init(recordType: UserRecordKeys.type.rawValue, recordID: friendId)) else {
-//            print("It was not possible to fetch the friend to make them friends")
-//            return
-//        }
-        
         let recordToMatch = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: friendId)
         let predicate = NSPredicate(format: "recordID = %@", recordToMatch)
         let recordType: CKRecord.RecordType = UserRecordKeys.type.rawValue
         
         
-        CloudKitUtility.fetch(predicate: predicate, recordType: recordType) as Future<[User], Error>
-//            .sink { _ in
-//                
-//            } receiveValue: { returnedUser in
-//                let user: User? = returnedUser
-////                updatedUser.friends?.append(referenceToFriend)
-////                friend.friends?.append(referencetoUser)
-////                
-////                updateUser(newUser: updatedUser)
-////                updateUser(newUser: friend)
-//            }
-//            .store(in: &cancellables)
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                
+            } receiveValue: { (returnedUsers: [User]?) in
+                guard let returnedUsers = returnedUsers, returnedUsers.count != 0 else {
+                    print("Error, didn't bring any friend")
+                    return
+                }
+                var updatedFriend = returnedUsers[0]
+                if updatedUser.friends == nil {
+                    updatedUser.friends = []
+                }
+                if updatedFriend.friends == nil {
+                    updatedFriend.friends = []
+                }
+                updatedUser.friends?.append(referenceToFriend)
+                updatedFriend.friends?.append(referencetoUser)
+                
+                updatedUser.record["friends"] = updatedUser.friends
+                updatedFriend.record["friends"] = updatedFriend.friends
+                
+                self.updateUser(newUser: updatedUser)
+                self.updateUser(newUser: updatedFriend)
+            }
+            .store(in: &cancellables)
     }
     
     func deleteFriend(friend: User){
@@ -154,7 +171,7 @@ class UserViewModel: ObservableObject {
         let newUserFriends = user?.friends?.filter({ reference in
             return reference != friendAccountID
         })
-        user?.friends = newUserFriends
+        user?.friends = newUserFriends ?? []
         updateUser(newUser: user!)
     }
     

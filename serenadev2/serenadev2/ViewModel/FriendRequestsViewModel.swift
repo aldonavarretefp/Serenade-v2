@@ -25,12 +25,9 @@ class FriendRequestsViewModel {
         - user: The user to fetch the friend requests for.
      */
     func fetchFriendRequestsForUser(user: User) {
-        let userID = CKRecord.ID(recordName: "87E3D069-576C-4DF4-A297-C5A15D231511")
-        
-        let recordToMatch = CKRecord.Reference(recordID: CKRecord.ID(recordName: "87E3D069-576C-4DF4-A297-C5A15D231511"), action: .none)
+        let recordToMatch = CKRecord.Reference(record: user.record, action: .none)
         let predicate = NSPredicate(format: "receiver == %@", recordToMatch)
         let recordType = FriendRequestsRecordKeys.type.rawValue
-        print(recordToMatch)
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
             .receive(on: DispatchQueue.main)
             .sink { _ in
@@ -106,28 +103,6 @@ class FriendRequestsViewModel {
                 break;
             }
         }
-    }
-
-    /**
-        Adds the sender to the receiver's friends list and viceversa.
-        - Parameters:
-            - friendRequest: The friend request to accept.
-    */
-    func acceptFriendRequestAndAddFriend(friendRequest: FriendRequest) {
-        let senderID = friendRequest.sender.recordID
-        let receiverID = friendRequest.receiver.recordID
-        let predicate = NSPredicate(format: "accountID == %@", senderID)
-        let userRecordType = UserRecordKeys.type.rawValue
-        print(senderID, receiverID, predicate, userRecordType)
-        
-    }
-    
-    private func addFriend(friend: User, to user: User) {
-        var updatedUser = user
-        let friendAccountID = friend.record.recordID
-        let reference = CKRecord.Reference(recordID: friendAccountID, action: .none)
-        updatedUser.friends?.append(reference)
-        CloudKitUtility.update(item: updatedUser) { _ in }
     }
 
 }

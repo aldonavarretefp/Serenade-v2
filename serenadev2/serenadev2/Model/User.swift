@@ -81,6 +81,21 @@ extension User {
 
 extension User {
     
+    var record2: CKRecord {
+        let record = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: record.recordID)
+        record[UserRecordKeys.accountID.rawValue] = accountID
+        record[UserRecordKeys.name.rawValue] = name
+        record[UserRecordKeys.tagName.rawValue] = tagName
+        record[UserRecordKeys.email.rawValue] = email
+        record[UserRecordKeys.friends.rawValue] = friends
+        record[UserRecordKeys.posts.rawValue] = posts
+        record[UserRecordKeys.streak.rawValue] = streak
+        record[UserRecordKeys.profilePicture.rawValue] = profilePicture
+        record[UserRecordKeys.isActive.rawValue] = isActive
+        return record
+    }
+
+    
     var id: String {
         (accountID?.recordID.recordName)!
     }
