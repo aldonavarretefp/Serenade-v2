@@ -28,7 +28,7 @@ struct ItemSmall: View {
     
     var body: some View {
         HStack {
-            if let imageUrl = item.isPerson ? item.imageUrl: item.song!.artworkUrlSmall {
+            if let imageUrl = item.isPerson ? item.imageUrl : item.song?.artworkUrlSmall {
                 AsyncImage(url: imageUrl) { phase in
                     switch phase {
                     case .empty:
@@ -54,19 +54,23 @@ struct ItemSmall: View {
                     view.clipShape(RoundedRectangle(cornerRadius: 5))
                 }
                 .frame(width: 50, height: 50)
+            } else {
+            // Provide a fallback view or image here if imageUrl is nil
+            Color.gray.frame(width: 50, height: 50)
             }
             
             VStack(alignment: .leading, spacing: 4){
-                Text(item.isPerson ? item.title! : item.song!.title)
+                Text(item.isPerson ? (item.title ?? "Unknown Title") : item.song?.title ?? "Unknown Song Title")
                     .font(.footnote)
                     .fontWeight(.bold)
                     .lineLimit(2)
+
                     
                 
-                Text(item.isPerson ? item.subtitle! : item.song!.artists)
+                Text(item.isPerson ? (item.subtitle ?? "No Subtitle") : (item.song?.artists ?? "Unknown Artists"))
                     .font(.caption)
                     .foregroundStyle(.callout)
-                    .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
+                    .lineLimit(2)
             }
             
             Spacer()
@@ -76,6 +80,7 @@ struct ItemSmall: View {
                     .foregroundColor(.gray)
             }
         }
+        .background(Color.viewBackground)
     }
 }
 
@@ -92,7 +97,7 @@ extension View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ItemSmall(item: ContentItem(imageUrl: URL(string: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"), title: "Fernando Fernández", subtitle: "janedoe", isPerson: true), showArrow: true)
+            ItemSmall(item: ContentItem(imageUrl: URL(string: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"), title: "Fernando Fernández", subtitle: "janedoe", isPerson: true), showArrow: false)
                     .previewLayout(.sizeThatFits)
                     .previewDisplayName("Person Preview")
             

@@ -86,8 +86,8 @@ struct NotificationsView: View {
                         }
                         .padding()
                     }
+                    .padding()
                 }
-                .toolbarBackground(.black)
             }
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(colorScheme == .light ? .white : .black,for: .navigationBar)
