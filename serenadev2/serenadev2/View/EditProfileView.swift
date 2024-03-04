@@ -38,7 +38,7 @@ struct EditProfileView: View {
                             .frame(width: 100, height: 100)
                             .clipShape(Circle())
                     }
-                    Button("Change profile photo") {
+                    Button(LocalizedStringKey("ChangeProfilePhoto")) {
 //                        PhotosPicker()
                     }
                         .padding(.top)
@@ -47,7 +47,7 @@ struct EditProfileView: View {
                             .padding(.vertical, 4)
                         HStack{
                             HStack{
-                                Text("Name")
+                                Text(LocalizedStringKey("Name"))
                                 Spacer()
                             }
                             .frame(maxWidth: 100)
@@ -58,7 +58,7 @@ struct EditProfileView: View {
                             .padding(.vertical, 4)
                         HStack{
                             HStack{
-                                Text("Username")
+                                Text(LocalizedStringKey("Username"))
                                 Spacer()
                             }
                             .frame(maxWidth: 100)
@@ -74,7 +74,7 @@ struct EditProfileView: View {
                     } label: {
                         Spacer()
                         Image(systemName: "checkmark.circle.fill")
-                        Text("Save changes")
+                        Text(LocalizedStringKey("SaveChanges"))
                             .font(.subheadline)
                         Spacer()
                     }
@@ -86,7 +86,7 @@ struct EditProfileView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Edit profile")
+            .navigationTitle(LocalizedStringKey("EditProfile"))
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 name = user.name 

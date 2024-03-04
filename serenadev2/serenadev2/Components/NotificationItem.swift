@@ -25,17 +25,17 @@ struct NotificationItem: View {
             Text(user.tagName)
                 .fontWeight(.semibold)
                 .font(.subheadline)
-            + Text(" wants to be your friend")
+            + Text(LocalizedStringKey("FriendRequest"))
             
             Spacer()
             
-            HStack{
-                NotificationActionButton(icon: "checkmark"){
-                    print("Check")
-                }
-                
+            HStack(spacing: 5){
                 NotificationActionButton(icon: "xmark"){
                     print("xmark")
+                }
+                
+                NotificationActionButton(icon: "checkmark"){
+                    print("Check")
                 }
             }
             .padding(.leading)

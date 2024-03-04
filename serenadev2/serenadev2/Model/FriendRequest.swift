@@ -42,8 +42,16 @@ extension FriendRequest {
         }
         
         self.init(sender: sender, receiver: receiver, status: FriendRequestStatus(rawValue: status) ?? .pending, timeStamp: timeStamp, record: record)
-        
     }
+    init?(sender: CKRecord.Reference, receiver: CKRecord.Reference, status: FriendRequestStatus, timeStamp: Date) {
+        let record = CKRecord(recordType: FriendRequestsRecordKeys.type.rawValue)
+        record[FriendRequestsRecordKeys.sender.rawValue] = sender
+        record[FriendRequestsRecordKeys.receiver.rawValue] = receiver
+        record[FriendRequestsRecordKeys.status.rawValue] = status.rawValue
+        record[FriendRequestsRecordKeys.timeStamp.rawValue] = timeStamp
+        self.init(record: record)
+    }
+    
 }
 
 extension FriendRequest {

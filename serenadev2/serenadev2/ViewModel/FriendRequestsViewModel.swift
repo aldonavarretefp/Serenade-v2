@@ -52,7 +52,10 @@ class FriendRequestsViewModel {
         let requestStatus: FriendRequestStatus = .pending
         let timeStamp: Date = .now
         
-        let friendRequest = FriendRequest(sender: senderReference, receiver: receiverReference, status: requestStatus, timeStamp: timeStamp, record: CKRecord(recordType: FriendRequestsRecordKeys.type.rawValue))
+        guard let friendRequest = FriendRequest(sender: senderReference, receiver: receiverReference, status: requestStatus, timeStamp: timeStamp) else {
+            print("Could not create new Friend Request")
+            return
+        }
         
         CloudKitUtility.add(item: friendRequest) { result in
             switch result {

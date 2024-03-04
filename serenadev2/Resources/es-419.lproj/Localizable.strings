@@ -1,0 +1,100 @@
+/* 
+  Localizable.strings
+  serenadev2
+
+  Created by Alejandro Oliva Ochoa on 01/03/24.
+  
+*/
+
+// Tab bar
+"Feed" = "Feed";
+"Search" = "Buscar";
+"Profile" = "Perfil";
+
+// Feed View
+"YourDailySong" = "Tu canción del día";
+"Today" = "Hoy";
+"Yesterday" = "Ayer";
+"TypePostDaily" = " canción del día";
+"ShareDailyButton" = "Compartir canción del día";
+
+// Notifications View
+"Notifications" = "Notificaciones";
+"FriendRequest" = " quiere ser tu amigo";
+
+// Search View
+"Music" = "Música";
+"People" = "Personas";
+"SearchForMusic" = "Buscar música";
+"SearchDescription" = "Busca tus canciones, artistas o álbumes favoritos";
+"NoMatchesFound" = "No se han encontrado resultados";
+"NoMatchesDescription" = "No hemos encontrado nada para su búsqueda. Pruebe con otras palabras clave o compruebe si hay errores tipográficos";
+
+// Profile View
+"Posts" = "Posts";
+"Friends" = "Amigos";
+"AddFriendButton" = "Añadir amigo";
+"PendingFriend" = "Pendiente";
+
+// Unfriend sheet
+"UnfriendTitleStart" = "Borrar a ";
+"UnfriendTitleEnd" = " de amigos";
+"UnfriendDescriptionStart" = "¿Estás seguro de que quieres eliminar a ";
+"UnfriendDescriptionEnd" = " de tu lista de amigos?";
+"Cancel" = "Cancelar";
+"DeleteFriend" = "Borrar amigo";
+
+// Settings View
+"Settings" = "Configuración";
+"EditProfile" = "Editar perfil";
+"FavoriteStreamingApps" = "Aplicaciones de streaming favoritas";
+"LogOut" = "Cerrar sesión";
+"DeleteAccount" = "Eliminar cuenta";
+
+// App information sheet (Serenade)
+"Information" = "Información";
+"Developers" = "Desarrolladores";
+"Website" = "Sitio web";
+
+// Log out
+"LogOutMessage" = "¿Estás seguro de que quieres cerrar sesión?";
+
+// Delete account
+"DeleteAccountDescriptionStart" = "Eliminar tu cuenta es permanente. Todos tus datos se eliminarán y no podrás recuperarlos. ¿Seguro que quieres ";
+"DeleteAccountBoldMessage" = "eliminar tu cuenta";
+"DeleteAccountDescriptionEnd" = "?";
+
+// Edit account View
+"ChangeProfilePhoto" = "Cambiar foto de perfil";
+"Name" = "Nombre";
+"Username" = "Nombre de usuario";
+"SaveChanges" = "Guardar cambios";
+
+// Favorite streaming apps sheet
+"FavoriteAppsDescription" = "Selecciona tus apps de streaming favoritas para reproducir música";
+
+// Song Detail View
+"TapToPlayPreview" = "Toca para reproducir la vista previa";
+"TapToPausePreview" = "Toca para pausar la vista previa";
+"Daily" = "Canción del día";
+"OpenWith" = "Abrir con";
+
+// Song meta data
+"SongInfo" = "Información de la canción";
+"ReleaseDate" = "Fecha de publicación";
+"WrittenBy" = "Escrito por";
+"Duration" = "Duración";
+"Genre" = "Género";
+"Genres" = "Géneros";
+"Album" = "Álbum";
+
+// Share daily sheet
+"DailyDescription" = "Comparte tu canción del día con todos tus amigos";
+"SelectSong" = "Seleccionar canción";
+"Caption" = "Descripción";
+"PlaceholderCaption" = "Deja que tus amigos conozcan tu melodía del día...";
+"SelectedSong" = "Canción seleccionada";
+"ChangeSong" = "Cambiar canción";
+
+// Open With sheet
+"OpenWithDescription" = "Escucha esta cancion en las siguientes plataformas de streaming";

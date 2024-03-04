@@ -8,12 +8,18 @@
 import SwiftUI
 import MusicKit
 
-
+enum selectedTab {
+    case music
+    case people
+}
 struct SearchView: View {
     @Environment(\.colorScheme) private var colorScheme
     @StateObject private var viewModel = SearchViewModel() // Initialize the view model
+    @ObservedObject var historyManager = SongHistoryManager.shared
     
-    @State private var selectedTab = "Music"
+    @State var history: [SongModel] = []
+    
+    @State private var selectedTab: selectedTab = .music
     @State private var underlineOffset: CGFloat = 0
     @State var isSongInfoDisplayed: Bool = false
     
@@ -29,6 +35,16 @@ struct SearchView: View {
         ContentItem(imageUrl: URL(string: "https://img.freepik.com/free-photo/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair_285396-896.jpg?size=626&ext=jpg&ga=GA1.1.1700460183.1708560000&semt=ais"), title: "Alice Johnson", subtitle: "alicejohnson", isPerson: true)
     ]
     
+    init() {
+        loadHistory()
+    }
+    
+    func loadHistory() {
+        Task {
+            history = await historyManager.getHistory()
+        }
+    }
+    
     var body: some View {
         
         NavigationStack {
@@ -36,27 +52,29 @@ struct SearchView: View {
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
                         // Music tab
-                        Text("Music")
+                        Text(LocalizedStringKey("Music"))
                             .padding(.vertical)
                             .frame(maxWidth: .infinity)
-                            .foregroundColor(selectedTab == "Music" ? colorScheme == .dark ? .white : .black : .callout)
+                            .background()
+                            .foregroundColor(selectedTab == .music ? colorScheme == .dark ? .white : .black : .callout)
                             .fontWeight(.semibold)
                             .onTapGesture {
                                 withAnimation(.easeOut(duration: animationDuration)) {
-                                    selectedTab = "Music"
+                                    selectedTab = .music
                                     underlineOffset = 0  // Reset offset for the Music tab
                                 }
                             }
                         
                         // People tab
-                        Text("People")
+                        Text(LocalizedStringKey("People"))
                             .padding(.vertical)
                             .frame(maxWidth: .infinity)
+                            .background()
                             .fontWeight(.semibold)
-                            .foregroundColor(selectedTab == "People" ? colorScheme == .dark ? .white : .black : .callout)
+                            .foregroundColor(selectedTab == .people ? colorScheme == .dark ? .white : .black : .callout)
                             .onTapGesture {
                                 withAnimation(.easeOut(duration: animationDuration)) {
-                                    selectedTab = "People"
+                                    selectedTab = .people
                                     underlineOffset = geometry.size.width / 2 // Set offset for the People tab
                                 }
                             }
@@ -71,42 +89,65 @@ struct SearchView: View {
                     .frame(height: 50)
                     .background()
                     
-                    ScrollView {
-                        VStack(spacing: 0) {
-                            ForEach(filteredResults) { value in
-                                
-                                ItemSmall(item: value, showArrow: false)
-                                    .padding()
-                                    .onTapGesture{
-                                        selectedSong = value
+                    if self.history.count != 0 && viewModel.searchText.isEmpty && selectedTab == .music{
+                        ScrollView{
+                            VStack(spacing: 0){
+                                ForEach(self.history, id:\.self) { song in
+                                    ItemSmall(item: ContentItem(isPerson: false, song: song), showXMark: true){
+                                        historyManager.removeSong(songId: song.id)
+                                        loadHistory()
                                     }
+                                        .padding([.leading, .top, .bottom])
+                                        .onTapGesture{
+                                            selectedSong = ContentItem(isPerson: false, song: song)
+                                            historyManager.addToHistory(song.id)
+                                            loadHistory()
+                                        }
+                                }
                             }
                         }
+                    } else {
+                        ScrollView {
+                            VStack(spacing: 0) {
+                                ForEach(filteredResults) { value in
+                                    
+                                    ItemSmall(item: value)
+                                        .padding()
+                                        .onTapGesture{
+                                            selectedSong = value
+                                            historyManager.addToHistory(value.song!.id)
+                                            loadHistory()
+                                        }
+                                }
+                            }
+                        }
+                        .scrollDismissesKeyboard(.immediately)
                     }
-                    .scrollDismissesKeyboard(.immediately)
                 }
             }
             .overlay {
                 // Check if the selected tab is Music before showing the overlay
-                if selectedTab == "Music" {
+                if selectedTab == .music {
                     if viewModel.isLoading {
                         // Display a loading indicator or view when music is being fetched
                         ProgressView()
                             .progressViewStyle(.circular)
                     } else if viewModel.searchText.isEmpty {
-                        // Display this when no search has been made yet (for Music tab only)
-                        ContentUnavailableView(label: {
-                            Label("Search for music ", systemImage: "music.note")
-                        }, description: {
-                            Text("Search for your favorite songs, artists or albums")
-                        })
+                        if self.history.count == 0 {
+                            // Display this when no search has been made yet (for Music tab only)
+                            ContentUnavailableView(label: {
+                                Label(LocalizedStringKey("SearchForMusic"), systemImage: "music.note")
+                            }, description: {
+                                Text(LocalizedStringKey("SearchDescription"))
+                            })
+                        }
                         
                     } else if filteredResults.isEmpty {
                         // Display this when there are no results (for Music tab only)
                         ContentUnavailableView(label: {
-                            Label("No Matches Found ", systemImage: "exclamationmark")
+                            Label(LocalizedStringKey("NoMatchesFound"), systemImage: "exclamationmark")
                         }, description: {
-                            Text("We couldn't find anything for your search. Try different keywords or check for typos.")
+                            Text(LocalizedStringKey("NoMatchesDescription"))
                         })
                         
                     }
@@ -125,11 +166,14 @@ struct SearchView: View {
         .fullScreenCover(item: $selectedSong){ item in
             SongDetailView(song: item.song!)
         }
+        .onAppear{
+            loadHistory()
+        }
     }
     
     
     var filteredResults: [ContentItem] {
-        if selectedTab == "Music" {
+        if selectedTab == .music {
             return viewModel.songs.map { song in
                 ContentItem(isPerson: false, song: song)
             }
@@ -146,5 +190,6 @@ struct SearchView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView()
+        
     }
 }

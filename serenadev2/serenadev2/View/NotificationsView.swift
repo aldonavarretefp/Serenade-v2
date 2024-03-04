@@ -35,11 +35,11 @@ struct NotificationsView: View {
                                 
                             }
                             
-//                            NotificationItem(user: User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true))
-//                            
-//                            NotificationItem(user: User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true))
+                            NotificationItem(user: User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "B5E07FDA-EB68-4C72-B547-ACE39273D662"))))
+                            
+                            
                             Button {
-                                print(friendRequestViewModel)
+                                print(friendRequestViewModel?.friendRequests)
                             } label: {
                                 Text("Print model")
                             }
@@ -53,6 +53,7 @@ struct NotificationsView: View {
                                         guard let user = userViewModel.user else { return }
                                         userViewModel.makeFriends(withId: user, friendId: friendRequests[0].sender.recordID)
                                     }
+                                    
                                     
                                 }
                                 
@@ -72,20 +73,25 @@ struct NotificationsView: View {
                             
                             
                             Button {
-                                
+                                let ale = CKRecord.init(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "110590A8-297A-495C-929D-B9951EAFF752"))
+                                guard let aldoID = userViewModel.user?.record.recordID else {
+                                    print("No user")
+                                    return
+                                }
+                                friendRequestViewModel?.createFriendRequest(senderID: ale.recordID, receiverID: aldoID)
                             } label: {
-                                Text("Delete")
+                                Text("Create")
                             }
                             
                         }
                         .padding()
                     }
+                    .padding()
                 }
-                .toolbarBackground(.black)
             }
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(colorScheme == .light ? .white : .black,for: .navigationBar)
-            .navigationTitle("Notifications")
+            .navigationTitle(LocalizedStringKey("Notifications"))
             .toolbarTitleDisplayMode(.inline)
             .onAppear {
                 
@@ -101,4 +107,5 @@ struct NotificationsView: View {
 
 #Preview {
     NotificationsView()
+        .environment(\.locale, .init(identifier: "it"))
 }

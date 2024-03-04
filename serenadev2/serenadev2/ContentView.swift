@@ -22,19 +22,19 @@ struct ContentView: View {
         
         TabView {
             Group{
-                NotificationsView()
+                FeedView()
                     .tabItem {
                         Image("feed.fill")
-                        Text("Feed")
+                        Text(LocalizedStringKey("Feed"))
                     }
                 SearchView()
                     .tabItem {
-                        Label("Search", systemImage: "magnifyingglass")
+                        Label(LocalizedStringKey("Search"), systemImage: "magnifyingglass")
                     }
                 
                 ProfileView()
                     .tabItem {
-                        Label("Profile", systemImage: "person.fill")
+                        Label(LocalizedStringKey("Profile"), systemImage: "person.fill")
                     }
             }
             .toolbarBackground(.visible, for: .tabBar)

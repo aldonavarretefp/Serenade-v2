@@ -20,15 +20,21 @@ struct ContentItem: Identifiable {
 struct ItemSmall: View {
     var item: ContentItem
     var showArrow: Bool
+    var showXMark: Bool
+    var comesFromDaily: Bool
+    var xMarkAction: (() -> Void)?
     
-    init(item: ContentItem, showArrow: Bool = false) {
+    init(item: ContentItem, showArrow: Bool = false, showXMark: Bool = false, comesFromDaily: Bool = false, xMarkAction: (() -> Void)? = nil) {
         self.item = item
         self.showArrow = showArrow
+        self.showXMark = showXMark
+        self.comesFromDaily = comesFromDaily
+        self.xMarkAction = xMarkAction // Asignamos la acción del botón X al cierre
     }
     
     var body: some View {
         HStack {
-            if let imageUrl = item.isPerson ? item.imageUrl: item.song!.artworkUrlSmall {
+            if let imageUrl = item.isPerson ? item.imageUrl : item.song?.artworkUrlSmall {
                 AsyncImage(url: imageUrl) { phase in
                     switch phase {
                     case .empty:
@@ -54,28 +60,42 @@ struct ItemSmall: View {
                     view.clipShape(RoundedRectangle(cornerRadius: 5))
                 }
                 .frame(width: 50, height: 50)
+            } else {
+                // Provide a fallback view or image here if imageUrl is nil
+                Color.gray.frame(width: 50, height: 50)
             }
             
             VStack(alignment: .leading, spacing: 4){
-                Text(item.isPerson ? item.title! : item.song!.title)
+                Text(item.isPerson ? (item.title ?? "Unknown Title") : item.song?.title ?? "Unknown Song Title")
                     .font(.footnote)
                     .fontWeight(.bold)
                     .lineLimit(2)
-                    
                 
-                Text(item.isPerson ? item.subtitle! : item.song!.artists)
+                
+                
+                Text(item.isPerson ? (item.subtitle ?? "No Subtitle") : (item.song?.artists ?? "Unknown Artists"))
                     .font(.caption)
                     .foregroundStyle(.callout)
-                    .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
+                    .lineLimit(2)
             }
             
             Spacer()
-           
+            
             if showArrow {
                 Image(systemName: "chevron.right")
                     .foregroundColor(.gray)
             }
+            
+            if showXMark {
+                Button(action: xMarkAction!) {
+                    Image(systemName: "xmark")
+                        .foregroundColor(.gray)
+                }
+                .padding()
+                
+            }
         }
+        .background(comesFromDaily == true ? .clear : .viewBackground)
     }
 }
 
@@ -92,9 +112,9 @@ extension View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ItemSmall(item: ContentItem(imageUrl: URL(string: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"), title: "Fernando Fernández", subtitle: "janedoe", isPerson: true), showArrow: true)
-                    .previewLayout(.sizeThatFits)
-                    .previewDisplayName("Person Preview")
+            ItemSmall(item: ContentItem(imageUrl: URL(string: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"), title: "Fernando Fernández", subtitle: "janedoe", isPerson: true), showArrow: false)
+                .previewLayout(.sizeThatFits)
+                .previewDisplayName("Person Preview")
             
             ItemSmall(item: ContentItem(imageUrl: URL(string: "https://i.scdn.co/image/ab67616d0000b2738940ac99f49e44f59e6f7fb3"), title: "See you again (feat. Kali Uchis)", subtitle: "Tyler, The Creator, Kali Uchis", isPerson: false), showArrow: true)
                 .previewLayout(.sizeThatFits)
