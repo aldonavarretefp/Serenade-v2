@@ -114,9 +114,6 @@ struct PreviewPlayer: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             // Reanudar la reproducción desde la posición almacenada
             self.player.seek(to: self.currentPlaybackTime)
-            self.startTimer()
-            self.player.play()
-            self.isPlaying = true
         }
         .onDisappear {
             // Reset the timer and the song when the view disappears
