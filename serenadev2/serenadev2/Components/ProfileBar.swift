@@ -75,14 +75,14 @@ struct ProfileBar: View {
                             NavigationLink(destination: SettingsView().toolbarRole(.editor)) {
                                 Image(systemName: "gearshape.fill")
                                     .resizable()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 22, height: 22)
                             }
                             .padding(5)
                             .foregroundStyle(.primary)
                         }
                         else {
                             Spacer()
-                                .frame(width: 25, height: 25)
+                                .frame(width: 22, height: 22)
                                 .padding(5)
                         }
                     }
