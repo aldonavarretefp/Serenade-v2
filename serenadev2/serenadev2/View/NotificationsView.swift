@@ -91,7 +91,7 @@ struct NotificationsView: View {
             }
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(colorScheme == .light ? .white : .black,for: .navigationBar)
-            .navigationTitle("Notifications")
+            .navigationTitle(LocalizedStringKey("Notifications"))
             .toolbarTitleDisplayMode(.inline)
             .onAppear {
                 
@@ -107,4 +107,5 @@ struct NotificationsView: View {
 
 #Preview {
     NotificationsView()
+        .environment(\.locale, .init(identifier: "it"))
 }

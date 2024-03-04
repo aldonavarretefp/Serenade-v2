@@ -13,7 +13,19 @@ struct SongMetaData: View {
     
     var formattedDate: String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d, yyyy"
+        let languageCode = Locale.current.language.languageCode!.identifier
+        
+        switch(languageCode){
+        case "en":
+            dateFormatter.dateFormat = "MMM d, yyyy"
+        case "es":
+            dateFormatter.dateFormat = "d 'de' MMMM 'de' yyyy"
+        case "it":
+            dateFormatter.dateFormat = "d MMM yyyy"
+        default:
+            dateFormatter.dateFormat = "MMM d, yyyy"
+        }
+        
         if let releaseDate = song.releaseDate {
             return dateFormatter.string(from: releaseDate)
         } else {
@@ -32,8 +44,9 @@ struct SongMetaData: View {
     }
     
     var body: some View {
-        VStack{
-            Text("Song information")
+        
+        VStack(alignment: .leading){
+            Text(LocalizedStringKey("SongInfo"))
                 .font(.headline)
                 .bold()
             
@@ -43,7 +56,7 @@ struct SongMetaData: View {
                         // Release date
                         if formattedDuration != "" {
                             VStack(alignment: .leading){
-                                Text("Release date")
+                                Text(LocalizedStringKey("ReleaseDate"))
                                     .fontWeight(.semibold)
                                 
                                 Text(formattedDate)
@@ -54,7 +67,7 @@ struct SongMetaData: View {
                         // Written by
                         if let composerName = song.composerName {
                             VStack(alignment: .leading){
-                                Text("Written by")
+                                Text(LocalizedStringKey("WrittenBy"))
                                     .fontWeight(.semibold)
                                 
                                 Text(composerName)
@@ -65,7 +78,7 @@ struct SongMetaData: View {
                         // Song duration
                         if formattedDuration != "" {
                             VStack(alignment: .leading){
-                                Text("Duration")
+                                Text(LocalizedStringKey("Duration"))
                                     .fontWeight(.semibold)
                                 
                                 Text(formattedDuration)
@@ -76,7 +89,7 @@ struct SongMetaData: View {
                         // Song genre/s
                         if song.genreNames.count != 0 {
                             VStack(alignment: .leading){
-                                Text(song.genreNames.count == 1 ? "Genre" : "Genres")
+                                Text(song.genreNames.count == 1 ? LocalizedStringKey("Genre") : LocalizedStringKey("Genres"))
                                     .fontWeight(.semibold)
                                 
                                 ForEach(song.genreNames.indices, id: \.self) { index in
@@ -89,7 +102,7 @@ struct SongMetaData: View {
                         // Album
                         if song.albumTitle != "" {
                             VStack(alignment: .leading){
-                                Text("Album")
+                                Text(LocalizedStringKey("Album"))
                                     .fontWeight(.semibold)
                                 
                                 Text(song.albumTitle!)

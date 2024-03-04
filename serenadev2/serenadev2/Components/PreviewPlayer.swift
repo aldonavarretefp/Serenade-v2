@@ -19,9 +19,11 @@ struct PreviewPlayer: View {
         self.secondaryColor = secondaryColor
         self.endTime = calculateEndTime(tiempo: seconds)
         
-        // Creamos el reproductor de audio con la URL proporcionada
+        // Player created with the passed url (each song preview url)
         self.player = AVPlayer(url: audioURL)
         
+        // Adjust the volume 50% less
+        self.player.volume = 0.5
         // This audio session configuration must be done before starting audio playback
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
@@ -47,9 +49,17 @@ struct PreviewPlayer: View {
     // When the song ends (max 30 seconds)
     var endTime: CMTime = CMTime(seconds: 15, preferredTimescale: 1)
     
+    // Variable to store the current playback position
+    @State private var currentPlaybackTime: CMTime = .zero
+    
     var body: some View {
         // Button to play/pause audio
-        VStack{
+        VStack(spacing: 5){
+            
+            Text(isPlaying ? LocalizedStringKey("TapToPausePreview") :LocalizedStringKey("TapToPlayPreview"))
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.7))
+            
             ZStack{
                 // Image to show the lines at the device width
                 Image("player-lines-full")
@@ -87,9 +97,23 @@ struct PreviewPlayer: View {
                         self.player.play()
                         
                     }
-                    self.isPlaying.toggle()
+                    withAnimation{
+                        self.isPlaying.toggle()
+                    }
                 }
             }
+        }
+        // Detecta cambios en scenePhase
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            // Almacenar la posición de reproducción actual
+            self.currentPlaybackTime = self.player.currentTime()
+            self.isPlaying = false
+            self.player.pause()
+            self.stopTimer()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            // Reanudar la reproducción desde la posición almacenada
+            self.player.seek(to: self.currentPlaybackTime)
         }
         .onDisappear {
             // Reset the timer and the song when the view disappears

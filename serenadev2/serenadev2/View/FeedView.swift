@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+// MARK: - Swipe direction
+enum SwipeDirection{
+    case up
+    case down
+    case none
+}
+
 struct FeedView: View {
     
     var body: some View {
@@ -21,18 +28,19 @@ struct FeedView: View {
     
     // MARK: - Variables
     // Check if the daily is already posted
-    @State var isDailyPosted: Bool = true
+    @State var isDailyPosted: Bool = false
     
     // Variables to hide/show the header
     @State var headerHeight: CGFloat = 0
     @State var headerOffset: CGFloat = 0
     @State var lastHeaderOffset: CGFloat = 0
-    @State var direction: SwipeDriection = .none
+    @State var direction: SwipeDirection = .none
     @State var shiftOffset: CGFloat = 0
     
     // Opacity variables for the button and the header
     @State var headerOpacity: Double = 1.0
     @State var dailyButtonOpacity: Double = 1.0
+    @State var isDailySheetOpened: Bool = false
     
     // Posts array to see some hardcoded posts
     let posts: [PostView] = [
@@ -201,34 +209,28 @@ struct FeedView: View {
                         .offset(y: -headerOffset < headerHeight ? headerOffset : (headerOffset < 0 ? headerOffset : 0))
                     }
                     .ignoresSafeArea(.all, edges: .top)
-                    
                     // If the daily post has not yet been made, show the button to do it
                     if !isDailyPosted {
-                        ActionButton(label: "Share daily song", symbolName: "waveform", fontColor: .white, backgroundColor: .purple, isShareDaily: true) {
-                            print("Daily button tapped")
+                        ActionButton(label: LocalizedStringKey("ShareDailyButton"), symbolName: "waveform", fontColor: .white, backgroundColor: .purple, isShareDaily: true, isDisabled: false) {
+                            isDailySheetOpened.toggle()
                         }
                         .opacity(dailyButtonOpacity)
+                        .fullScreenCover(isPresented: $isDailySheetOpened){
+                            DailySongView(isSongFromDaily: true )
+                        }
                         .padding()
                     }
                 }
-                
-            }
-            // This overlay is to show a bar behind the status bar
-            .overlay(alignment: .top) {
-                Color.clear
-                    .background()
-                    .ignoresSafeArea(edges: .top)
-                    .frame(height: 0)
+                // This overlay is to show a bar behind the status bar
+                .overlay(alignment: .top) {
+                    Color.clear
+                        .background()
+                        .ignoresSafeArea(edges: .top)
+                        .frame(height: 0)
+                }
             }
         }
     } */
-}
-
-// MARK: - Swipe direction
-enum SwipeDriection{
-    case up
-    case down
-    case none
 }
 
 #Preview {

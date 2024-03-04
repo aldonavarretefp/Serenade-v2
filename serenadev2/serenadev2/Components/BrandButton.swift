@@ -69,26 +69,65 @@ enum ButtonType: CaseIterable {
     case amazonMusic
     
     // Function to return configured brand buttons based on the enum case
-    var configuration: BrandButton {
+    func configuration(songTitle: String, songArtist: String, songId: String) -> BrandButton{
         switch self {
         case .appleMusic:
             return BrandButton(label: "Apple Music", brandLogo: "AppleMusicBrandLogo", fontColor: .black, startColor: .appleMusicStart, endColor: .appleMusicEnd) {
-                print("Open Apple Music")
+                let baseURL = "https://music.apple.com/us/album/"
+                    // Asumiendo que songId es el identificador único de la canción.
+                    let fullURL = baseURL + songId
+                    
+                    guard let url = URL(string: fullURL) else {
+                        print("Invalid URL")
+                        return
+                    }
+                    
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         case .spotify:
             return BrandButton(label: "Spotify", brandLogo: "SpotifyBrandLogo", fontColor: .black, startColor: .spotifyStart, endColor: .spotifyEnd) {
-                print("Open Spotify")
+                
+                if let encodedArtist = songArtist.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                   let encodedTitle = songTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    
+                    let urlString = "https://open.spotify.com/search/\(encodedTitle)%20\(encodedArtist)"
+                    
+                    guard let spotifyUrl = URL(string: urlString) else { return }
+                    UIApplication.shared.open(spotifyUrl)
+                } else {
+                    print("Unable to create URL: Artist or title is nil")
+                }
             }
         case .youtubeMusic:
             return BrandButton(label: "Youtube Music", brandLogo: "YoutubeBrandLogo", fontColor: .black, startColor: .youtubeMusicStart, endColor: .youtubeMusicEnd) {
-                print("Open Youtube Music")
+                   
+                if let encodedArtist = songArtist.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                   let encodedTitle = songTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    
+                    let urlString = "https://music.youtube.com/search?q=\(encodedTitle)%20\(encodedArtist)?filter=IsLibrary%7Cfalse&sc=none"
+                    guard let youtubeMusicUrl = URL(string: urlString) else { return }
+                    UIApplication.shared.open(youtubeMusicUrl)
+                } else {
+                    print("Unable to create URL: Artist or title is nil")
+                }
             }
         case .amazonMusic:
             return BrandButton(label: "Amazon Music", brandLogo: "AmazonMusicBrandLogo", fontColor: .black, startColor: .amazonMusicStart, endColor: .amazonMusicEnd) {
-                print("Open Amazon Music")
+                
+                if let encodedArtist = songArtist.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                   let encodedTitle = songTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    
+                    let urlString = "https://music.amazon.com/search/\(encodedTitle)%20\(encodedArtist)"
+                    guard let amazonMusicUrl = URL(string: urlString) else { return }
+                    UIApplication.shared.open(amazonMusicUrl)
+                } else {
+                    print("Unable to create URL: Artist or title is nil")
+                }
+                
             }
         }
     }
+    
 }
 
 // Extension to UIScreen to get screen dimensions

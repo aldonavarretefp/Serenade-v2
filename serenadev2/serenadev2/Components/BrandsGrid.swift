@@ -21,6 +21,9 @@ struct BrandsGrid: View {
     
     // Array of button types to display
     var buttonTypes: [ButtonType]
+    var songTitle: String
+    var songArtist: String
+    var songId: String
     
     var body: some View {
         // Chunk the buttonTypes array into subarrays of up to 3 elements
@@ -35,19 +38,19 @@ struct BrandsGrid: View {
                     // Iterate over each button type in the current chunk
                     ForEach(chunk, id: \.self) { buttonType in
                         // Get the configuration for the current button type
-                        let config = buttonType.configuration
+                        let config = buttonType.configuration(songTitle: self.songTitle, songArtist: self.songArtist, songId: self.songId)
                         // Create and display the brand button with the configuration properties
                         BrandButton(label: config.label, brandLogo: config.brandLogo, fontColor: config.fontColor, startColor: config.startColor, endColor: config.endColor, action: config.action)
                             .frame(maxWidth: .infinity) // Ensure the buttons are evenly spaced
                     }
                 }
                 // Set the maximum height for each row based on the screen height
-                .frame(maxHeight: UIScreen.screenHeight / 7)
+                .frame(minHeight: UIScreen.screenHeight / 8, maxHeight: UIScreen.screenHeight / 6)
             }
         }
     }
 }
 
 #Preview {
-    BrandsGrid(buttonTypes: [.appleMusic, .spotify, .youtubeMusic, .amazonMusic])
+    BrandsGrid(buttonTypes: [.appleMusic, .spotify, .youtubeMusic, .amazonMusic], songTitle: "Runaway", songArtist: "Ye", songId: "")
 }

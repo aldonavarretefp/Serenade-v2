@@ -19,13 +19,13 @@ struct AppInfoSheet: View {
                 .ignoresSafeArea()
             VStack {
                 HStack {
-                    Text("Information")
+                    Text(LocalizedStringKey("Information"))
                         .font(.title2)
                     .fontWeight(.semibold)
                     Spacer()
                 }
                 
-                Image("AppIcon")
+                Image("AppLogo")
                     .resizable()
                     .frame(width: 100, height: 100)
                     .clipShape(RoundedRectangle(cornerRadius: 20))
@@ -40,9 +40,9 @@ struct AppInfoSheet: View {
                             HStack {
                                 Image(systemName: "hammer")
                                     .foregroundStyle(.accent)
-                                Text("Developers")
-                                    .font(.body)
+                                Text(LocalizedStringKey("Developers"))
                             }
+                            .padding(.bottom, 5)
                             Text("Aldo Navarrete")
                             Text("Alejandro Oliva")
                             Text("Diego Núñez")
@@ -61,7 +61,7 @@ struct AppInfoSheet: View {
                     HStack {
                         Image(systemName: "network")
                             .foregroundStyle(.accent)
-                        Text("Website")
+                        Text(LocalizedStringKey("Website"))
                         Spacer()
                         Image(systemName: "arrow.up.right")
                             .foregroundStyle(.callout)

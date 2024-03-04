@@ -12,6 +12,10 @@ struct SongDetailView: View {
     // MARK: - Environment properties
     @Environment(\.dismiss) var dismiss
     
+    
+    @State var isDailySheetDisplayed: Bool = false
+    @State var isOpenWithSheetDisplayed: Bool = false
+    
     // MARK: - Properties
     var song: SongModel
     var seconds: Double = 15.0
@@ -85,14 +89,24 @@ struct SongDetailView: View {
                     VStack(spacing: 15){
                         
                         // Daily button
-                        ActionButton(label: "Daily", symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false) {
-                            print("Daily button tapped")
+                        ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false, isDisabled: false) {
+                            isDailySheetDisplayed.toggle()
+                            
+                        }
+                        .sheet(isPresented: $isDailySheetDisplayed){
+                            DailySongView(song: song, isSongFromDaily: false)
+                                .presentationDetents([.fraction(0.7)])
                         }
                         
                         // Open with button
-                        ActionButton(label: "Open with", symbolName: "arrow.up.forward.circle.fill", fontColor: Color(song.priColor!), backgroundColor: Color(song.bgColor!), isShareDaily: false) {
-                            print("Daily button tapped")
+
+                        ActionButton(label: LocalizedStringKey("OpenWith"), symbolName: "arrow.up.forward.circle.fill", fontColor: Color(song.priColor!), backgroundColor: Color(song.bgColor!), isShareDaily: false, isDisabled: false) {
+                            isOpenWithSheetDisplayed.toggle()
+                        }.sheet(isPresented: $isOpenWithSheetDisplayed){
+                            OpenWithView(buttonTypes: [.appleMusic, .spotify, .youtubeMusic, .amazonMusic] , songTitle: song.title, songArtist: song.artists, songId: song.id)
+                                .presentationDetents([.fraction(0.55)])
                         }
+                        
                     }
                     .padding()
                     
