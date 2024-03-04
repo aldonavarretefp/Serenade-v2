@@ -11,10 +11,19 @@ import SwiftData
 @main
 struct serenadev2App: App {
     @StateObject var userViewModel: UserViewModel = UserViewModel()
+    @StateObject var authManager: AuthManager  = AuthManager()
+    
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(userViewModel)
+            if authManager.isAuthenticated == false {
+                SignInView()
+            }
+            else{
+                ContentView()
+                    .environmentObject(userViewModel)
+            }
+            
         }
     }
 }
