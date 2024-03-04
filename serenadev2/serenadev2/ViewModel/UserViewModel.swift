@@ -105,12 +105,24 @@ class UserViewModel: ObservableObject {
     }
     
     func createUser(user: User){
-        let recordToMatch = CKRecord.Reference(recordID: userID!, action: .none)
-        let newUser = User(accountID: recordToMatch, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, record: user.record)
-        CloudKitUtility.add(item: newUser) { _ in }
+        self.searchUsers(tagname: user.tagName) { returnedUsers in
+            guard let returnedUsers = returnedUsers else { return }
+            if(returnedUsers.isEmpty){
+                return
+            } else {
+                let recordToMatch = CKRecord.Reference(recordID: self.userID!, action: .none)
+                let newUser = User(accountID: recordToMatch, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, record: user.record)
+                CloudKitUtility.add(item: newUser) { _ in }
+            }
+        }
     }
     
-    func updateUser(newUser: User) {
+    func updateUser(updatedUser: User) {
+        var copyUser = updatedUser
+        guard let newUser = copyUser.update(newUser: updatedUser) else { return }
+        
+        user = newUser
+        
         CloudKitUtility.update(item: newUser) { result in
             switch result {
             case .success(_):
@@ -124,7 +136,7 @@ class UserViewModel: ObservableObject {
     
     func deleteUser(){
         user?.isActive = false
-        updateUser(newUser: user!)
+        updateUser(updatedUser: user!)
     }
     
     func makeFriends(withId user: User, friendId: CKRecord.ID){
@@ -160,8 +172,8 @@ class UserViewModel: ObservableObject {
                 updatedUser.record["friends"] = updatedUser.friends
                 updatedFriend.record["friends"] = updatedFriend.friends
                 
-                self.updateUser(newUser: updatedUser)
-                self.updateUser(newUser: updatedFriend)
+                self.updateUser(updatedUser: updatedUser)
+                self.updateUser(updatedUser: updatedFriend)
             }
             .store(in: &cancellables)
     }
@@ -172,7 +184,7 @@ class UserViewModel: ObservableObject {
             return reference != friendAccountID
         })
         user?.friends = newUserFriends ?? []
-        updateUser(newUser: user!)
+        updateUser(updatedUser: user!)
     }
     
     func logOut(){
@@ -180,7 +192,7 @@ class UserViewModel: ObservableObject {
     }
     
     func searchUsers(tagname: String, completion: @escaping ([User]?) -> Void) {
-        let predicate = NSPredicate(format: "tagname == %@", tagname)
+        let predicate = NSPredicate(format: "tagName == %@", tagname)
         let recordType = UserRecordKeys.type.rawValue
 
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
@@ -196,15 +208,6 @@ class UserViewModel: ObservableObject {
                 completion(friendss)
             }
             .store(in: &cancellables)
-    }
-    
-    // TODO
-    func sendFriendRequest(){
-        
-    }
-    
-    func cancelFriendRequest(){
-        
     }
 }
 
