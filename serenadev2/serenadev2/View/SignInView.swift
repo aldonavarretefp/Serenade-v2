@@ -42,7 +42,7 @@ struct SignInView: View {
                         Text("Email: \(authManager.email)")
                         Text("UserID: \(authManager.userId) ")
                     
-
+                        
                         
                     }
                 }

@@ -22,7 +22,7 @@ enum UserRecordKeys: String {
 }
 
 struct User: Hashable, CloudKitableProtocol {
-    var accountID: CKRecord.Reference?
+    var accountID: String?
     var name: String
     var tagName: String
     var email: String
@@ -37,7 +37,7 @@ struct User: Hashable, CloudKitableProtocol {
 extension User {
     init?(record: CKRecord) {
         print(record)
-        guard let accountID = record[UserRecordKeys.accountID.rawValue] as? CKRecord.Reference? else {
+        guard let accountID = record[UserRecordKeys.accountID.rawValue] as? String? else {
             return nil
         }
         guard let name = record[UserRecordKeys.name.rawValue] as? String else {
@@ -75,7 +75,7 @@ extension User {
         self.init(accountID: accountID,name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, record: record)
     }
     
-    init?(accountID: CKRecord.Reference?, name: String, tagName: String, email: String, friends: [CKRecord.Reference]?, posts: [CKRecord.Reference]?, streak: Int, profilePicture: String, isActive: Bool) {
+    init?(accountID: String?, name: String, tagName: String, email: String, friends: [CKRecord.Reference]?, posts: [CKRecord.Reference]?, streak: Int, profilePicture: String, isActive: Bool) {
         let record = CKRecord(recordType: UserRecordKeys.type.rawValue)
         record[UserRecordKeys.accountID.rawValue] = accountID
         record[UserRecordKeys.name.rawValue] = name

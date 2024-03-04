@@ -13,13 +13,11 @@ struct serenadev2App: App {
     @StateObject var userViewModel: UserViewModel = UserViewModel()
     @StateObject var authManager: AuthManager  = AuthManager()
     
-    
     var body: some Scene {
         WindowGroup {
             if authManager.isAuthenticated == false {
                 SignInView()
-            }
-            else{
+            } else{
                 ContentView()
                     .environmentObject(userViewModel)
             }
