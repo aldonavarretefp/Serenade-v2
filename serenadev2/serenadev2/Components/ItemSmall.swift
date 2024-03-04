@@ -20,10 +20,12 @@ struct ContentItem: Identifiable {
 struct ItemSmall: View {
     var item: ContentItem
     var showArrow: Bool
+    var comesFromDaily: Bool
     
-    init(item: ContentItem, showArrow: Bool = false) {
+    init(item: ContentItem, showArrow: Bool = false, comesFromDaily: Bool = false) {
         self.item = item
         self.showArrow = showArrow
+        self.comesFromDaily = comesFromDaily
     }
     
     var body: some View {
@@ -80,7 +82,7 @@ struct ItemSmall: View {
                     .foregroundColor(.gray)
             }
         }
-        .background(Color.viewBackground)
+        .background(comesFromDaily == true ? .clear : .viewBackground)
     }
 }
 
