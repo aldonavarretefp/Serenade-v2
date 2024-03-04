@@ -47,6 +47,9 @@ struct PreviewPlayer: View {
     // When the song ends (max 30 seconds)
     var endTime: CMTime = CMTime(seconds: 15, preferredTimescale: 1)
     
+    // Variable to store the current playback position
+    @State private var currentPlaybackTime: CMTime = .zero
+    
     var body: some View {
         // Button to play/pause audio
         VStack(spacing: 5){
@@ -97,6 +100,21 @@ struct PreviewPlayer: View {
                     }
                 }
             }
+        }
+        // Detecta cambios en scenePhase
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            // Almacenar la posición de reproducción actual
+            self.currentPlaybackTime = self.player.currentTime()
+            self.isPlaying = false
+            self.player.pause()
+            self.stopTimer()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            // Reanudar la reproducción desde la posición almacenada
+            self.player.seek(to: self.currentPlaybackTime)
+            self.startTimer()
+            self.player.play()
+            self.isPlaying = true
         }
         .onDisappear {
             // Reset the timer and the song when the view disappears
