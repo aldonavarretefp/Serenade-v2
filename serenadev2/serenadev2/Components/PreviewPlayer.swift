@@ -19,9 +19,11 @@ struct PreviewPlayer: View {
         self.secondaryColor = secondaryColor
         self.endTime = calculateEndTime(tiempo: seconds)
         
-        // Creamos el reproductor de audio con la URL proporcionada
+        // Player created with the passed url (each song preview url)
         self.player = AVPlayer(url: audioURL)
         
+        // Adjust the volume 50% less
+        self.player.volume = 0.5
         // This audio session configuration must be done before starting audio playback
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)

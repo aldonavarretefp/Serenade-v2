@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4447C0562B920FD100593AF5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4447C0552B920FD100593AF5 /* NotificationsView.swift */; };
 		4447C05A2B92223700593AF5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4447C05C2B92223700593AF5 /* Localizable.strings */; };
+		4447C07C2B95B97A00593AF5 /* SongHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */; };
 		446800292B90C87D00A858F1 /* SongMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446800282B90C87D00A858F1 /* SongMetaData.swift */; };
 		44D1A4212B91DAC200BE6F92 /* NotificationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */; };
 		44D1A4232B91DB3100BE6F92 /* NotificationActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */; };
@@ -82,6 +83,7 @@
 		4447C05B2B92223700593AF5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4447C05D2B92223900593AF5 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4447C05E2B92223900593AF5 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongHistoryManager.swift; sourceTree = "<group>"; };
 		446800282B90C87D00A858F1 /* SongMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongMetaData.swift; sourceTree = "<group>"; };
 		44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationItem.swift; sourceTree = "<group>"; };
 		44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationActionButton.swift; sourceTree = "<group>"; };
@@ -169,6 +171,14 @@
 				4447C05C2B92223700593AF5 /* Localizable.strings */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		4447C07D2B95B9CF00593AF5 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */,
+			);
+			path = Manager;
 			sourceTree = "<group>";
 		};
 		C40C09B42B863C82009BE4C5 /* ViewExtensions */ = {
@@ -292,6 +302,7 @@
 				F7207C9E2B84F52300E383E6 /* Config */,
 				F7207C9B2B84E4A200E383E6 /* Service */,
 				EA9BC9E52B83A2B300292705 /* View */,
+				4447C07D2B95B9CF00593AF5 /* Manager */,
 				EA9BC9E42B83A2AD00292705 /* Model */,
 				EA9BC9E22B83A28D00292705 /* Components */,
 				F137D2322B839A82006264C1 /* serenadev2App.swift */,
@@ -499,6 +510,7 @@
 				4447C0562B920FD100593AF5 /* NotificationsView.swift in Sources */,
 				C4D511192B8E67F000E95549 /* SearchViewModel.swift in Sources */,
 				F7F928652B879FAF00050926 /* MockedUser.swift in Sources */,
+				4447C07C2B95B97A00593AF5 /* SongHistoryManager.swift in Sources */,
 				F137D2352B839A82006264C1 /* ContentView.swift in Sources */,
 				EA9BC9F62B87960900292705 /* ProfileView.swift in Sources */,
 				EA9BC9E82B83A44800292705 /* ProfileBar.swift in Sources */,

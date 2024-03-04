@@ -78,7 +78,7 @@ struct SelectSongView: View {
     }
     
     var filteredResults: [ContentItem] {
-        var contentitems = viewModel.songs.map { song in
+        let contentitems = viewModel.songs.map { song in
             ContentItem(isPerson: false, song: song)
         }
         return contentitems
