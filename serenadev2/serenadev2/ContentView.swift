@@ -21,7 +21,7 @@ struct ContentView: View {
         
         TabView {
             Group{
-                NotificationsView()
+                FeedView()
                     .tabItem {
                         Image("feed.fill")
                         Text("Feed")

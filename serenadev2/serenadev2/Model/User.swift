@@ -73,16 +73,11 @@ extension User {
             return nil
         }
         
-        
-        
         self.init(accountID: accountID,name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, record: record)
     }
-}
-
-extension User {
     
-    var record2: CKRecord {
-        let record = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: record.recordID)
+    init?(accountID: CKRecord.Reference?, name: String, tagName: String, email: String, friends: [CKRecord.Reference]?, posts: [CKRecord.Reference]?, streak: Int, profilePicture: String, isActive: Bool) {
+        let record = CKRecord(recordType: UserRecordKeys.type.rawValue)
         record[UserRecordKeys.accountID.rawValue] = accountID
         record[UserRecordKeys.name.rawValue] = name
         record[UserRecordKeys.tagName.rawValue] = tagName
@@ -92,10 +87,14 @@ extension User {
         record[UserRecordKeys.streak.rawValue] = streak
         record[UserRecordKeys.profilePicture.rawValue] = profilePicture
         record[UserRecordKeys.isActive.rawValue] = isActive
-        return record
+        
+        self.init(record: record)
     }
-
     
+}
+
+extension User {
+
     var id: String {
         (accountID?.recordID.recordName)!
     }
