@@ -30,7 +30,6 @@ struct SelectSongView: View {
                         ItemSmall(item: value, showArrow: false)
                         //.padding()
                             .onTapGesture {
-                                print("THIS IS THE SONG : \(value)")
                                 updateSelectedSong(from: value)
                                 presentationMode.wrappedValue.dismiss()
                                 selectedSong = value
@@ -82,7 +81,6 @@ struct SelectSongView: View {
         var contentitems = viewModel.songs.map { song in
             ContentItem(isPerson: false, song: song)
         }
-        print(contentitems.count)
         return contentitems
         
     }
@@ -112,13 +110,11 @@ struct SelectSongView: View {
             albumTitle: songDetails.albumTitle,
             duration: songDetails.duration,
             composerName: songDetails.composerName,
-            genreNames: songDetails.genreNames ?? [],
+            genreNames: songDetails.genreNames ,
             releaseDate: songDetails.releaseDate
         )
         
-        print("This is the deeeddeddede\(newSong)")
         self.song = newSong
-        print(" SI ESTA PASANDO LA CANCION \(song)")
     }
     
 }

@@ -93,8 +93,6 @@ enum ButtonType: CaseIterable {
                     let urlString = "https://open.spotify.com/search/\(encodedTitle)%20\(encodedArtist)"
                     
                     guard let spotifyUrl = URL(string: urlString) else { return }
-                    
-                    print(spotifyUrl.absoluteString)
                     UIApplication.shared.open(spotifyUrl)
                 } else {
                     print("Unable to create URL: Artist or title is nil")
@@ -108,7 +106,6 @@ enum ButtonType: CaseIterable {
                     
                     let urlString = "https://music.youtube.com/search?q=\(encodedTitle)%20\(encodedArtist)?filter=IsLibrary%7Cfalse&sc=none"
                     guard let youtubeMusicUrl = URL(string: urlString) else { return }
-                    print(youtubeMusicUrl.absoluteString)
                     UIApplication.shared.open(youtubeMusicUrl)
                 } else {
                     print("Unable to create URL: Artist or title is nil")
@@ -121,9 +118,8 @@ enum ButtonType: CaseIterable {
                    let encodedTitle = songTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                     
                     let urlString = "https://music.amazon.com/search/\(encodedTitle)%20\(encodedArtist)"
-                    guard let youtubeMusicUrl = URL(string: urlString) else { return }
-                    print(youtubeMusicUrl.absoluteString)
-                    UIApplication.shared.open(youtubeMusicUrl)
+                    guard let amazonMusicUrl = URL(string: urlString) else { return }
+                    UIApplication.shared.open(amazonMusicUrl)
                 } else {
                     print("Unable to create URL: Artist or title is nil")
                 }

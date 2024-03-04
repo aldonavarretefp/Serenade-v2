@@ -37,7 +37,6 @@ struct DailySongView: View {
                         if isSongFromDaily {
                             Button(action: {
                                 // This will toggle the state variable to present the sheet
-                                printSong(song: song)
                                 isPresentingSearchSong = true
                             }) {
                                 VStack(alignment: .leading) {
@@ -152,11 +151,6 @@ struct DailySongView: View {
     }
     
     
-}
-
-
-func printSong (song: SongModel){
-    print("THIS IS THE RECEIVED SONG \(song)")
 }
 
 struct CaptionView: View {
