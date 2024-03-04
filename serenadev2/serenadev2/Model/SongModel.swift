@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import MusicKit
 
 struct SongModel: Identifiable, Hashable {
     var id: String

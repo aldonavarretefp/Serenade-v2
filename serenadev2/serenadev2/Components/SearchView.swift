@@ -97,12 +97,12 @@ struct SearchView: View {
                                         historyManager.removeSong(songId: song.id)
                                         loadHistory()
                                     }
-                                        .padding([.leading, .top, .bottom])
-                                        .onTapGesture{
-                                            selectedSong = ContentItem(isPerson: false, song: song)
-                                            historyManager.addToHistory(song.id)
-                                            loadHistory()
-                                        }
+                                    .padding([.leading, .top, .bottom])
+                                    .onTapGesture{
+                                        selectedSong = ContentItem(isPerson: false, song: song)
+                                        historyManager.addToHistory(song.id)
+                                        loadHistory()
+                                    }
                                 }
                             }
                         }
@@ -170,7 +170,6 @@ struct SearchView: View {
             loadHistory()
         }
     }
-    
     
     var filteredResults: [ContentItem] {
         if selectedTab == .music {
