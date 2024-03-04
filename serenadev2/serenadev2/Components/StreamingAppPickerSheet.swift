@@ -9,6 +9,8 @@ import SwiftUI
 
 struct StreamingAppPickerSheet: View {
     
+    @Environment(\.dismiss) var dismiss
+    
     @State var selectedAppleMusic: Bool = true
     @State var selectedSpotify: Bool = true
     @State var selectedYouTubeMusic: Bool = true
@@ -20,6 +22,27 @@ struct StreamingAppPickerSheet: View {
                 Color.viewBackground
                     .ignoresSafeArea()
                 VStack(alignment: .leading) {
+                    HStack(alignment: .top){
+                        Text(LocalizedStringKey("FavoriteStreamingApps"))
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                        
+                        Spacer()
+                        
+                        Button{
+                            // Dismiss the full screen
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark.circle")
+                                .font(.title)
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.white, .clear)
+                                .background(.black.opacity(0.3))
+                                .clipShape(Circle())
+                        }
+                    }
+                    .padding([.top, .bottom])
+                    
                     Text(LocalizedStringKey("FavoriteAppsDescription"))
                         .fontWeight(.light)
                         .foregroundStyle(.callout)
@@ -31,13 +54,6 @@ struct StreamingAppPickerSheet: View {
                     //                Spacer()
                 }
                 .padding(.horizontal)
-            }
-            .toolbar{
-                ToolbarItem(placement: .topBarLeading){
-                    Text(LocalizedStringKey("FavoriteStreamingApps"))
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                }
             }
         }
     }

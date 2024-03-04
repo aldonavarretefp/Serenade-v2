@@ -28,7 +28,7 @@ struct OpenWithView : View {
                     .ignoresSafeArea()
                 VStack(alignment: .leading, spacing: 30){
                     // A text view displaying instructions or information to the user.
-                    Text("Listen to this song on the following music streaming platforms")
+                    Text(LocalizedStringKey("OpenWithDescription"))
                         .fontWeight(.light)
                         .foregroundStyle(.callout)
                     
@@ -43,7 +43,7 @@ struct OpenWithView : View {
                 .toolbar{
                     // Toolbar item placed on the leading side of the navigation bar.
                     ToolbarItem(placement: .navigationBarLeading){
-                        Text("Open with")
+                        Text(LocalizedStringKey("OpenWith"))
                             .font(.title2)
                             .fontWeight(.semibold)
                     }

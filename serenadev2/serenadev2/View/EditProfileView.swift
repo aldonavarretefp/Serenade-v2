@@ -86,7 +86,7 @@ struct EditProfileView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Edit profile")
+            .navigationTitle(LocalizedStringKey("EditProfile"))
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 name = user.name 

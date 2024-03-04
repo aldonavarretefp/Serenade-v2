@@ -28,7 +28,7 @@ struct DailySongView: View {
                     .fill(.ultraThinMaterial)
                     .ignoresSafeArea()
                 VStack(alignment: .leading, spacing: 30) {
-                    Text("Share your song of the day with all of your friends.")
+                    Text(LocalizedStringKey("DailyDescription"))
                         .fontWeight(.light)
                         .foregroundStyle(.callout)
                     
@@ -42,11 +42,11 @@ struct DailySongView: View {
                             }) {
                                 VStack(alignment: .leading) {
                                     HStack {
-                                        Text("Selected song")
+                                        Text(LocalizedStringKey("SelectedSong"))
                                             .font(.callout)
                                         
                                         Spacer()
-                                        Text("Change song")
+                                        Text(LocalizedStringKey("ChangeSong"))
                                             .font(.footnote)
                                             .fontWeight(.light)
                                             .foregroundStyle(.callout)
@@ -55,10 +55,9 @@ struct DailySongView: View {
                                         Rectangle()
                                             .fill(.ultraThickMaterial)
                                         
-                                        ItemSmall(item: ContentItem(isPerson: false, song: song), showArrow: false)
+                                        ItemSmall(item: ContentItem(isPerson: false, song: song), showArrow: false, comesFromDaily: true)
                                             .padding(.horizontal, 5)
                                     }
-                                    //.background(.viewBackground)
                                     .frame(maxHeight: 60)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                 }
@@ -74,7 +73,7 @@ struct DailySongView: View {
                             
                             VStack(alignment: .leading) {
                                 HStack {
-                                    Text("Selected song")
+                                    Text(LocalizedStringKey("SelectedSong"))
                                         .font(.callout)
                                     
                                 }
@@ -82,11 +81,12 @@ struct DailySongView: View {
                                     Rectangle()
                                         .fill(.ultraThickMaterial)
                                     
-                                    ItemSmall(item: ContentItem(isPerson: false, song: song), showArrow: false)
+                                    ItemSmall(item: ContentItem(isPerson: false, song: song), showArrow: false, comesFromDaily: true)
                                         .padding(.horizontal, 5)
                                 }
                                 .frame(maxHeight: 60)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                                
                             }
                             
                             
@@ -107,7 +107,7 @@ struct DailySongView: View {
                     
                     VStack(alignment: .leading) {
                         HStack {
-                            Text("Caption")
+                            Text(LocalizedStringKey("Caption"))
                                 .font(.callout)
                             Spacer()
                             
@@ -120,7 +120,7 @@ struct DailySongView: View {
                     Spacer()
                     // Enable the 'Daily' button only if a song is selected
                     
-                    ActionButton(label: "Daily", symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: song == nil) {
+                    ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: song == nil) {
                         print("Shared daily")
                     }
                     
@@ -130,8 +130,8 @@ struct DailySongView: View {
             .ignoresSafeArea(.keyboard)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Daily")
-                        .font(.title2)
+                    Text(LocalizedStringKey("Daily"))
+                        .font(.title3)
                         .fontWeight(.semibold)
                 }
                 ToolbarItem(placement: .topBarTrailing){
@@ -174,7 +174,7 @@ struct CaptionView: View {
                     Rectangle()
                         .fill(Color.card) // Change to the actual color
                     
-                    TextField("Let your friends know your melody of the day...", text: $caption)
+                    TextField(LocalizedStringKey("PlaceholderCaption"), text: $caption)
                                 .multilineTextAlignment(.leading)
                                 .font(.subheadline)
                                 .padding()
@@ -222,7 +222,7 @@ struct SelectSong: View {
                 Image(systemName: "plus.circle.fill")
                     .foregroundColor(colorScheme == .dark ? .white : .black)
                     .font(.title3)
-                Text("Select song")
+                Text(LocalizedStringKey("SelectSong"))
                     .foregroundColor(colorScheme == .dark ? .white : .black)
                     .font(.body)
                     .fontWeight(.semibold)

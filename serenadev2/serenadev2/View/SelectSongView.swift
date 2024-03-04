@@ -28,7 +28,7 @@ struct SelectSongView: View {
                     
                     List(filteredResults) { value in
                         ItemSmall(item: value, showArrow: false)
-                            //.padding()
+                        //.padding()
                             .onTapGesture {
                                 print("THIS IS THE SONG : \(value)")
                                 updateSelectedSong(from: value)
@@ -42,26 +42,28 @@ struct SelectSongView: View {
                     .listStyle(.plain)
                     .background(.viewBackground)
                     .overlay {
-                            if viewModel.isLoading {
-                                // Display a loading indicator or view when music is being fetched
-                                ProgressView()
-                                    .progressViewStyle(.circular)
-                            } else if viewModel.searchText.isEmpty {
-                                // Display this when no search has been made yet
-                                ContentUnavailableView(label: {
-                                    Label("Search for music ", systemImage: "music.note")
-                                }, description: {
-                                    Text("Search for your favorite songs, artists or albums")
-                                })
-                            } else if filteredResults.isEmpty {
-                                // Display this when there are no results (for Music tab only)
-                                ContentUnavailableView(label: {
-                                    Label("No Matches Found ", systemImage: "exclamationmark")
-                                }, description: {
-                                    Text("We couldn't find anything for your search. Try different keywords or check for typos.")
-                                })
+                        if viewModel.isLoading {
+                            // Display a loading indicator or view when music is being fetched
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                        } else if viewModel.searchText.isEmpty {
+                            // Display this when no search has been made yet (for Music tab only)
+                            ContentUnavailableView(label: {
+                                Label(LocalizedStringKey("SearchForMusic"), systemImage: "music.note")
+                            }, description: {
+                                Text(LocalizedStringKey("SearchDescription"))
+                            })
+                            
+                        } else if filteredResults.isEmpty {
+                            // Display this when there are no results (for Music tab only)
+                            ContentUnavailableView(label: {
+                                Label(LocalizedStringKey("NoMatchesFound"), systemImage: "exclamationmark")
+                            }, description: {
+                                Text(LocalizedStringKey("NoMatchesDescription"))
+                            })
                             
                         }
+                        
                     }
                 }
                 
@@ -71,15 +73,15 @@ struct SelectSongView: View {
             .onChange(of: viewModel.searchText) {
                 viewModel.fetchMusic(with: viewModel.searchText)
             }
-            .navigationTitle("Select Song")
-                        .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(LocalizedStringKey("SelectSong"))
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     
     var filteredResults: [ContentItem] {
-            var contentitems = viewModel.songs.map { song in
-                ContentItem(isPerson: false, song: song)
-            }
+        var contentitems = viewModel.songs.map { song in
+            ContentItem(isPerson: false, song: song)
+        }
         print(contentitems.count)
         return contentitems
         
@@ -118,7 +120,7 @@ struct SelectSongView: View {
         self.song = newSong
         print(" SI ESTA PASANDO LA CANCION \(song)")
     }
-
+    
 }
 
 struct SelectSongView_Previews: PreviewProvider {
