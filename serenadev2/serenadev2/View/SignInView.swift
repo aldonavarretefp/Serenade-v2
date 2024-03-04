@@ -12,9 +12,16 @@ struct SignInView: View {
     
     @Environment(\.colorScheme) var colorScheme
     
-    @StateObject private var authManager = AuthManager()
+    @ObservedObject var authManager: AuthManager
+    
+    @EnvironmentObject var userViewModel: UserViewModel
+    
     @State private var email: String = ""
     @State private var password: String = ""
+    
+    init(authManager: AuthManager) {
+        self.authManager = authManager
+    }
     
     var body: some View {
         NavigationStack {
@@ -42,9 +49,8 @@ struct SignInView: View {
                         Text("Email: \(authManager.email)")
                         Text("UserID: \(authManager.userId) ")
                     
-                        
-                        
                     }
+                    
                 }
                 .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
                 .padding()
@@ -66,8 +72,4 @@ struct SignInView: View {
         .preferredColorScheme(colorScheme == .dark ? .dark : .light)
         .transition(.asymmetric(insertion: .slide, removal: .push(from: .trailing)))
     }
-}
-
-#Preview {
-    SignInView()
 }

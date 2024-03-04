@@ -28,6 +28,8 @@
 		C4AF43142B965AF40089C62A /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AF43132B965AF40089C62A /* SignInView.swift */; };
 		C4AF43162B965BCA0089C62A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AF43152B965BCA0089C62A /* AuthManager.swift */; };
 		C4AF43182B9663E10089C62A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AF43172B9663E10089C62A /* OnboardingView.swift */; };
+		C4AF431A2B9670D90089C62A /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AF43192B9670D90089C62A /* SplashScreenView.swift */; };
+		C4AF431C2B9679150089C62A /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AF431B2B9679150089C62A /* UserDefaultsKeys.swift */; };
 		C4D511192B8E67F000E95549 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D511182B8E67F000E95549 /* SearchViewModel.swift */; };
 		C4D5111B2B8F759300E95549 /* SongModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D5111A2B8F759300E95549 /* SongModel.swift */; };
 		C4D5111E2B8FBF6D00E95549 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D5111D2B8FBF6D00E95549 /* SongService.swift */; };
@@ -106,6 +108,8 @@
 		C4AF43132B965AF40089C62A /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		C4AF43152B965BCA0089C62A /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		C4AF43172B9663E10089C62A /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		C4AF43192B9670D90089C62A /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
+		C4AF431B2B9679150089C62A /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		C4D511182B8E67F000E95549 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		C4D5111A2B8F759300E95549 /* SongModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongModel.swift; sourceTree = "<group>"; };
 		C4D5111D2B8FBF6D00E95549 /* SongService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongService.swift; sourceTree = "<group>"; };
@@ -186,6 +190,7 @@
 			children = (
 				4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */,
 				C4AF43152B965BCA0089C62A /* AuthManager.swift */,
+				C4AF431B2B9679150089C62A /* UserDefaultsKeys.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -275,6 +280,7 @@
 				E0C891562B9387D70065234F /* OpenWithView.swift */,
 				C4AF43132B965AF40089C62A /* SignInView.swift */,
 				C4AF43172B9663E10089C62A /* OnboardingView.swift */,
+				C4AF43192B9670D90089C62A /* SplashScreenView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -560,12 +566,14 @@
 				EA216FCA2B8F6B6800A715EB /* ChecklistItem.swift in Sources */,
 				EA9BC9EC2B8501ED00292705 /* PostView.swift in Sources */,
 				C402E7DF2B8CD500004EC79C /* DailyPosted.swift in Sources */,
+				C4AF431A2B9670D90089C62A /* SplashScreenView.swift in Sources */,
 				44D1A4212B91DAC200BE6F92 /* NotificationItem.swift in Sources */,
 				EAB0C0D82B8CEC5A004F47F6 /* EditProfileView.swift in Sources */,
 				44D1A4232B91DB3100BE6F92 /* NotificationActionButton.swift in Sources */,
 				E0C891572B9387D70065234F /* OpenWithView.swift in Sources */,
 				EA9BC9EC2B8501ED00292705 /* PostView.swift in Sources */,
 				E0540C732B8E703A001A7561 /* DailySongView.swift in Sources */,
+				C4AF431C2B9679150089C62A /* UserDefaultsKeys.swift in Sources */,
 				EA9BC9F32B87861C00292705 /* User.swift in Sources */,
 				C402E7D72B8CD42D004EC79C /* CustomTabBar.swift in Sources */,
 				C402E7DD2B8CD4E7004EC79C /* FeedView.swift in Sources */,

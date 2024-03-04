@@ -11,17 +11,46 @@ import SwiftData
 @main
 struct serenadev2App: App {
     @StateObject var userViewModel: UserViewModel = UserViewModel()
-    @StateObject var authManager: AuthManager  = AuthManager()
+    @StateObject var authManager: AuthManager = AuthManager()
+    @State private var isShowingSplashScreen = true
+    
+    @State var hasCompletedOnboarding: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.hasCompletedOnboarding)
+    
+    @State var userId: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? "")
+    @State var userName: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userName) ?? "")
+    @State var userEmail: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? "")
     
     var body: some Scene {
+        
         WindowGroup {
-            if authManager.isAuthenticated == false {
-                SignInView()
-            } else{
-                ContentView()
-                    .environmentObject(userViewModel)
+            ZStack {
+                if isShowingSplashScreen {
+                    SplashScreenView(isShowingSplashScreen: $isShowingSplashScreen)
+                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
+                        .zIndex(2)
+                } else if !hasCompletedOnboarding {
+                    OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
+                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.5)))
+                        .zIndex(1)
+                } else if authManager.isAuthenticated {
+                    ContentView()
+                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.5)))
+                        .zIndex(0)
+                } else {
+                    SignInView(authManager: authManager)
+                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.5)))
+                        .zIndex(0)
+                }
             }
-            
+            .environmentObject(userViewModel)
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // Adjust delay as necessary
+                    withAnimation {
+                        self.isShowingSplashScreen = false
+                    }
+                }
+            }
         }
     }
 }
+

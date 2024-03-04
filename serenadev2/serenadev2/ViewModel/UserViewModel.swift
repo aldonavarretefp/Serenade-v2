@@ -16,15 +16,19 @@ class UserViewModel: ObservableObject {
     var cancellables = Set<AnyCancellable>()
     
     init(){
-        if let userID = UserDefaults.standard.string(forKey: "userID") {
-            self.userID = userID
-            self.isLoggedIn = true
+        if let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) {
+            self.userID = nil
+            self.isLoggedIn = false
+            self.user = nil
+            
             fetchUserFromAccountID(accountID: userID) { returnedUser in
                 self.user = returnedUser
+                self.userID = userID
+                self.isLoggedIn = true
             }
         } else {
             self.userID = nil
-            isLoggedIn = false
+            self.isLoggedIn = false
             self.user = nil
         }
     }
@@ -112,10 +116,10 @@ class UserViewModel: ObservableObject {
     func createUser(user: User){
         self.searchUsers(tagname: user.tagName) { returnedUsers in
             guard let returnedUsers = returnedUsers else { return }
-            if(returnedUsers.isEmpty){
+            if(!returnedUsers.isEmpty){
                 return
             } else {
-                guard let newUser = User(accountID: self.userID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive) else { return }
+                guard let newUser = User(accountID: user.accountID ?? "", name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive) else { return }
                 
                 CloudKitUtility.add(item: newUser) { result in
                     switch result {
