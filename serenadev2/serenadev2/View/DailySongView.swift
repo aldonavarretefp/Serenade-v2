@@ -19,6 +19,9 @@ struct DailySongView: View {
     
     @State var song: SongModel? // Optional to handle the case where no song is selected
     
+    @EnvironmentObject var userViewModel: UserViewModel
+    @EnvironmentObject var postViewModel: PostViewModel
+    
     var isSongFromDaily : Bool
     
     var body: some View {
@@ -120,6 +123,16 @@ struct DailySongView: View {
                     // Enable the 'Daily' button only if a song is selected
                     
                     ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: song == nil) {
+                        
+                        guard let user = userViewModel.user, let song = song else {
+                            print("ERROR: User does not exist")
+                            return
+                        }
+                        
+                        let post = Post(postType: .daily, songId: song.id, date: Date.now, isAnonymous: false, isActive: true)
+                        
+                        postViewModel.createAPost(post: post)
+                        
                         print("Shared daily")
                     }
                     
