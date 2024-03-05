@@ -10,14 +10,28 @@ import SwiftUI
 import CloudKit
 import Combine
 
-class FriendRequestsViewModel {
+class FriendRequestsViewModel: ObservableObject {
     
     @Published var friendRequests = [FriendRequest]()
+    @Published var userDetails: [CKRecord.ID: User] = [:]
     var cancellables = Set<AnyCancellable>()
     
-    init(user: User) {
-        fetchFriendRequestsForUser(user: user)
-    }
+    private func fetchUserDetails(for recordID: CKRecord.ID) {
+            // Use CloudKit to fetch the CKRecord for the given recordID
+            // Then initialize a User object with the fetched CKRecord and store it in `userDetails`
+            CKContainer.default().publicCloudDatabase.fetch(withRecordID: recordID) { [weak self] record, error in
+                guard let record = record, error == nil else {
+                    print("Error fetching user details: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                if let user = User(record: record) {
+                    DispatchQueue.main.async {
+                        self?.userDetails[recordID] = user
+                    }
+                }
+            }
+        }
     
     /**
      Fetches the friend requests for the user.
@@ -26,17 +40,22 @@ class FriendRequestsViewModel {
      */
     func fetchFriendRequestsForUser(user: User) {
         let recordToMatch = CKRecord.Reference(record: user.record, action: .none)
-        let predicate = NSPredicate(format: "receiver == %@", recordToMatch)
+        let predicate = NSPredicate(format: "receiver == %@ && status == %@", recordToMatch, FriendRequestStatus.pending.rawValue)
         let recordType = FriendRequestsRecordKeys.type.rawValue
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
             .receive(on: DispatchQueue.main)
             .sink { _ in
-                
-            } receiveValue: { [weak self] returnedFriendRequests in
+            } receiveValue: { [weak self] (returnedFriendRequests: [FriendRequest]) in
+                print(returnedFriendRequests)
                 self?.friendRequests = returnedFriendRequests
+                for request in returnedFriendRequests {
+                    let record = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: request.sender.recordID)
+                    self?.fetchUserDetails(for: record.recordID)
+                }
+                
+                
             }
             .store(in: &cancellables)
-        
     }
 
     /**
@@ -94,12 +113,14 @@ class FriendRequestsViewModel {
         - Parameters:
             - friendRequest: The friend request to decline.
     */
-    func declineFriendRequest(friendRequest: FriendRequest) {
+    func declineFriendRequest(friendRequest: FriendRequest, completionHandler: @escaping () -> Void) {
+        
         friendRequest.record["status"] = FriendRequestStatus.rejected.rawValue
         CloudKitUtility.update(item: friendRequest) { result in
             switch result {
             case .success(_):
                 print("Updated succesfully")
+                completionHandler()
                 break;
             case .failure(let error):
                 print("Failure", error.localizedDescription)

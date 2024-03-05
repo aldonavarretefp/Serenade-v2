@@ -11,16 +11,29 @@ struct NotificationItem: View {
     
     // MARK: - Properties
     var user: User
+    var friendRequest: FriendRequest
+    @EnvironmentObject var friendRequestViewModel: FriendRequestsViewModel
+    @EnvironmentObject var userViewModel: UserViewModel
     
     // MARK: - Body
     var body: some View {
         HStack{
-            Image(user.profilePicture)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50)
-                .clipShape(Circle())
-                .padding(.trailing, 5)
+            if user.profilePicture != "" {
+                Image(user.profilePicture)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50)
+                    .clipShape(Circle())
+                    .padding(.trailing, 5)
+            } else {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50)
+                    .clipShape(Circle())
+                    .padding(.trailing, 5)
+            }
+            
             
             Text(user.tagName)
                 .fontWeight(.semibold)
@@ -31,11 +44,17 @@ struct NotificationItem: View {
             
             HStack(spacing: 5){
                 NotificationActionButton(icon: "xmark"){
-                    print("xmark")
+                    friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {
+                        guard let user = userViewModel.user else { return }
+                        userViewModel.unmakeFriends(withId: user, friendId: friendRequest.sender.recordID)
+                    }
                 }
                 
                 NotificationActionButton(icon: "checkmark"){
-                    print("Check")
+                    friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
+                        guard let user = userViewModel.user else { return }
+                        userViewModel.makeFriends(withId: user, friendId: friendRequest.sender.recordID)
+                    }
                 }
             }
             .padding(.leading)
@@ -43,6 +62,6 @@ struct NotificationItem: View {
     }
 }
 
-#Preview {
-    NotificationItem(user: User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", friends: [], posts: [], streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true, record: .init(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "B5E07FDA-EB68-4C72-B547-ACE39273D662"))))
-}
+//#Preview {
+//    NotificationItem(user: User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", friends: [], posts: [], streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true, record: .init(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "B5E07FDA-EB68-4C72-B547-ACE39273D662"))))
+//}
