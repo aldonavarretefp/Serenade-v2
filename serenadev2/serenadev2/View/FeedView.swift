@@ -260,9 +260,9 @@ struct FeedView: View {
             }
         }
         .onAppear {
-            postViewModel.fetchAllPosts(user: userViewModel.user!) { returnedPosts in
+          /*  postViewModel.fetchAllPosts(user: userViewModel.user!) { returnedPosts in
                 posts = returnedPosts!
-            }
+            }*/
         }
         .refreshable {
             postViewModel.fetchAllPosts(user: userViewModel.user!) { returnedPosts in

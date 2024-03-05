@@ -16,8 +16,8 @@ struct SignInView: View {
     
     @EnvironmentObject var userViewModel: UserViewModel
     
-    @State private var email: String = ""
-    @State private var password: String = ""
+    @State private var shouldShowUserDetails = false
+    
     
     init(authManager: AuthManager) {
         self.authManager = authManager
@@ -38,22 +38,16 @@ struct SignInView: View {
                     SignInWithAppleButton(.signIn) { _ in
                         authManager.signInWithApple()
                     } onCompletion: { result in
-                        // Result handling is now managed by AuthManager
+
                     }
                     .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
                     .frame(height: 45)
                     .padding()
-
-                    if authManager.isAuthenticated {
-                        Text("Welcome, \(authManager.fullName)")
-                        Text("Email: \(authManager.email)")
-                        Text("UserID: \(authManager.userId) ")
-                    
-                    }
                     
                 }
                 .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
                 .padding()
+                
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(

@@ -9,6 +9,7 @@ import Foundation
 import AuthenticationServices
 
 class AuthManager: NSObject, ObservableObject, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    
     @Published var email: String = ""
     @Published var fullName: String = ""
     @Published var userId: String = ""
@@ -43,8 +44,6 @@ class AuthManager: NSObject, ObservableObject, ASAuthorizationControllerDelegate
                     print("Saved userID: \(self.userId)")
                 }
                 
-                self.email = appleIDCredential.email ?? ""
-                self.fullName = [appleIDCredential.fullName?.givenName, appleIDCredential.fullName?.familyName].compactMap { $0 }.joined(separator: " ")
                 self.isAuthenticated = true
             }
         }
@@ -57,5 +56,26 @@ class AuthManager: NSObject, ObservableObject, ASAuthorizationControllerDelegate
 
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return ASPresentationAnchor()
+    }
+    
+    func checkAuthenticationState() {
+        if let userId = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID), !userId.isEmpty {
+            // Assume user is authenticated if userID exists and is not empty
+            self.isAuthenticated = true
+        } else {
+            self.isAuthenticated = false
+        }
+    }
+
+    func logOut() {
+        // Clear user data from UserDefaults
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userID)
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userName)
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userEmail)
+        
+        // Update authentication status
+        DispatchQueue.main.async {
+            self.isAuthenticated = false
+        }
     }
 }

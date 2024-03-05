@@ -16,10 +16,11 @@ class UserViewModel: ObservableObject {
     var cancellables = Set<AnyCancellable>()
     
     init(){
+        self.userID = nil
+        self.isLoggedIn = false
+        self.user = nil
         if let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) {
-            self.userID = nil
-            self.isLoggedIn = false
-            self.user = nil
+            
             
             fetchUserFromAccountID(accountID: userID) { returnedUser in
                 self.user = returnedUser
