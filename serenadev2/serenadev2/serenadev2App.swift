@@ -24,7 +24,7 @@ struct serenadev2App: App {
     
     @State var tagName: String = ""
     
-    @StateObject var songVM = SongViewModel()
+    @StateObject var songViewModel = SongViewModelTest()
     
     var body: some Scene {
         
@@ -54,7 +54,7 @@ else if authManager.isAuthenticated {
             }
             .environmentObject(userViewModel)
             .environmentObject(postViewModel)
-            .environmentObject(songVM)
+            .environmentObject(songViewModel)
             .onAppear {
                 authManager.checkAuthenticationState()
                 
