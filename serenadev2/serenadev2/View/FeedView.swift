@@ -22,26 +22,7 @@ struct FeedView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     
     var body: some View {
-        var post: Post
-        VStack{
-            Text("Name: " + userName)
-            Text("UserID: " + userId)
-            Text("UserEmail: " + userEmail)
-            
-            Button(action: {
-                guard let newUser = User(accountID: userId, name: userName, tagName: "pablitoclavounclavito", email: userEmail, friends: nil, posts: nil, streak: 0, profilePicture: "", isActive: true)
-                else {
-                    return 
-                }
-
-                userViewModel.createUser(user: newUser)
-                
-                print(userViewModel.isLoggedIn)
-                
-            }, label: {
-                Text("Create Account")
-            })
-        }
+        Text("Feed View")
     }
     
     /*

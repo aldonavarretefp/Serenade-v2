@@ -27,21 +27,46 @@ struct serenadev2App: App {
         
         WindowGroup {
             ZStack {
-                if isShowingSplashScreen {
+                if authManager.isAuthenticated {
+                    ContentView()
+                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 1.0).delay(0.5)))
+                        .zIndex(0)
+                } else if isShowingSplashScreen {
                     SplashScreenView(isShowingSplashScreen: $isShowingSplashScreen)
-                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
+                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 1.0).delay(0.5)))
                         .zIndex(2)
                 } else if !hasCompletedOnboarding {
                     OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
-                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.5)))
+                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 1.0).delay(0.5)))
                         .zIndex(1)
-                } else if authManager.isAuthenticated {
-                    ContentView()
-                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.5)))
-                        .zIndex(0)
+                
+
+                } else if authManager.isAuthenticated && !userViewModel.isLoggedIn {
+                    Form {
+                        Text("Name: " + userName)
+                        Text("UserID: " + userId)
+                        Text("UserEmail: " + userEmail)
+                        TextField("Tag Name", text: $tagName)
+                            .padding(.bottom, 40)
+                        
+                        Button(action: {
+                            guard let newUser = User(accountID: authManager.userId, name: authManager.fullName, tagName: tagName, email: authManager.email, friends: nil, posts: nil, streak: 0, profilePicture: "", isActive: true)
+                            else {
+                                return
+                            }
+                            userViewModel.createUser(user: newUser)
+                            
+                        }, label: {
+                            Text("Create Account")
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                        })
+                    }
                 } else {
                     SignInView(authManager: authManager)
-                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.5)))
+                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.5).delay(0.5)))
                         .zIndex(0)
                 }
             }

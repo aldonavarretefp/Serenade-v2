@@ -28,10 +28,9 @@ class AuthManager: NSObject, ObservableObject, ASAuthorizationControllerDelegate
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             DispatchQueue.main.async {
-                self.userId = appleIDCredential.user ?? ""
+                self.userId = appleIDCredential.user
                 self.email = appleIDCredential.email ?? ""
                 self.fullName = [appleIDCredential.fullName?.givenName, appleIDCredential.fullName?.familyName].compactMap { $0 }.joined(separator: " ")
-                self.isAuthenticated = true
                 
                 if self.email != "" && self.fullName != "" {
                     UserDefaults.standard.set(self.fullName, forKey: UserDefaultsKeys.userName)
@@ -43,12 +42,8 @@ class AuthManager: NSObject, ObservableObject, ASAuthorizationControllerDelegate
                     UserDefaults.standard.set(self.userId, forKey: UserDefaultsKeys.userID)
                     print("Saved userID: \(self.userId)")
                 }
-                        
-               
                 
-
-                
-                self.email = appleIDCredential.email ?? "No Email Found"
+                self.email = appleIDCredential.email ?? ""
                 self.fullName = [appleIDCredential.fullName?.givenName, appleIDCredential.fullName?.familyName].compactMap { $0 }.joined(separator: " ")
                 self.isAuthenticated = true
             }
