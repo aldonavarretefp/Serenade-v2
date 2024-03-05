@@ -57,10 +57,10 @@ struct ContentView: View {
 //                }
 //            }
             
-            let post = Post(postType: TypeRec(rawValue: "daily")!, sender: userViewModel.user?.accountID, caption: "This is a test", songId: "hello", date: Date(), isAnonymous: false, isActive: true)
-            postViewModel.createAPost(post: post)
-            print("userViewModel.user: \(userViewModel.user)")
-            print("userViewModel.user?.accountID: \(userViewModel.user?.accountID)")
+//            let post = Post(postType: TypeRec(rawValue: "daily")!, sender: userViewModel.user?.accountID, caption: "This is a test", songId: "hello", date: Date(), isAnonymous: false, isActive: true)
+//            postViewModel.createAPost(post: post)
+//            print("userViewModel.user: \(userViewModel.user)")
+//            print("userViewModel.user?.accountID: \(userViewModel.user?.accountID)")
             
 //            postViewModel.bringAllPostFromUserID(id: CKRecord(recordID: CKRecord.ID(recordName: "_798464902c8d85f4c1b288fe738f5cb5"))) { returnedPosts in
 //                    print(returnedPosts)
