@@ -14,8 +14,8 @@ struct PostView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var songViewModel: SongViewModelTest
     
-    @State var sender: User?
-    @State var song: SongModel?
+    var sender: User?
+    var song: SongModel?
     
     var post: Post
     
@@ -60,8 +60,11 @@ struct PostView: View {
                             .frame(height: 28)
                     }
                     
-                    if let sender {
+                    if let sender , sender.tagName != "" {
                         Text(sender.tagName).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
+                    }
+                    else {
+                        Text("tagName").fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
                     }
                     Spacer()
                     formattedDate
@@ -132,95 +135,95 @@ struct PostView: View {
                     //                        .frame(width: 70, height: 70)
                     //                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
                     //                        .padding()
-                    VStack(alignment: .leading) {
-                        //                        Text(post.song!.title)
-                        //                            .fontWeight(.bold)
-                        //                        Text(post.song!.artist)
-                        //                            .font(.footnote)
-                        //                            .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
-                        if let song {
-                            AsyncImage(url: song.artworkUrlMedium, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
-                                switch phase {
-                                case .empty:
-                                    Rectangle()
-                                        .fill(Color((song.bgColor)!))
-                                        .frame(width: 70, height: 70)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                                        .padding()
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 70, height: 70)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                                        .padding()
-                                        .transition(.opacity.animation(.easeIn(duration: 0.5)))
-                                case .failure(_):
-                                    Rectangle()
-                                        .fill(Color((song.bgColor)!))
-                                        .frame(width: 70, height: 70)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                                        .padding()
-                                default:
-                                    Rectangle()
-                                        .fill(Color((song.bgColor)!))
-                                        .frame(width: 70, height: 70)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                                        .padding()
-                                }
+                    //                    VStack(alignment: .leading) {
+                    //                        Text(post.song!.title)
+                    //                            .fontWeight(.bold)
+                    //                        Text(post.song!.artist)
+                    //                            .font(.footnote)
+                    //                            .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
+                    if let song {
+                        AsyncImage(url: song.artworkUrlMedium, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                            switch phase {
+                            case .empty:
+                                Rectangle()
+                                    .fill(Color((song.bgColor)!))
+                                    .frame(width: 70, height: 70)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                    .padding()
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 70, height: 70)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                    .padding()
+                                    .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                            case .failure(_):
+                                Rectangle()
+                                    .fill(Color((song.bgColor)!))
+                                    .frame(width: 70, height: 70)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                    .padding()
+                            default:
+                                Rectangle()
+                                    .fill(Color((song.bgColor)!))
+                                    .frame(width: 70, height: 70)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                    .padding()
                             }
-                            
-                            
-                            VStack(alignment: .leading) {
-                                Text(song.title)
-                                    .fontWeight(.bold)
-                                Text(song.artists)
-                                    .font(.footnote)
-                                    .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
-                            }
-                            .padding(.trailing)
-                            .lineLimit(2)
                         }
                         
+                        
+                        VStack(alignment: .leading) {
+                            Text(song.title)
+                                .fontWeight(.bold)
+                            Text(song.artists)
+                                .font(.footnote)
+                                .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
+                        }
+                        .padding(.trailing)
+                        .lineLimit(2)
                     }
-                    .frame(height: 95)
+                    
                 }
-                // On tap gesture to open the info of the passed song
-                .onTapGesture {
-                    isSongInfoDisplayed = true
-                }
-                .fullScreenCover(isPresented: $isSongInfoDisplayed){
-                    //                SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, song: post.song!)
-                    SongDetailView(song: song!)
-                }
+                .frame(height: 95)
             }
-            .font(.subheadline)
-            .task {
-                let senderRecord = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: post.sender!.recordID)
-                userViewModel.fetchUserFromRecord(record: senderRecord) { (returnedUser: User?) in
-                    print(returnedUser ?? "No user")
-                    if returnedUser != nil {
-                        sender = returnedUser!
-                    }
-                }
-                songViewModel.fetchSong(id: post.songId) { song in
-                    self.song = songViewModel.song
-                }
-                
+            // On tap gesture to open the info of the passed song
+            .onTapGesture {
+                isSongInfoDisplayed = true
+            }
+            .fullScreenCover(isPresented: $isSongInfoDisplayed){
+                //                SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, song: post.song!)
+                SongDetailView(song: song!)
             }
         }
-        
+        .font(.subheadline)
+//        .task {
+//            let senderRecord = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: post.sender!.recordID)
+//            userViewModel.fetchUserFromRecord(record: senderRecord) { (returnedUser: User?) in
+//                print(returnedUser ?? "No user")
+//                if returnedUser != nil {
+//                    sender = returnedUser!
+//                }
+//            }
+//            songViewModel.fetchSong(id: post.songId) { song in
+//                self.song = songViewModel.song
+//            }
+//            
+//        }
     }
     
-    //#Preview {
-    //    ScrollView {
-    //        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!! Give it a listen right now, you won't regret it!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears", artist: "The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-    //        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-    //        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-    //        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-    //    }
-    //}
 }
+
+//#Preview {
+//    ScrollView {
+//        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!! Give it a listen right now, you won't regret it!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears", artist: "The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
+//        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
+//        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
+//        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
+//    }
+//}
+
 #Preview {
     ScrollView {
         PostView(post: Post(postType: .daily, songId: "songId", date: Date(), isAnonymous: false, isActive: true))

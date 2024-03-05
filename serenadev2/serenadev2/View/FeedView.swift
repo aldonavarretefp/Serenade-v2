@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CloudKit
 
 // MARK: - Swipe direction
 enum SwipeDirection{
@@ -89,7 +90,6 @@ struct FeedView: View {
     ]
     */
     @State var posts: [Post] = []
-    
      
     // MARK: - Body
     var body: some View {
@@ -259,16 +259,27 @@ struct FeedView: View {
                 }
             }
         }
-        .onAppear {
-          /*  postViewModel.fetchAllPosts(user: userViewModel.user!) { returnedPosts in
-                posts = returnedPosts!
-            }*/
-        }
-        .refreshable {
-            postViewModel.fetchAllPosts(user: userViewModel.user!) { returnedPosts in
-                posts = returnedPosts!
+        .task {
+            if userViewModel.user != nil {
+                postViewModel.fetchAllPosts(user: userViewModel.user!) { returnedPosts in
+                    posts = returnedPosts!
+                    
+                }
+            }
+            else {
+                print("User is nil")
             }
         }
+//        .refreshable {
+//            if userViewModel.user != nil {
+//                postViewModel.fetchAllPosts(user: userViewModel.user!) { returnedPosts in
+//                    posts = returnedPosts!
+//                }
+//            }
+//            else {
+//                print("User is nil")
+//            }
+//        }
     }
 }
 
