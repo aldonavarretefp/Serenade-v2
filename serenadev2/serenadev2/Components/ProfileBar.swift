@@ -18,6 +18,7 @@ struct ProfileBar: View {
     @State var isFriendRequestSent: Bool
     @State var isCurrentUser: Bool
     @State var isFriend: Bool?
+    @EnvironmentObject var userViewModel: UserViewModel
     
     var user: User
     
@@ -141,8 +142,13 @@ struct ProfileBar: View {
                                 })
                                 .sheet(isPresented: $isUnfriendSheetDisplayed, content: {
                                     
-                                    ConfirmationSheet(titleStart: LocalizedStringKey("UnfriendTitleStart"), titleEnd: LocalizedStringKey("UnfriendTitleEnd"), user: "alex10liva", descriptionStart: LocalizedStringKey("UnfriendDescriptionStart"), descriptionEnd: LocalizedStringKey("UnfriendDescriptionEnd"), buttonLabel: "DeleteFriend"){
-                                        isFriend = false
+                                    ConfirmationSheet(titleStart: LocalizedStringKey("UnfriendTitleStart"), titleEnd: LocalizedStringKey("UnfriendTitleEnd"), user: user.tagName, descriptionStart: LocalizedStringKey("UnfriendDescriptionStart"), descriptionEnd: LocalizedStringKey("UnfriendDescriptionEnd"), buttonLabel: "DeleteFriend"){
+                                        guard let currentUser = userViewModel.user else {
+                                            print("ERROR: Couldn't unmake friends")
+                                            return
+                                        }
+                                        let friendID = user.record.recordID
+                                        userViewModel.unmakeFriends(withId: currentUser, friendId: friendID)
                                     }
                                     .presentationDetents([.fraction(0.3)])
                                 })
