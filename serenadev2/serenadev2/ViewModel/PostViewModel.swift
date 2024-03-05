@@ -10,7 +10,6 @@ import CloudKit
 import Combine
 
 class PostViewModel: ObservableObject {
-    @Published var postID: CKRecord.ID?
     @Published var error: String = ""
     var cancellables = Set<AnyCancellable>()
     

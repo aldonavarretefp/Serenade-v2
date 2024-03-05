@@ -89,12 +89,12 @@ struct ProfileBar: View {
                     }
                     HStack {
                         VStack {
-                            
+                            Text(user.posts != nil ? String(user.posts!.count) : "-")
                             Text(LocalizedStringKey("Posts"))
                         }
                         .font(.caption)
                         VStack {
-                            
+                            Text(user.friends != nil ? String(user.friends!.count) : "-")
                             Text(LocalizedStringKey("Friends"))
                         }
                         .font(.caption)

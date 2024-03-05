@@ -27,7 +27,7 @@ enum TypeRec: String, CaseIterable, Decodable {
 }
 
 // MARK: - Post model
-struct Post: Hashable, CloudKitableProtocol {
+struct Post: Hashable, CloudKitableProtocol, Identifiable {
     var postType: TypeRec
     var sender: CKRecord.Reference?
     var receiver: CKRecord.Reference?
