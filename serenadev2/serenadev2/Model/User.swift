@@ -22,7 +22,7 @@ enum UserRecordKeys: String {
 }
 
 struct User: Hashable, CloudKitableProtocol {
-    var accountID: CKRecord.Reference?
+    var accountID: String?
     var name: String
     var tagName: String
     var email: String
@@ -37,7 +37,7 @@ struct User: Hashable, CloudKitableProtocol {
 extension User {
     init?(record: CKRecord) {
         print(record)
-        guard let accountID = record[UserRecordKeys.accountID.rawValue] as? CKRecord.Reference? else {
+        guard let accountID = record[UserRecordKeys.accountID.rawValue] as? String? else {
             return nil
         }
         guard let name = record[UserRecordKeys.name.rawValue] as? String else {
@@ -72,11 +72,10 @@ extension User {
             print("Didn't find property isActive")
             return nil
         }
-        
         self.init(accountID: accountID, name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, record: record)
     }
     
-    init?(accountID: CKRecord.Reference?, name: String, tagName: String, email: String, friends: [CKRecord.Reference]?, posts: [CKRecord.Reference]?, streak: Int, profilePicture: String, isActive: Bool) {
+    init?(accountID: String?, name: String, tagName: String, email: String, friends: [CKRecord.Reference]?, posts: [CKRecord.Reference]?, streak: Int, profilePicture: String, isActive: Bool) {
         let record = CKRecord(recordType: UserRecordKeys.type.rawValue)
         record[UserRecordKeys.accountID.rawValue] = accountID
         record[UserRecordKeys.name.rawValue] = name
@@ -87,15 +86,33 @@ extension User {
         record[UserRecordKeys.streak.rawValue] = streak
         record[UserRecordKeys.profilePicture.rawValue] = profilePicture
         record[UserRecordKeys.isActive.rawValue] = isActive
-        
         self.init(record: record)
     }
-    
 }
 
 extension User {
-
-    var id: String {
-        (accountID?.recordID.recordName)!
+    mutating func update(newUser: User) -> User? {
+        
+        self.accountID = newUser.accountID
+        self.name = newUser.name
+        self.tagName = newUser.tagName
+        self.email = newUser.email
+        self.friends = newUser.friends
+        self.posts = newUser.posts
+        self.streak = newUser.streak
+        self.profilePicture = newUser.profilePicture
+        self.isActive = newUser.isActive
+        
+        let record = self.record
+        record[UserRecordKeys.accountID.rawValue] = newUser.accountID
+        record[UserRecordKeys.name.rawValue] = newUser.name
+        record[UserRecordKeys.tagName.rawValue] = newUser.tagName
+        record[UserRecordKeys.email.rawValue] = newUser.email
+        record[UserRecordKeys.friends.rawValue] = newUser.friends
+        record[UserRecordKeys.posts.rawValue] = newUser.posts
+        record[UserRecordKeys.streak.rawValue] = newUser.streak
+        record[UserRecordKeys.profilePicture.rawValue] = newUser.profilePicture
+        record[UserRecordKeys.isActive.rawValue] = newUser.isActive
+        return User(record: record)
     }
 }

@@ -11,21 +11,30 @@ import Combine
 
 class UserViewModel: ObservableObject {
     @Published var user: User?
-    @Published var permissionStatus: Bool = false
-    @Published var userID: CKRecord.ID?
-
-    @Published var isSignedInToiCloud: Bool = false
-    @Published var error: String = ""
+    @Published var userID: String?
+    @Published var isLoggedIn: Bool
     var cancellables = Set<AnyCancellable>()
     
     init(){
-        getiCloudStatus()
-        requestPermission()
-        fetchMainUserIDFromiCloud()
+        if let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) {
+            self.userID = nil
+            self.isLoggedIn = false
+            self.user = nil
+            
+            fetchUserFromAccountID(accountID: userID) { returnedUser in
+                self.user = returnedUser
+                self.userID = userID
+                self.isLoggedIn = true
+            }
+        } else {
+            self.userID = nil
+            self.isLoggedIn = false
+            self.user = nil
+        }
     }
     
     //MARK: iCloud Connection
-    private func getiCloudStatus() {
+    /*private func getiCloudStatus() {
         CloudKitUtility.getiCloudStatus()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
@@ -39,9 +48,9 @@ class UserViewModel: ObservableObject {
                 self?.isSignedInToiCloud = success
             }
             .store(in: &cancellables)
-    }
+    }*/
         
-    private func requestPermission() {
+    /*private func requestPermission() {
         CloudKitUtility.requestApplicationPermission()
             .receive(on: DispatchQueue.main)
             .sink { _ in
@@ -50,9 +59,9 @@ class UserViewModel: ObservableObject {
                 self?.permissionStatus = success
             }
             .store(in: &cancellables)
-    }
+    }*/
     
-    private func fetchMainUserIDFromiCloud(){
+    /*private func fetchMainUserIDFromiCloud(){
         CloudKitUtility.discoverUserID()
             .receive(on: DispatchQueue.main)
             .sink { _ in
@@ -62,9 +71,9 @@ class UserViewModel: ObservableObject {
                 self?.fetchMainUser()
             }
             .store(in: &cancellables)
-    }
+    }*/
     
-    private func fetchMainUser(){
+    /*private func fetchMainUser(){
         guard let userID = self.userID else {return}
         
         let recordToMatch = CKRecord.Reference(recordID: userID, action: .none)
@@ -81,12 +90,12 @@ class UserViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
+    */
     
     //MARK: CRUD Functions
     
-    func fetchUserFromAccountID(accountID: CKRecord.ID, completion: @escaping (User?) -> Void) {
-        let recordToMatch = CKRecord.Reference(recordID: accountID, action: .none)
-        let predicate = NSPredicate(format: "accountID == %@ && isActive == 1", recordToMatch)
+    func fetchUserFromAccountID(accountID: String, completion: @escaping (User?) -> Void) {
+        let predicate = NSPredicate(format: "accountID == %@ && isActive == 1", accountID)
         let recordType = UserRecordKeys.type.rawValue
 
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
@@ -105,12 +114,34 @@ class UserViewModel: ObservableObject {
     }
     
     func createUser(user: User){
-        let recordToMatch = CKRecord.Reference(recordID: userID!, action: .none)
-        let newUser = User(accountID: recordToMatch, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, record: user.record)
-        CloudKitUtility.add(item: newUser) { _ in }
+        self.searchUsers(tagname: user.tagName) { returnedUsers in
+            guard let returnedUsers = returnedUsers else { return }
+            if(!returnedUsers.isEmpty){
+                return
+            } else {
+                guard let newUser = User(accountID: user.accountID ?? "", name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive) else { return }
+                
+                CloudKitUtility.add(item: newUser) { result in
+                    switch result {
+                    case .success(_):
+                        self.user = newUser
+                        self.userID = newUser.accountID
+                        self.isLoggedIn = true
+                        break
+                    case .failure(_):
+                        break
+                    }
+                }
+            }
+        }
     }
     
-    func updateUser(newUser: User) {
+    func updateUser(updatedUser: User) {
+        var copyUser = updatedUser
+        guard let newUser = copyUser.update(newUser: updatedUser) else { return }
+        
+        user = newUser
+        
         CloudKitUtility.update(item: newUser) { result in
             switch result {
             case .success(_):
@@ -124,7 +155,7 @@ class UserViewModel: ObservableObject {
     
     func deleteUser(){
         user?.isActive = false
-        updateUser(newUser: user!)
+        updateUser(updatedUser: user!)
     }
     
     func makeFriends(withId user: User, friendId: CKRecord.ID){
@@ -160,27 +191,29 @@ class UserViewModel: ObservableObject {
                 updatedUser.record["friends"] = updatedUser.friends
                 updatedFriend.record["friends"] = updatedFriend.friends
                 
-                self.updateUser(newUser: updatedUser)
-                self.updateUser(newUser: updatedFriend)
+                self.updateUser(updatedUser: updatedUser)
+                self.updateUser(updatedUser: updatedFriend)
             }
             .store(in: &cancellables)
     }
     
-    func deleteFriend(friend: User){
+    /*func deleteFriend(friend: User){
         guard let friendAccountID = friend.accountID else {return}
         let newUserFriends = user?.friends?.filter({ reference in
             return reference != friendAccountID
         })
         user?.friends = newUserFriends ?? []
-        updateUser(newUser: user!)
-    }
+        updateUser(updatedUser: user!)
+    }*/
     
     func logOut(){
         self.user = nil
+        self.isLoggedIn = false
+        self.userID = nil
     }
     
     func searchUsers(tagname: String, completion: @escaping ([User]?) -> Void) {
-        let predicate = NSPredicate(format: "tagname == %@", tagname)
+        let predicate = NSPredicate(format: "tagName == %@", tagname)
         let recordType = UserRecordKeys.type.rawValue
 
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
@@ -196,15 +229,6 @@ class UserViewModel: ObservableObject {
                 completion(friendss)
             }
             .store(in: &cancellables)
-    }
-    
-    // TODO
-    func sendFriendRequest(){
-        
-    }
-    
-    func cancelFriendRequest(){
-        
     }
 }
 

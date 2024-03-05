@@ -15,10 +15,33 @@ enum SwipeDirection{
 }
 
 struct FeedView: View {
+    @State var userId: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? "")
+    @State var userName: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userName) ?? "")
+    @State var userEmail: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? "")
+    
+    @EnvironmentObject var userViewModel: UserViewModel
     
     var body: some View {
         var post: Post
-        Text("")
+        VStack{
+            Text("Name: " + userName)
+            Text("UserID: " + userId)
+            Text("UserEmail: " + userEmail)
+            
+            Button(action: {
+                guard let newUser = User(accountID: userId, name: userName, tagName: "pablitoclavounclavito", email: userEmail, friends: nil, posts: nil, streak: 0, profilePicture: "", isActive: true)
+                else {
+                    return 
+                }
+
+                userViewModel.createUser(user: newUser)
+                
+                print(userViewModel.isLoggedIn)
+                
+            }, label: {
+                Text("Create Account")
+            })
+        }
     }
     
     /*
