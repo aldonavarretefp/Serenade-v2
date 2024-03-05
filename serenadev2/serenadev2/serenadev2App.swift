@@ -12,7 +12,6 @@ import SwiftData
 struct serenadev2App: App {
     @StateObject var userViewModel: UserViewModel = UserViewModel()
     @StateObject var postViewModel: PostViewModel = PostViewModel()
-    @StateObject var authManager: AuthManager = AuthManager()
     @State private var isShowingSplashScreen = true
     
     @State var hasCompletedOnboarding: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.hasCompletedOnboarding)
@@ -20,6 +19,9 @@ struct serenadev2App: App {
     @State var userId: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? "")
     @State var userName: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userName) ?? "")
     @State var userEmail: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? "")
+    @StateObject var authManager = AuthManager()
+    
+    @State var tagName: String = ""
     
     var body: some Scene {
         

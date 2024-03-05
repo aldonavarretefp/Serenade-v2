@@ -85,7 +85,9 @@ class UserViewModel: ObservableObject {
                 
             } receiveValue: { [weak self] (returnedUsers: [User]?) in
                 let users: [User]? = returnedUsers
-                guard let user = users?[0] else { return }
+//                guard let user = users?[0] else { return }
+                let user = User(accountID: nil, name: "Aldo Navarrete", tagName: "aldo", email: "aldo@gmail.com", friends: nil, posts: nil, streak: 10, profilePicture: "", isActive: true, record: .init(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "87E3D069-576C-4DF4-A297-C5A15D231511")))
+                print(user)
                 self?.user = user
             }
             .store(in: &cancellables)
@@ -98,6 +100,25 @@ class UserViewModel: ObservableObject {
         let predicate = NSPredicate(format: "accountID == %@ && isActive == 1", accountID)
         let recordType = UserRecordKeys.type.rawValue
 
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                //completion(nil) // Llamada asincrónica fallida, devolver nil
+            } receiveValue: { returnedUsers in
+                let users: [User]? = returnedUsers
+                guard let userR = users?[0] else {
+                    completion(nil) // Llamada asincrónica exitosa pero sin usuarios devueltos
+                    return
+                }
+                completion(userR) // Llamada asincrónica exitosa con usuario devuelto
+            }
+            .store(in: &cancellables)
+    }
+    
+    func fetchUserFromRecord(record: CKRecord, completion: @escaping (User?) -> Void) {
+        let predicate = NSPredicate(format: "recordID == %@", record.recordID)
+        let recordType = UserRecordKeys.type.rawValue
+        
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
             .receive(on: DispatchQueue.main)
             .sink { _ in
@@ -158,6 +179,8 @@ class UserViewModel: ObservableObject {
         updateUser(updatedUser: user!)
     }
     
+    
+    
     func makeFriends(withId user: User, friendId: CKRecord.ID){
         var updatedUser = user
         
@@ -196,6 +219,66 @@ class UserViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
+    
+    func unmakeFriends(withId user: User, friendId: CKRecord.ID) {
+        var updatedUser = user
+        
+        // Prepare the references to remove
+        let referenceToFriend = CKRecord.Reference(recordID: friendId, action: .none)
+        let referencetoUser = CKRecord.Reference(recordID: user.record.recordID, action: .none)
+        
+        // Fetch the friend user's record
+        let predicate = NSPredicate(format: "recordID == %@", friendId)
+        let recordType: CKRecord.RecordType = UserRecordKeys.type.rawValue
+        
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("Finished fetching friend user")
+                case .failure(let error):
+                    print("Error fetching friend user: \(error)")
+                }
+            } receiveValue: { [weak self] (returnedUsers: [User]) in
+                guard let self = self, let updatedFriend = returnedUsers.first else {
+                    print("Error: Didn't find the friend user")
+                    return
+                }
+                
+                // Remove the friend references from each user's friends list
+                
+                
+                var updatedFriendVar = updatedFriend
+                var updatedUserVar = updatedUser
+                updatedFriendVar.friends?.removeAll(where: { $0 == referencetoUser })
+                updatedUserVar.friends?.removeAll(where: { $0 == referenceToFriend })
+                // Update the CKRecord for each user
+                updatedUserVar.record["friends"] = updatedUser.friends
+                updatedFriendVar.record["friends"] = updatedFriend.friends
+                
+                // Update both user records in CloudKit
+                self.updateUser(updatedUser: updatedUserVar)
+                self.updateUser(updatedUser: updatedFriendVar)
+            }
+            .store(in: &cancellables)
+    }
+
+
+    func fetchUser(recordID: CKRecord.ID, completion: @escaping (User?) -> Void) {
+        CKContainer.default().publicCloudDatabase.fetch(withRecordID: recordID) { record, error in
+            DispatchQueue.main.async {
+                guard let record = record, error == nil else {
+                    print("Error fetching user: \(error?.localizedDescription ?? "Unknown error")")
+                    completion(nil)
+                    return
+                }
+                let user = User(record: record)
+                completion(user)
+            }
+        }
+    }
+
     
     /*func deleteFriend(friend: User){
         guard let friendAccountID = friend.accountID else {return}

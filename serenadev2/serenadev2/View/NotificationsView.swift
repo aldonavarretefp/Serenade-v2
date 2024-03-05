@@ -11,7 +11,7 @@ struct NotificationsView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var userViewModel: UserViewModel
-    @State var friendRequestViewModel: FriendRequestsViewModel? = nil
+    @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
     
     var body: some View {
         NavigationStack{
@@ -22,66 +22,59 @@ struct NotificationsView: View {
                 VStack{
                     ScrollView{
                         VStack(spacing: 35){
-                            if let vm = friendRequestViewModel {
-                                
-                                ForEach(vm.friendRequests, id: \.self) { request in
-                                    let record = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: request.sender.recordID)
+                            
+                            ForEach(friendRequestViewModel.friendRequests, id: \.self) { request in
+                                if let user = friendRequestViewModel.userDetails[request.sender.recordID] {
                                     
-                                    let user = User(record: record)
-                                    if let user {
-                                        Text("\(user.name) te mandó solicitud")
-                                    }
+                                    NotificationItem(user: user, friendRequest: request)
+                                        .environmentObject(friendRequestViewModel)
                                 }
-                                
                             }
                             
-                            NotificationItem(user: User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "B5E07FDA-EB68-4C72-B547-ACE39273D662"))))
-                            
+//                            NotificationItem(user: User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "B5E07FDA-EB68-4C72-B547-ACE39273D662"))))
                             
                             Button {
-                                print(friendRequestViewModel?.friendRequests)
+                                print(friendRequestViewModel.friendRequests)
                             } label: {
                                 Text("Print model")
                             }
                             
                             Button {
-                                guard let friendRequests = friendRequestViewModel?.friendRequests else {
+                                guard friendRequestViewModel.friendRequests.count != 0 else {
                                     return
                                 }
                                 Task {
-                                    friendRequestViewModel?.acceptFriendRequest(friendRequest: friendRequests[0]) {
+                                    friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequestViewModel.friendRequests[0]) {
                                         guard let user = userViewModel.user else { return }
-                                        userViewModel.makeFriends(withId: user, friendId: friendRequests[0].sender.recordID)
+                                        userViewModel.makeFriends(withId: user, friendId: friendRequestViewModel.friendRequests[0].sender.recordID)
                                     }
-                                    
-                                    
                                 }
                                 
                             } label: {
                                 Text("Accept")
                             }
                             
-                            Button {
-                                guard let friendRequests = friendRequestViewModel?.friendRequests else {
-                                    print("NO friend requests")
-                                    return
-                                }
-                                friendRequestViewModel?.declineFriendRequest(friendRequest: friendRequests[0])
-                            } label: {
-                                Text("Decline")
-                            }
+//                            Button {
+//                                guard let friendRequests = friendRequestViewModel.friendRequests else {
+//                                    print("NO friend requests")
+//                                    return
+//                                }
+//                                friendRequestViewModel?.declineFriendRequest(friendRequest: friendRequests[0])
+//                            } label: {
+//                                Text("Decline")
+//                            }
                             
                             
-                            Button {
-                                let ale = CKRecord.init(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "110590A8-297A-495C-929D-B9951EAFF752"))
-                                guard let aldoID = userViewModel.user?.record.recordID else {
-                                    print("No user")
-                                    return
-                                }
-                                friendRequestViewModel?.createFriendRequest(senderID: ale.recordID, receiverID: aldoID)
-                            } label: {
-                                Text("Create")
-                            }
+//                            Button {
+//                                let ale = CKRecord.init(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "110590A8-297A-495C-929D-B9951EAFF752"))
+//                                guard let aldoID = userViewModel.user?.record.recordID else {
+//                                    print("No user")
+//                                    return
+//                                }
+//                                friendRequestViewModel?.createFriendRequest(senderID: ale.recordID, receiverID: aldoID)
+//                            } label: {
+//                                Text("Create")
+//                            }
                             
                         }
                         .padding()
@@ -94,10 +87,14 @@ struct NotificationsView: View {
             .navigationTitle(LocalizedStringKey("Notifications"))
             .toolbarTitleDisplayMode(.inline)
             .onAppear {
-                
-                if friendRequestViewModel == nil, let currentUser = userViewModel.user {
-                    self.friendRequestViewModel = FriendRequestsViewModel(user: currentUser)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    if let currentUser = userViewModel.user {
+    //                    self.friendRequestViewModel = FriendRequestsViewModel(user: currentUser)
+                        self.friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser)
+                        
+                    }
                 }
+                
                 
                 
             }

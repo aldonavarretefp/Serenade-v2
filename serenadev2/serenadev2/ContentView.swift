@@ -15,7 +15,7 @@ struct ContentView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var postViewModel: PostViewModel
     @Environment(\.colorScheme) var colorScheme
-    @State var friendsRequestsViewModel: FriendRequestsViewModel? = nil
+    
     
     // MARK: - Body
     var body: some View {
@@ -67,16 +67,16 @@ struct ContentView: View {
 //            }
         }
         .refreshable {
-            guard let user = userViewModel.user else { return }
-            print(userViewModel)
-            friendsRequestsViewModel = FriendRequestsViewModel(user: user)
-            
-//            let receiverRecordID = CKRecord.ID(recordName: "_af000b8fe1c7918a2f1594aa3b366436")
-//            let senderRecordID = CKRecord.ID(recordName: "_3e240adc518136e6354887a86b479e6c")
-            let receiverRecordID = CKRecord.ID(recordName: "87E3D069-576C-4DF4-A297-C5A15D231511")
-            let senderRecordID = CKRecord.ID(recordName: "110590A8-297A-495C-929D-B9951EAFF752")
-            
-            print(receiverRecordID, senderRecordID)
+//            guard let user = userViewModel.user else { return }
+//            print(userViewModel)
+//            friendsRequestsViewModel = FriendRequestsViewModel(user: user)
+//            
+////            let receiverRecordID = CKRecord.ID(recordName: "_af000b8fe1c7918a2f1594aa3b366436")
+////            let senderRecordID = CKRecord.ID(recordName: "_3e240adc518136e6354887a86b479e6c")
+//            let receiverRecordID = CKRecord.ID(recordName: "87E3D069-576C-4DF4-A297-C5A15D231511")
+//            let senderRecordID = CKRecord.ID(recordName: "110590A8-297A-495C-929D-B9951EAFF752")
+//            
+//            print(receiverRecordID, senderRecordID)
 
 //            friendsRequestsViewModel?.createFriendRequest(senderID: senderRecordID, receiverID: receiverRecordID)
         }

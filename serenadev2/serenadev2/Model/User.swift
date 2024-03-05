@@ -40,12 +40,12 @@ extension User {
         guard let accountID = record[UserRecordKeys.accountID.rawValue] as? String? else {
             return nil
         }
-        guard let name = record[UserRecordKeys.name.rawValue] as? String else {
-            print("Didn't find property name")
-            return nil
-        }
         guard let tagName = record[UserRecordKeys.tagName.rawValue] as? String else {
             print("Didn't find property tagName")
+            return nil
+        }
+        guard let name = record[UserRecordKeys.name.rawValue] as? String else {
+            print("Didn't find property name")
             return nil
         }
         guard let email = record[UserRecordKeys.email.rawValue] as? String else {
@@ -115,4 +115,5 @@ extension User {
         record[UserRecordKeys.isActive.rawValue] = newUser.isActive
         return User(record: record)
     }
+    
 }
