@@ -90,6 +90,8 @@ struct SongDetailView: View {
                         
                         // Daily button
                         ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false, isDisabled: false) {
+                            
+                            
                             isDailySheetDisplayed.toggle()
                             
                         }

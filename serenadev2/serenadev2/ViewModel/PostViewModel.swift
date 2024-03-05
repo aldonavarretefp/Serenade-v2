@@ -110,10 +110,12 @@ class PostViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func createAPost(post: Post){
+    func createAPost(post: Post, completionHandler: @escaping (() -> Void) ){
         let recordToMatch = CKRecord.Reference(recordID: post.sender!.recordID, action: .none)
         let newPost = Post(postType: post.postType, sender: recordToMatch, receiver: post.receiver, caption: post.caption, songId: post.songId, date: post.date, isAnonymous: post.isAnonymous, isActive: post.isActive)
-        CloudKitUtility.add(item: newPost) { _ in }
+        CloudKitUtility.add(item: newPost) { _ in
+                completionHandler()
+        }
     }
 }
 

@@ -32,20 +32,19 @@ struct serenadev2App: App {
             ZStack {
                 if authManager.isAuthenticated && !userViewModel.isLoggedIn {
                     UserDetailsView(authManager: authManager)
-                }
-else if authManager.isAuthenticated {
+                } else if authManager.isAuthenticated {
                     ContentView()
                         .transition(AnyTransition.opacity.animation(.easeInOut(duration: 1.0).delay(0.5)))
                         .zIndex(0)
-                } else if isShowingSplashScreen {
-                    SplashScreenView(isShowingSplashScreen: $isShowingSplashScreen)
-                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 1.0).delay(0.5)))
-                        .zIndex(2)
                 } else if !hasCompletedOnboarding {
                     OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
                         .transition(AnyTransition.opacity.animation(.easeInOut(duration: 1.0).delay(0.5)))
                         .zIndex(1)
-            
+                    
+                } else if isShowingSplashScreen {
+                    SplashScreenView(isShowingSplashScreen: $isShowingSplashScreen)
+                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 1.0).delay(0.5)))
+                        .zIndex(2)
                 } else {
                     SignInView(authManager: authManager)
                         .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
@@ -58,7 +57,7 @@ else if authManager.isAuthenticated {
             .onAppear {
                 authManager.checkAuthenticationState()
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // Adjust delay as necessary
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { 
                     withAnimation {
                         self.isShowingSplashScreen = false
                     }

@@ -64,7 +64,7 @@ struct PostView: View {
                         Text(sender.tagName).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
                     }
                     else {
-                        Text("tagName").fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
+                        Text("user").fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
                     }
                     Spacer()
                     formattedDate
@@ -73,8 +73,8 @@ struct PostView: View {
                 .padding([.top, .leading, .trailing])
                 .padding(.bottom, post.caption == "" ? 5 : 0)
                 //                Spacer()
-                if post.caption != "" {
-                    Text(post.caption!)
+                if let postCaption = post.caption {
+                    Text(postCaption)
                         .lineLimit(4)
                         .padding(.horizontal)
                         .padding(.top, 2)
@@ -194,7 +194,9 @@ struct PostView: View {
             }
             .fullScreenCover(isPresented: $isSongInfoDisplayed){
                 //                SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, song: post.song!)
-                SongDetailView(song: song!)
+                if let song {
+                    SongDetailView(song: song)
+                }
             }
         }
         .font(.subheadline)

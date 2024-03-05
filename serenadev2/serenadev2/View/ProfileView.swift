@@ -18,11 +18,11 @@ struct ProfileView: View {
     
     // Opacity variables for the button and the header
     @State var headerOpacity: Double = 1.0
+    @EnvironmentObject var postVM: PostViewModel
+    @EnvironmentObject var userVM: UserViewModel
     
-    var body: some View {
-        Text("")
-    }
-    /*
+    @State private var posts: [Post] = []
+    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
@@ -31,24 +31,11 @@ struct ProfileView: View {
                 
                 VStack(spacing: 0){
                     
-                    ScrollView (.vertical, showsIndicators: false){
+                    ScrollView (.vertical, showsIndicators: false) {
                         VStack(spacing: 15) {
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(
-                                id: "1",
-                                title: "Robbers",
-                                artists: "The 1975",
-                                artworkUrlSmall: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/100x100bb.jpg"), artworkUrlMedium: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/500x500bb.jpg"),
-                                artworkUrlLarge: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/1000x1000bb.jpg"),
-                                bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
-                                priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),
-                                secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
-                                terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
-                                quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
-                                previewUrl: URL(string: "https://example.com/preview.mp3"), albumTitle: "",
-                                duration: 295.502,
-                                composerName: "Greg Kurstin & Adele Adkins",
-                                genreNames: ["Pop"],
-                                releaseDate: Date(timeIntervalSince1970: 1445558400))), profileImg: "AfterHoursCoverArt")
+                            ForEach(posts) { post in
+                                PostView(post: post)
+                            }
                             
                         }
                         .padding(.top, headerHeight)
@@ -96,11 +83,11 @@ struct ProfileView: View {
                         }
                     }
                     .coordinateSpace(name: "SCROLL")
-                    .overlay(alignment: .top){
+                    .overlay(alignment: .top) {
                         ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: sebastian)
                             .opacity(headerOpacity)
                             .padding(.top, safeArea().top)
-                        //                            .background(colorScheme == .dark ? .black : .white)
+                        
                             .padding(.bottom)
                             .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
                         
@@ -128,11 +115,26 @@ struct ProfileView: View {
                     .ignoresSafeArea(edges: .top)
                     .frame(height: 0)
             }
+            .task {
+                guard let user = userVM.user else {
+                    print("NO USER FROM PROFILE")
+                    return
+                }
+                postVM.fetchAllPostsFromUserID(id: user.record.recordID) { posts in
+                    guard let posts else {
+                        print("Didn't fetch any posts")
+                        return
+                    }
+                    self.posts = posts
+                    print(posts)
+                }
+            }
         }
     }
-    */
 }
 
 #Preview {
     ProfileView()
 }
+
+

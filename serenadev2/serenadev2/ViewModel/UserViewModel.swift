@@ -21,8 +21,12 @@ class UserViewModel: ObservableObject {
         self.user = nil
         if let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) {
             
-            
             fetchUserFromAccountID(accountID: userID) { returnedUser in
+                guard let user = returnedUser else {
+                    print("NO USER FROM DB")
+                    return
+                }
+                print("Fetched User from DB: \(user)")
                 self.user = returnedUser
                 self.userID = userID
                 self.isLoggedIn = true
@@ -105,13 +109,14 @@ class UserViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 //completion(nil) // Llamada asincrónica fallida, devolver nil
-            } receiveValue: { returnedUsers in
-                let users: [User]? = returnedUsers
-                guard let userR = users?[0] else {
-                    completion(nil) // Llamada asincrónica exitosa pero sin usuarios devueltos
+            } receiveValue: { (returnedUsers: [User]?) in
+                
+                guard let returnedUsers, returnedUsers.count > 0 else {
+                    completion(nil)
                     return
                 }
-                completion(userR) // Llamada asincrónica exitosa con usuario devuelto
+                let user = returnedUsers[0]
+                completion(user)
             }
             .store(in: &cancellables)
     }
@@ -146,9 +151,11 @@ class UserViewModel: ObservableObject {
                 CloudKitUtility.add(item: newUser) { result in
                     switch result {
                     case .success(_):
-                        self.user = newUser
-                        self.userID = newUser.accountID
-                        self.isLoggedIn = true
+                        DispatchQueue.main.async {
+                            self.user = newUser
+                            self.userID = newUser.accountID
+                            self.isLoggedIn = true
+                        }
                         break
                     case .failure(_):
                         break
@@ -290,10 +297,12 @@ class UserViewModel: ObservableObject {
         updateUser(updatedUser: user!)
     }*/
     
-    func logOut(){
-        self.user = nil
-        self.isLoggedIn = false
-        self.userID = nil
+    func logOut() {
+        DispatchQueue.main.async {
+            self.user = nil
+            self.isLoggedIn = false
+            self.userID = nil
+        }
     }
     
     func searchUsers(tagname: String, completion: @escaping ([User]?) -> Void) {
