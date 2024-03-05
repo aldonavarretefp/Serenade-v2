@@ -20,7 +20,9 @@ struct FeedView: View {
     @State var userEmail: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? "")
     
     @EnvironmentObject var userViewModel: UserViewModel
+    @EnvironmentObject var postViewModel: PostViewModel
     
+    /*
     var body: some View {
         var post: Post
         VStack{
@@ -42,9 +44,9 @@ struct FeedView: View {
                 Text("Create Account")
             })
         }
-    }
+    }*/
     
-    /*
+    
     // MARK: - Environment properties
     // Color scheme of the phone
     @Environment(\.colorScheme) var colorScheme
@@ -66,7 +68,7 @@ struct FeedView: View {
     @State var isDailySheetOpened: Bool = false
     
     // Posts array to see some hardcoded posts
-    let posts: [PostView] = [
+    /*let posts: [PostView] = [
         PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(
             id: "1",
             title: "Hello",
@@ -84,7 +86,10 @@ struct FeedView: View {
             genreNames: ["Pop"],
             releaseDate: Date(timeIntervalSince1970: 1445558400))), profileImg: "AfterHoursCoverArt")
     ]
+    */
+    @State var posts: [Post] = []
     
+     
     // MARK: - Body
     var body: some View {
         NavigationStack{
@@ -99,9 +104,8 @@ struct FeedView: View {
                     ScrollView (.vertical, showsIndicators: false){
                         VStack (spacing: 15){
                             
-                            ForEach(posts, id: \.post.id) { postView in
-                                PostView(post: postView.post, profileImg: postView.profileImg)
-                                
+                            ForEach(posts) { post in
+                                PostView(post: post)
                             }
                         }
                         .padding(.top, headerHeight)
@@ -253,7 +257,17 @@ struct FeedView: View {
                 }
             }
         }
-    } */
+        .onAppear {
+            postViewModel.fetchAllPosts(user: userViewModel.user!) { returnedPosts in
+                posts = returnedPosts!
+            }
+        }
+        .refreshable {
+            postViewModel.fetchAllPosts(user: userViewModel.user!) { returnedPosts in
+                posts = returnedPosts!
+            }
+        }
+    }
 }
 
 #Preview {
