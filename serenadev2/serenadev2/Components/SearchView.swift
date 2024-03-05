@@ -23,13 +23,14 @@ struct SearchView: View {
     @State private var underlineOffset: CGFloat = 0
     @State var isSongInfoDisplayed: Bool = false
     
+    @EnvironmentObject var userViewModel: UserViewModel
     
     private let underlineHeight: CGFloat = 2
     private let animationDuration = 0.2
     
     @State private var selectedSong: ContentItem?
     
-    let peopleList = [
+    @State private var peopleList = [
         ContentItem(imageUrl: URL(string: "https://www.opticalexpress.co.uk/media/1064/man-with-glasses-smiling-looking-into-distance.jpg"), title: "Fernando Fernández", subtitle: "janedoe", isPerson: true),
         ContentItem(imageUrl: URL(string: "https://i.pinimg.com/474x/98/51/1e/98511ee98a1930b8938e42caf0904d2d.jpg"), title: "Jane Smith", subtitle: "janesmith", isPerson: true),
         ContentItem(imageUrl: URL(string: "https://img.freepik.com/free-photo/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair_285396-896.jpg?size=626&ext=jpg&ga=GA1.1.1700460183.1708560000&semt=ais"), title: "Alice Johnson", subtitle: "alicejohnson", isPerson: true)
@@ -160,7 +161,20 @@ struct SearchView: View {
             .disableAutocorrection(true)
         }
         .onChange(of: viewModel.searchText) {
-            viewModel.fetchMusic(with: viewModel.searchText)
+            if selectedTab == .music {
+                viewModel.fetchMusic(with: viewModel.searchText)
+            } else {
+                userViewModel.searchUsers(tagname: viewModel.searchText) { returnedUsers in
+                    
+                    if let returnedUsers = returnedUsers {
+                        peopleList = returnedUsers.map({ user in
+                            ContentItem(imageUrl: URL(string: user.profilePicture), title: user.name, subtitle: user.tagName, isPerson: true)
+                        })
+                    }
+                    
+                }
+            }
+            
         }
         
         .fullScreenCover(item: $selectedSong){ item in
