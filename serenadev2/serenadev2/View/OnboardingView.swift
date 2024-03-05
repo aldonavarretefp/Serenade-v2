@@ -13,43 +13,34 @@ struct OnboardingView: View {
     
     var body: some View {
         
-        ZStack{
-            VStack{
-                VStack(alignment: .center){
-                    Text("Welcome to Serenade")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .padding(.bottom)
-                    
-                    VStack{
-                        FeatureView(icon: "heart.fill", title: "Add Friends", description: "Connect effortlessly with friends to share and explore musical tastes together.")
-
-                        
-                        FeatureView(icon: "hearingdevice.ear.fill", title: "Hear Previews", description: "Listen to 30-second previews of songs before diving into the full experience.")
-                        
-                        FeatureView(icon: "clock.arrow.circlepath", title: "Daily Song Posting", description: "Share your daily song once every 24 hours with the community, enriching everyone's musical journey.")
-                        
-                        FeatureView(icon: "play.circle.fill", title: "Open with Favorite Streaming App", description: "Enjoy uninterrupted listening by opening songs directly in your preferred streaming app.")
-                    }
+        VStack(){
+            Text("Welcome to Serenade")
+                .font(.title)
+                .fontWeight(.bold)
+                .padding(.bottom, 20)
+            
+            VStack(alignment: .leading, spacing: 40){
+                FeatureView(icon: "heart.fill", title: "Add Friends", description: "Connect effortlessly with friends to share and explore musical tastes together.")
                 
-                }.padding()
-                    
-                    Spacer ()
-                    
-                    ActionButton(label: "Start", symbolName: "", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: false) {
-                        
-                        UserDefaults.standard.set(true, forKey: UserDefaultsKeys.hasCompletedOnboarding)
-                        hasCompletedOnboarding = true
-                        
-                    }
+                
+                FeatureView(icon: "hearingdevice.ear.fill", title: "Hear Previews", description: "Listen to 15-second previews of songs before diving into the full experience.")
+                
+                FeatureView(icon: "clock.arrow.circlepath", title: "Daily Song Posting", description: "Share your daily song once every 24 hours with the community, enriching everyone's musical journey.")
+                
+                FeatureView(icon: "play.circle.fill", title: "Open with Favorite Streaming App", description: "Enjoy uninterrupted listening by opening songs directly in your preferred streaming app.")
             }
-            .padding()
-                
-        
+            
         }
+        .padding()
         
-        
-        
+        Spacer ()
+        ActionButton(label: "Start", symbolName: "", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: false) {
+            
+            UserDefaults.standard.set(true, forKey: UserDefaultsKeys.hasCompletedOnboarding)
+            hasCompletedOnboarding = true
+            
+        }
+        .padding()
     }
 }
 
@@ -59,26 +50,28 @@ struct FeatureView: View {
     var description: String
     
     var body: some View {
-        HStack {
+        HStack(alignment: .center, spacing: 32){
+            
             Image(systemName: icon)
+                .font(.largeTitle)
                 .foregroundColor(.accentColor)
-                .imageScale(.large)
-                .font(.title)
+                .padding(.leading)
+                .frame(maxWidth: 40)
             
-            Spacer()
-            
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 5) {
                 Text(title)
                     .fontWeight(.semibold)
-                    .font(.title3)
-                Text(description)
-                    .foregroundColor(.secondary)
+                    .font(.title2)
                 
-            }.frame(maxWidth: .infinity)
+                Text(description)
+                    .foregroundColor(.callout)
+            }
         }
-        .padding()
-        .frame(maxWidth: .infinity)
         
     }
 }
 
+
+#Preview {
+    OnboardingView(hasCompletedOnboarding: .constant(true))
+}
