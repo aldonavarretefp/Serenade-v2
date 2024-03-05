@@ -105,6 +105,7 @@ struct FeedView: View {
                     ScrollView (.vertical, showsIndicators: false){
                         VStack (spacing: 15){
                             
+                            
                             ForEach(posts) { post in
                                 PostView(post: post)
                             }

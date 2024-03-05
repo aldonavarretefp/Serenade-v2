@@ -23,6 +23,8 @@ struct serenadev2App: App {
     
     @State var tagName: String = ""
     
+    @StateObject var songVM = SongViewModel()
+    
     var body: some Scene {
         
         WindowGroup {
@@ -72,6 +74,7 @@ struct serenadev2App: App {
             }
             .environmentObject(userViewModel)
             .environmentObject(postViewModel)
+            .environmentObject(songVM)
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // Adjust delay as necessary
                     withAnimation {

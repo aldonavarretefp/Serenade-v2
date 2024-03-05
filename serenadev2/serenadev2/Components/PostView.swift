@@ -9,10 +9,6 @@ import SwiftUI
 import CloudKit
 
 struct PostView: View {
-    //    var body: some View {
-    //        Text("")
-    //    }
-    
     @Environment(\.colorScheme) var colorScheme
     @State var isSongInfoDisplayed: Bool = false
     @EnvironmentObject var userViewModel: UserViewModel
@@ -50,13 +46,23 @@ struct PostView: View {
                 .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0.0), radius: 18, y: 5)
             VStack(alignment: .leading) {
                 HStack {
-                    Image(sender!.profilePicture)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .clipShape(Circle())
-                        .frame(height: 28)
+                    if let sender, sender.profilePicture != "" {
+                        Image(sender.profilePicture)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .clipShape(Circle())
+                            .frame(height: 28)
+                    } else {
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .clipShape(Circle())
+                            .frame(height: 28)
+                    }
                     
-                    Text(sender!.tagName).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
+                    if let sender {
+                        Text(sender.tagName).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
+                    }
                     Spacer()
                     formattedDate
                 }
@@ -79,36 +85,39 @@ struct PostView: View {
                 //                    .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
                 
                 // Back card song cover art
-                AsyncImage(url: song!.artworkUrlMedium, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
-                    switch phase {
-                    case .empty:
-                        Rectangle()
-                            .fill(Color((song!.bgColor)!))
-                            .frame(height: 95)
-                            .blur(radius: 20.0)
-                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(height: 95)
-                            .blur(radius: 20.0)
-                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
-                            .transition(.opacity.animation(.easeIn(duration: 0.5)))
-                    case .failure(_):
-                        Rectangle()
-                            .fill(Color((song!.bgColor)!))
-                            .frame(height: 95)
-                            .blur(radius: 20.0)
-                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
-                    default:
-                        Rectangle()
-                            .fill(Color((song!.bgColor)!))
-                            .frame(height: 95)
-                            .blur(radius: 20.0)
-                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                if let song {
+                    AsyncImage(url: song.artworkUrlMedium, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                        switch phase {
+                        case .empty:
+                            Rectangle()
+                                .fill(Color((song.bgColor)!))
+                                .frame(height: 95)
+                                .blur(radius: 20.0)
+                                .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(height: 95)
+                                .blur(radius: 20.0)
+                                .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                                .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                        case .failure(_):
+                            Rectangle()
+                                .fill(Color((song.bgColor)!))
+                                .frame(height: 95)
+                                .blur(radius: 20.0)
+                                .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                        default:
+                            Rectangle()
+                                .fill(Color((song.bgColor)!))
+                                .frame(height: 95)
+                                .blur(radius: 20.0)
+                                .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                        }
                     }
                 }
+                
             }
             ZStack(alignment: .leading) {
                 UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0))
@@ -129,47 +138,50 @@ struct PostView: View {
                         //                        Text(post.song!.artist)
                         //                            .font(.footnote)
                         //                            .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
-                        AsyncImage(url: song!.artworkUrlMedium, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
-                            switch phase {
-                            case .empty:
-                                Rectangle()
-                                    .fill(Color((song!.bgColor)!))
-                                    .frame(width: 70, height: 70)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                                    .padding()
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 70, height: 70)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                                    .padding()
-                                    .transition(.opacity.animation(.easeIn(duration: 0.5)))
-                            case .failure(_):
-                                Rectangle()
-                                    .fill(Color((song!.bgColor)!))
-                                    .frame(width: 70, height: 70)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                                    .padding()
-                            default:
-                                Rectangle()
-                                    .fill(Color((song!.bgColor)!))
-                                    .frame(width: 70, height: 70)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                                    .padding()
+                        if let song {
+                            AsyncImage(url: song.artworkUrlMedium, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
+                                switch phase {
+                                case .empty:
+                                    Rectangle()
+                                        .fill(Color((song.bgColor)!))
+                                        .frame(width: 70, height: 70)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                        .padding()
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 70, height: 70)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                        .padding()
+                                        .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                                case .failure(_):
+                                    Rectangle()
+                                        .fill(Color((song.bgColor)!))
+                                        .frame(width: 70, height: 70)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                        .padding()
+                                default:
+                                    Rectangle()
+                                        .fill(Color((song.bgColor)!))
+                                        .frame(width: 70, height: 70)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                                        .padding()
+                                }
                             }
+                            
+                            
+                            VStack(alignment: .leading) {
+                                Text(song.title)
+                                    .fontWeight(.bold)
+                                Text(song.artists)
+                                    .font(.footnote)
+                                    .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
+                            }
+                            .padding(.trailing)
+                            .lineLimit(2)
                         }
                         
-                        
-                        VStack(alignment: .leading) {
-                            Text(song!.title)
-                                .fontWeight(.bold)
-                            Text(song!.artists)
-                                .font(.footnote)
-                                .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
-                        }
-                        .padding(.trailing)
-                        .lineLimit(2)
                     }
                     .frame(height: 95)
                 }
@@ -183,15 +195,18 @@ struct PostView: View {
                 }
             }
             .font(.subheadline)
-            .onAppear {
+            .task {
                 let senderRecord = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: post.sender!.recordID)
-                userViewModel.fetchUserFromRecord(record: senderRecord) { returnedUser in
+                userViewModel.fetchUserFromRecord(record: senderRecord) { (returnedUser: User?) in
+                    print(returnedUser ?? "No user")
                     if returnedUser != nil {
                         sender = returnedUser!
                     }
                 }
-                songViewModel.fetchSong(id: post.songId)
-                song = songViewModel.song
+                songViewModel.fetchSong(id: post.songId) { song in
+                    self.song = songViewModel.song
+                }
+                
             }
         }
         
