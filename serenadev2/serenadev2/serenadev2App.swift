@@ -30,7 +30,7 @@ struct serenadev2App: App {
         
         WindowGroup {
             ZStack {
-                if authManager.isAuthenticated && !userViewModel.isLoggedIn {
+                if authManager.isAuthenticated && userViewModel.user != nil {
                     UserDetailsView(authManager: authManager)
                 } else if authManager.isAuthenticated {
                     ContentView()

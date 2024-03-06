@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import AuthenticationServices
 
 class AuthManager: NSObject, ObservableObject, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
@@ -13,8 +14,11 @@ class AuthManager: NSObject, ObservableObject, ASAuthorizationControllerDelegate
     @Published var email: String = ""
     @Published var fullName: String = ""
     @Published var userId: String = ""
+    
     @Published var isAuthenticated: Bool = false
     @Published var showInitialSetup: Bool = false
+    
+    @EnvironmentObject var userViewModel: UserViewModel
 
     func signInWithApple() {
         let request = ASAuthorizationAppleIDProvider().createRequest()
@@ -76,5 +80,7 @@ class AuthManager: NSObject, ObservableObject, ASAuthorizationControllerDelegate
         DispatchQueue.main.async {
             self.isAuthenticated = false
         }
+        
     }
+    
 }
