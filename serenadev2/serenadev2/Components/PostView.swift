@@ -72,11 +72,13 @@ struct PostView: View {
                 .padding(.bottom, post.caption == "" ? 5 : 0)
                 //                Spacer()
                 if let postCaption = post.caption {
-                    Text(postCaption)
-                        .lineLimit(4)
-                        .padding(.horizontal)
-                        .padding(.top, 2)
-                        .padding(.bottom, 2)
+                    if postCaption != "" {
+                        Text(postCaption)
+                            .lineLimit(4)
+                            .padding(.horizontal)
+                            .padding(.top, 2)
+                            .padding(.bottom, 2)
+                    }
                 }
                 //                Image()
                 //                    .resizable()

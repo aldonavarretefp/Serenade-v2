@@ -160,6 +160,16 @@ struct FeedView: View {
                         
                     }
                     .coordinateSpace(name: "SCROLL")
+                    .refreshable {
+                        let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? ""
+                        print("UserID: ", userID)
+                        Task {
+                            if let user = userViewModel.user {
+                                print("Fetching posts...")
+                                await postViewModel.fetchAllPostsAsync(user: user)
+                            }
+                        }
+                    }
                     .overlay(alignment: .top){
                         VStack(spacing: 12){
                             
@@ -264,7 +274,6 @@ struct FeedView: View {
                     await postViewModel.fetchAllPostsAsync(user: user)
                 }
             }
-            
         }
     }
 }

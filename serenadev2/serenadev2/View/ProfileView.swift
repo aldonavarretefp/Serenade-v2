@@ -25,8 +25,19 @@ struct ProfileView: View {
     
     @State var posts: [Post] = []
     
-    var user: User?
-
+    @State var user: User?
+    
+    func isFriendCheck(user: User) -> Bool {
+        if self.user != nil {
+            if userVM.user!.friends.contains(where: { $0 == user.record.recordID }) {
+                return true
+            } else {
+                return false
+            }
+        }
+        else { return false }
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {

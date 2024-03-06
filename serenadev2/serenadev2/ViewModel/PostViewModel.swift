@@ -59,6 +59,7 @@ class PostViewModel: ObservableObject {
         
         do {
             let posts: [Post] = try await CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            sortPostsByDate()
             return posts
         } catch {
             print("Error fetching posts: \(error)")
@@ -74,6 +75,7 @@ class PostViewModel: ObservableObject {
             // Now call an async version of `fetchAllPostsFromUserID`
             if let posts = await fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
                 self.posts = posts
+                sortPostsByDate()
                 for post in posts {
                     guard let sender = post.sender else {
                         print("Post has no sender")
@@ -105,6 +107,7 @@ class PostViewModel: ObservableObject {
             do {
                 let posts: [Post] = try await CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
                 self.posts = posts
+                sortPostsByDate()
                 for post in posts {
                     guard let sender = post.sender else {
                         print("Post has no sender")
@@ -149,6 +152,7 @@ class PostViewModel: ObservableObject {
                         return
                     }
                     self.fetchSenderDetails(for: sender.recordID)
+                    self.sortPostsByDate()
                 }
             }
         }
@@ -169,6 +173,7 @@ class PostViewModel: ObservableObject {
                         return
                     }
                     self.posts = posts
+                    self.sortPostsByDate()
                 }
                 .store(in: &cancellables)
         }
@@ -214,7 +219,7 @@ class PostViewModel: ObservableObject {
                         return
                     }
                     self.fetchSenderDetails(for: sender.recordID)
-                    
+                    self.sortPostsByDate()
                 }
                 
             }
@@ -227,6 +232,10 @@ class PostViewModel: ObservableObject {
         CloudKitUtility.add(item: newPost) { _ in
             completionHandler()
         }
+    }
+    
+    func sortPostsByDate() {
+        self.posts.sort {$0.date > $1.date}
     }
 }
 
