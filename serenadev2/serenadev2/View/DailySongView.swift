@@ -154,6 +154,9 @@ struct DailySongView: View {
 }
 
 struct CaptionView: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    
     @Binding var caption: String
     @Binding var characterLimit: Int
     var isSongFromDaily: Bool
@@ -172,7 +175,7 @@ struct CaptionView: View {
                                 .multilineTextAlignment(.leading)
                                 .font(.subheadline)
                                 .padding()
-                                .foregroundColor(.white) // Adjust as needed; white text may not be visible on a light background
+                                .foregroundStyle(colorScheme == .light ? .black : .white) // Adjust as needed; white text may not be visible on a light background
                                 .focused($isTextFieldFocused)
                                 .onSubmit {
                                     // This will dismiss the keyboard
