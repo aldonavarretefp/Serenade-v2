@@ -15,7 +15,7 @@ class PostViewModel: ObservableObject {
     @Published var posts: [Post] = []
     var cancellables = Set<AnyCancellable>()
     
-    private func fetchSenderDetails(for recordID: CKRecord.ID) {
+    func fetchSenderDetails(for recordID: CKRecord.ID) {
         // Use CloudKit to fetch the CKRecord for the given recordID
         // Then initialize a User object with the fetched CKRecord and store it in `userDetails`
         CKContainer.default().publicCloudDatabase.fetch(withRecordID: recordID) { [weak self] record, error in

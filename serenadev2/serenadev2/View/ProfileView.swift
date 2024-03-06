@@ -24,6 +24,7 @@ struct ProfileView: View {
     @EnvironmentObject var authManager: AuthManager
     
     @State var posts: [Post] = []
+    var user: User?
     
     var body: some View {
         NavigationStack {
@@ -35,9 +36,9 @@ struct ProfileView: View {
                     
                     ScrollView (.vertical, showsIndicators: false) {
                         VStack(spacing: 15) {
-                            ForEach(posts) { post in
-                                PostView(post: post)
-                            }
+//                            ForEach(posts) { post in
+//                                PostView(post: post)
+//                            }
                             if postVM.posts.isEmpty {
                                 ContentUnavailableView(label: {
                                     Label(LocalizedStringKey("No posts"), systemImage: "music.note")
@@ -52,7 +53,6 @@ struct ProfileView: View {
                                     }
                                 }
                             }
-                            
                         }
                         .padding(.top, headerHeight)
                         .padding(.bottom)
@@ -100,7 +100,7 @@ struct ProfileView: View {
                     }
                     .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top) {
-                        if let user = userVM.user {
+                        if let user = self.user {
                             
                             
                             ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: user)
@@ -127,6 +127,60 @@ struct ProfileView: View {
                         }
                     }
                     .ignoresSafeArea(.all, edges: .top)
+                    .refreshable {
+                        if self.user == nil {
+                            print("USER IS NIL")
+                            guard let user = userVM.user else {
+                                print("NO USER FROM PROFILE")
+                                return
+                            }
+                            if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
+                                postVM.posts = posts
+                                for post in posts {
+                                    print("Post: ", post.songId)
+                                    guard let sender = post.sender else {
+                                        print("Post has no sender")
+                                        return
+                                    }
+                                    // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
+                                    await postVM.fetchSenderDetailsAsync(for: sender.recordID)
+                                    let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
+                                    switch result {
+                                    case .success(let songModel):
+                                        postVM.songsDetails[post.songId] = songModel
+                                    default:
+                                        print("ERROR: Couldn't bring song details")
+                                        break;
+                                    }
+                                    
+                                }
+                            }
+                        }
+                        else {
+                            let user = self.user
+                            if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user!.record.recordID) {
+                                postVM.posts = posts
+                                for post in posts {
+                                    print("Post: ", post.songId)
+                                    guard let sender = post.sender else {
+                                        print("Post has no sender")
+                                        return
+                                    }
+                                    // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
+                                    await postVM.fetchSenderDetailsAsync(for: sender.recordID)
+                                    let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
+                                    switch result {
+                                    case .success(let songModel):
+                                        postVM.songsDetails[post.songId] = songModel
+                                    default:
+                                        print("ERROR: Couldn't bring song details")
+                                        break;
+                                    }
+                                    
+                                }
+                            }
+                        }
+                    }
                 }
             }
             // This overlay is to show a bar behind the status bar
@@ -137,27 +191,65 @@ struct ProfileView: View {
                     .frame(height: 0)
             }
             .task {
-                guard let user = userVM.user else {
-                    print("NO USER FROM PROFILE")
-                    return
-                }
-                postVM.fetchAllPostsFromUserID(id: user.record.recordID) { posts in
-                    
-                    guard let posts else {
-                        print("Didn't fetch any posts")
+                if self.user == nil {
+                    print("USER IS NIL")
+                    guard let user = userVM.user else {
+                        print("NO USER FROM PROFILE")
                         return
                     }
-                    
-                    self.posts = posts
-                    print(posts)
+                    if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
+                        postVM.posts = posts
+                        for post in posts {
+                            print("Post: ", post.songId)
+                            guard let sender = post.sender else {
+                                print("Post has no sender")
+                                return
+                            }
+                            // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
+                            await postVM.fetchSenderDetailsAsync(for: sender.recordID)
+                            let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
+                            switch result {
+                            case .success(let songModel):
+                                postVM.songsDetails[post.songId] = songModel
+                            default:
+                                print("ERROR: Couldn't bring song details")
+                                break;
+                            }
+                            
+                        }
+                    }
+                }
+                else {
+                    let user = self.user
+                    if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user!.record.recordID) {
+                        postVM.posts = posts
+                        for post in posts {
+                            print("Post: ", post.songId)
+                            guard let sender = post.sender else {
+                                print("Post has no sender")
+                                return
+                            }
+                            // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
+                            await postVM.fetchSenderDetailsAsync(for: sender.recordID)
+                            let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
+                            switch result {
+                            case .success(let songModel):
+                                postVM.songsDetails[post.songId] = songModel
+                            default:
+                                print("ERROR: Couldn't bring song details")
+                                break;
+                            }
+                            
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-#Preview {
-    ProfileView()
-}
+//#Preview {
+//    ProfileView()
+//}
 
 
