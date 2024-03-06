@@ -104,7 +104,7 @@ struct SongDetailView: View {
                             isOpenWithSheetDisplayed.toggle()
                         }.sheet(isPresented: $isOpenWithSheetDisplayed){
                             OpenWithView(buttonTypes: [.appleMusic, .spotify, .youtubeMusic] , songTitle: song.title, songArtist: song.artists, songId: song.id)
-                                .presentationDetents([.fraction(0.55)])
+                                .presentationDetents([.fraction(0.4)])
                         }
                         
                     }
