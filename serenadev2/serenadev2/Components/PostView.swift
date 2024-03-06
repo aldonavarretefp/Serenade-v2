@@ -114,7 +114,13 @@ struct PostView: View {
                         }
                     }
                 }
-                
+                else {
+                    Rectangle()
+                        .fill(Color(.callout))
+                        .frame(height: 95)
+                        .blur(radius: 20.0)
+                        .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                }
             }
             ZStack(alignment: .leading) {
                 UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0))
@@ -178,13 +184,31 @@ struct PostView: View {
                         .padding(.trailing)
                         .lineLimit(2)
                     }
+                    else {
+                        Rectangle()
+                            .fill(Color(.callout))
+                            .frame(width: 70, height: 70)
+                            .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                            .padding()
+                        VStack(alignment: .leading) {
+                            Text("Song Title")
+                                .fontWeight(.bold)
+                            Text("Artist")
+                                .font(.footnote)
+                                .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
+                        }
+                        .padding(.trailing)
+                        .lineLimit(2)
+                    }
                     
                 }
                 .frame(height: 95)
             }
             // On tap gesture to open the info of the passed song
             .onTapGesture {
-                isSongInfoDisplayed = true
+                if song != nil {
+                    isSongInfoDisplayed = true
+                }
             }
             .fullScreenCover(isPresented: $isSongInfoDisplayed){
                 //                SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, song: post.song!)
