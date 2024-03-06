@@ -253,6 +253,8 @@ struct FeedView: View {
             }
         }
         .task {
+            let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? ""
+            print("UserID: ", userID)
             Task {
                 if let user = userViewModel.user {
                     print("Fetching posts...")

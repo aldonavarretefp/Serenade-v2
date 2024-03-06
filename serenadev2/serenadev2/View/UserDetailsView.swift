@@ -11,16 +11,10 @@ struct UserDetailsView: View {
     
     @Environment(\.colorScheme) var colorScheme
     
-    @ObservedObject var authManager: AuthManager
-    
     @EnvironmentObject var userViewModel: UserViewModel
     
     @State private var name: String = ""
-    @State private var email: String = ""
     @State var tagname: String = ""
-    
-    @State var userId: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? "")
-    
     
     var body: some View {
         NavigationView {
@@ -34,7 +28,7 @@ struct UserDetailsView: View {
                     .ignoresSafeArea()
                 
                 VStack (){
-                    Text("Create your profile to get started")
+                    Text("Complete your profile to get started")
                         .font(.largeTitle)
                         .bold()
                         .multilineTextAlignment(.center)
@@ -72,7 +66,7 @@ struct UserDetailsView: View {
                     
                     Spacer()
                     
-                    ActionButton(label: "Create account", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname != "" ? false : true){
+                    ActionButton(label: "Complete account", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname != "" ? false : true){
                         saveUserDetails()
                     }
                 }
@@ -80,33 +74,33 @@ struct UserDetailsView: View {
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
                 // Clear UserDefaults here if leaving UserDetailsView
-                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userID)
-                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userName)
-                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userEmail)
+//                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userID)
+//                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userName)
+//                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userEmail)
                 // Remove other details as necessary
             }
             .onAppear {
                 // Pre-fill the user details if available
-                name = UserDefaults.standard.string(forKey: UserDefaultsKeys.userName) ?? ""
-                email = UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? ""
-                // Assume tagName is not stored in UserDefaults initially, or add logic if it is.
+                if let userName = userViewModel.user?.name {
+                    name = userName
+                }
+            
             }
         }
         .foregroundStyle(.white)
     }
     
     private func saveUserDetails() {
-        guard let newUser = User(accountID: userId, name: name, tagName: tagname, email: email, posts: nil, streak: 0, profilePicture: "", isActive: true)
-        else {
+        
+        guard var user = userViewModel.user else {
+            print("No user in DB")
             return
         }
         
-        userViewModel.createUser(user: newUser)
-        
-        print(userViewModel.isLoggedIn)
-        
-        // Assuming validation and saving are successful:
-        authManager.isAuthenticated = true // Update authentication status if needed
+        user.tagName = tagname
+        user.name = name
+        userViewModel.tagNameExists = true
+        userViewModel.updateUser(updatedUser: user)
     }
 }
 

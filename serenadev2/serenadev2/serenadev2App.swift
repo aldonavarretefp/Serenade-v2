@@ -18,10 +18,6 @@ struct serenadev2App: App {
     
     @State var hasCompletedOnboarding: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.hasCompletedOnboarding)
     
-    @State var userId: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? "")
-    @State var userName: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userName) ?? "")
-    @State var userEmail: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? "")
-    
     @State var tagName: String = ""
     
     @StateObject var songViewModel = SongViewModelTest()
@@ -30,23 +26,24 @@ struct serenadev2App: App {
         
         WindowGroup {
             ZStack {
-                if authManager.isAuthenticated && userViewModel.user != nil {
-                    UserDetailsView(authManager: authManager)
-                } else if authManager.isAuthenticated {
-                    ContentView()
-                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
-                        .zIndex(0)
-                } else if !hasCompletedOnboarding {
+                if !hasCompletedOnboarding {
                     OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
                         .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
                         .zIndex(1)
+                    
+                } else if userViewModel.user == nil && !userViewModel.isLoggedIn {
+                    SignInView(authManager: authManager)
+                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
+                        .zIndex(0)
+                } else if userViewModel.user != nil && !userViewModel.tagNameExists {
+                    UserDetailsView()
                     
                 } else if isShowingSplashScreen {
                     SplashScreenView(isShowingSplashScreen: $isShowingSplashScreen)
                         .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
                         .zIndex(2)
                 } else {
-                    SignInView(authManager: authManager)
+                    ContentView()
                         .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
                         .zIndex(0)
                 }
@@ -56,9 +53,9 @@ struct serenadev2App: App {
             .environmentObject(songViewModel)
             .environmentObject(authManager)
             .onAppear {
-                authManager.checkAuthenticationState()
+//                authManager.checkAuthenticationState()
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { 
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     withAnimation {
                         self.isShowingSplashScreen = false
                     }
