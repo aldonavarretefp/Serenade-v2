@@ -102,7 +102,6 @@ class UserViewModel: ObservableObject {
             case .failure(let error):
                 print("Error while updating the user ", error.localizedDescription)
                 break;
-                
             }
         }
     }
@@ -238,5 +237,12 @@ class UserViewModel: ObservableObject {
                 completion(friendss)
             }
             .store(in: &cancellables)
+    }
+    
+    func addPostToUser(sender: User, post: Post) {
+        var newUser = sender
+        newUser.posts = newUser.posts ?? []
+        newUser.posts?.append(CKRecord.Reference(recordID: post.record.recordID, action: .none))
+        updateUser(updatedUser: newUser)
     }
 }

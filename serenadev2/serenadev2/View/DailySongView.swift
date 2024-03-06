@@ -133,6 +133,7 @@ struct DailySongView: View {
                         let post = Post(postType: .daily, sender: reference, caption: self.caption,  songId: song.id, date: Date.now, isAnonymous: false, isActive: true)
                         
                         postViewModel.createAPost(post: post) {
+                            userViewModel.addPostToUser(sender: user, post: post)
                             self.dismiss()
                             print("Shared daily")
                         }
