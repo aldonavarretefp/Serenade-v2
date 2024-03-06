@@ -8,6 +8,9 @@ import Foundation
 import SwiftUI
 
 struct UserDetailsView: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    
     @ObservedObject var authManager: AuthManager
     
     @EnvironmentObject var userViewModel: UserViewModel
@@ -20,18 +23,52 @@ struct UserDetailsView: View {
     
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("User Details")) {
-                    TextField("Full Name", text: $userName)
-                    TextField("TagName", text: $tagname)
-
+            
+            ZStack{
+                
+                LinearGradient(colors: [Color(hex: 0xBA55D3), Color(hex: 0x101010)], startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
+                
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                
+                VStack (){
+                    Text("Create your profile to get started")
+                        .font(.largeTitle)
+                        .bold()
+                        .multilineTextAlignment(.center)
+                        .padding()
+                        .padding(.bottom, 20)
+                    
+                    Text("Please fill in your details to personalize your experience")
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom, 40)
+                    
+                    VStack(alignment: .leading, spacing: 40){
+                        VStack(spacing: 20){
+                            TextField("Full name", text: $userName)
+                                .padding()
+                                .background(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                
+                            
+                            TextField("Username", text: $tagname)
+                                .padding()
+                                .background(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    ActionButton(label: "Create account", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: false){
+                        saveUserDetails()
+                    }
                 }
-                Button("Save") {
-                    saveUserDetails()
-                }
+                .padding()
             }
-            .navigationBarTitle("Edit Details", displayMode: .inline)
         }
+        .foregroundStyle(.white)
     }
 
     private func saveUserDetails() {
@@ -48,3 +85,4 @@ struct UserDetailsView: View {
         authManager.isAuthenticated = true // Update authentication status if needed
     }
 }
+
