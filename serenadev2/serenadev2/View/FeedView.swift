@@ -92,7 +92,9 @@ struct FeedView: View {
                                 ForEach(postViewModel.posts, id: \.self) { post in
                                     // Ensure PostView can handle nil or incomplete data gracefully
                                     if let sender = post.sender, let senderUser = postViewModel.senderDetails[sender.recordID], let song = postViewModel.songsDetails[post.songId] {
-                                        PostView(post: post, sender: senderUser, song: song)
+                                        PostView(post: post, sender: senderUser, song: song){
+                                            print(song.title) // Aqui es donde se pone lo de instagram
+                                        }
                                     }
                                     else {
                                         PostView(post: post)

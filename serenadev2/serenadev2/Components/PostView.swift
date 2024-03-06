@@ -30,6 +30,8 @@ struct PostView: View {
     var sender: User?
     var song: SongModel?
 
+    var action: (() -> Void)?
+    
     var body: some View {
         
         //let strokeGradient = LinearGradient(gradient: Gradient(colors: [(colorScheme == .light ? Color.black : Color.white).opacity(0.46), (colorScheme == .light ? Color.black : Color.white).opacity(0.23)]), startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -199,6 +201,28 @@ struct PostView: View {
                         }
                         .padding(.trailing)
                         .lineLimit(2)
+                    }
+                    
+                    if let receivedAction = action {
+                        
+                        Spacer()
+                        
+                        VStack{
+                            Spacer()
+                            
+                            Button(action: receivedAction){
+                                
+                                Image(systemName: "square.and.arrow.up.circle.fill")
+                                    .bold()
+                                    .font(.title)
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(Color((song?.priColor)!), Color((song?.bgColor)!))
+                                
+                                    .padding([.horizontal, .top])
+                                    .padding(.bottom, 12)
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
                     
                 }
