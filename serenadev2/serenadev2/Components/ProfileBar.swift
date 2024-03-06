@@ -90,12 +90,12 @@ struct ProfileBar: View {
                     }
                     HStack {
                         VStack {
-                            Text(user.posts != nil ? String(user.posts!.count) : "-")
+                            Text(user.posts != nil ? String(user.posts!.count) : "0")
                             Text(LocalizedStringKey("Posts"))
                         }
                         .font(.caption)
                         VStack {
-                            Text(user.friends != nil ? String(user.friends!.count) : "-")
+                            Text(user.friends != nil ? String(user.friends!.count) : "0")
                             Text(LocalizedStringKey("Friends"))
                         }
                         .font(.caption)
@@ -105,7 +105,7 @@ struct ProfileBar: View {
                             if !isFriend! {
                                 if !isFriendRequestSent {
                                     Button(action: {
-                                        //                                    sendFriendRequest()
+                                        
                                         isFriendRequestSent = true
                                     }, label: {
                                         ZStack {

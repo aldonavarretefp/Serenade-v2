@@ -9,19 +9,11 @@ import SwiftUI
 import CloudKit
 
 struct PostView: View {
+    @EnvironmentObject var userViewModel: UserViewModel
     @Environment(\.colorScheme) var colorScheme
     @State var isSongInfoDisplayed: Bool = false
-    @EnvironmentObject var userViewModel: UserViewModel
-    @EnvironmentObject var songViewModel: SongViewModelTest
-    
-    var sender: User?
-    var song: SongModel?
     
     var post: Post
-    
-    // Quitar despues
-    //    var profileImg: String
-    
     var formattedDate: Text {
         let calendar = Calendar.current
         
@@ -35,7 +27,9 @@ struct PostView: View {
             return Text(dateFormatter.string(from: post.date))
         }
     }
-    
+    var sender: User?
+    var song: SongModel?
+
     var body: some View {
         
         //let strokeGradient = LinearGradient(gradient: Gradient(colors: [(colorScheme == .light ? Color.black : Color.white).opacity(0.46), (colorScheme == .light ? Color.black : Color.white).opacity(0.23)]), startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -80,12 +74,12 @@ struct PostView: View {
                         .padding(.top, 2)
                         .padding(.bottom, 2)
                 }
-                //                Image()
-                //                    .resizable()
-                //                    .aspectRatio(contentMode: .fill)
-                //                    .frame(height: 95)
-                //                    .blur(radius: 20.0)
-                //                    .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+//                Image()
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fill)
+//                    .frame(height: 95)
+//                    .blur(radius: 20.0)
+//                    .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
                 
                 // Back card song cover art
                 if let song {
@@ -200,7 +194,10 @@ struct PostView: View {
             }
         }
         .font(.subheadline)
-//        .task {
+        .task {
+            print("POSTVIEW: ")
+            print(self.post)
+            print(self.sender ?? "NO SENDER")
 //            let senderRecord = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: post.sender!.recordID)
 //            userViewModel.fetchUserFromRecord(record: senderRecord) { (returnedUser: User?) in
 //                print(returnedUser ?? "No user")
@@ -212,7 +209,7 @@ struct PostView: View {
 //                self.song = songViewModel.song
 //            }
 //            
-//        }
+        }
     }
     
 }

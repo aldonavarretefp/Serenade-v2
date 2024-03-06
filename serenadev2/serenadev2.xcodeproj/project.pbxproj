@@ -62,7 +62,6 @@
 		F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */; };
 		F73FC09F2B961FBA00D0537D /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73FC09E2B961FBA00D0537D /* LoginView.swift */; };
 		F73FC0A12B96206A00D0537D /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73FC0A02B96206A00D0537D /* AuthManager.swift */; };
-		F7AE69222B90B45E003C6A7C /* SongViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69212B90B45E003C6A7C /* SongViewModel.swift */; };
 		F7AE69252B90B5C5003C6A7C /* FriendRequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */; };
 		F7AE69272B90B61A003C6A7C /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69262B90B61A003C6A7C /* FriendRequest.swift */; };
 		F7E810CF2B921E6A00000946 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F928612B878D8E00050926 /* UserViewModel.swift */; };
@@ -149,7 +148,6 @@
 		F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitConfig.swift; sourceTree = "<group>"; };
 		F73FC09E2B961FBA00D0537D /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		F73FC0A02B96206A00D0537D /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
-		F7AE69212B90B45E003C6A7C /* SongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SongViewModel.swift; path = serenadev2/ViewModel/SongViewModel.swift; sourceTree = SOURCE_ROOT; };
 		F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsViewModel.swift; sourceTree = "<group>"; };
 		F7AE69262B90B61A003C6A7C /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		F7F928612B878D8E00050926 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserViewModel.swift; path = serenadev2/ViewModel/UserViewModel.swift; sourceTree = SOURCE_ROOT; };
@@ -390,7 +388,6 @@
 			isa = PBXGroup;
 			children = (
 				F7F928612B878D8E00050926 /* UserViewModel.swift */,
-				F7AE69212B90B45E003C6A7C /* SongViewModel.swift */,
 				F709F6C12B90CA0000B60216 /* PostViewModel.swift */,
 				F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */,
 			);
@@ -584,7 +581,6 @@
 				EA9BC9F32B87861C00292705 /* User.swift in Sources */,
 				C402E7D72B8CD42D004EC79C /* CustomTabBar.swift in Sources */,
 				C402E7DD2B8CD4E7004EC79C /* FeedView.swift in Sources */,
-				F7AE69222B90B45E003C6A7C /* SongViewModel.swift in Sources */,
 				C49B42122B87869800FD66F9 /* SearchView.swift in Sources */,
 				C4A7635D2B9697CC002A3A5B /* UserDetailsView.swift in Sources */,
 				446800292B90C87D00A858F1 /* SongMetaData.swift in Sources */,

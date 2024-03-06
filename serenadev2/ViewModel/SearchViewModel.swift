@@ -52,33 +52,25 @@ class SearchViewModel: ObservableObject {
     /// - Parameter searchText: The text to search for in the MusicKit API.
     func fetchMusic(with searchText: String) {
         
-        // Immediately clear songs and reset loading state if search text is empty
         if searchText.isEmpty {
             DispatchQueue.main.async {
-                self.songs = [] // Clears the songs list immediately
-                self.isLoading = false // Ensure loading state is also reset
+                self.songs = []
+                self.isLoading = false
             }
-            return // Exit the method early if no search text is provided
+            return
         }
-        
         isLoading = true 
         
-        // Asynchronously requests music data.
         Task {
-            // Requests authorization to access MusicKit content.
             let status = await MusicAuthorization.request()
             switch status {
             case .authorized:
-                // Constructs the search request with the current searchText.
                 var request = MusicCatalogSearchRequest(term: searchText, types: [Song.self])
-                request.limit = 25 // Limits the number of search results.
-                
+                request.limit = 25
                 do {
-                    // Executes the search request and processes the results.
                     let result = try await request.response()
                     DispatchQueue.main.async {
                         self.isLoading = false
-                        // Maps the MusicKit search results to the app's song model and updates the songs list.
                         self.songs = result.songs.compactMap({
                             return SongModel(
                                 id: $0.id.rawValue,
@@ -102,33 +94,10 @@ class SearchViewModel: ObservableObject {
                         })
                         
                     }
-                    // After updating the songs list, check if there's at least one song and print its previewUrl.
-//                    if let firstSong = self.songs.first {
-//                            print("ID: \(firstSong.id)")
-//                            print("Title: \(firstSong.title)")
-//                            print("Artists: \(firstSong.artists)")
-//                            print("Artwork URL (Small): \(String(describing: firstSong.artworkUrlSmall))")
-//                            print("Artwork URL (Large): \(String(describing: firstSong.artworkUrlLarge))")
-//                            print("Background Color: \(String(describing: firstSong.bgColor))")
-//                            print("Primary Color: \(String(describing: firstSong.priColor))")
-//                            print("Secondary Color: \(String(describing: firstSong.secColor))")
-//                            print("Tertiary Color: \(String(describing: firstSong.terColor))")
-//                            print("Quaternary Color: \(String(describing: firstSong.quaColor))")
-//                            print("Preview URL: \(String(describing: firstSong.previewUrl))")
-//                            print("Duration: \(String(describing: firstSong.duration))")
-//                            print("Composers Name: \(String(describing: firstSong.composerName))")
-//                            print("Genre Names: \(firstSong.genreNames.joined(separator: ", "))")
-//                            print("Release Date: \(String(describing: firstSong.releaseDate))")
-//                        } else {
-//                            print("No songs found or no preview available")
-//                        }
-                    
                 } catch {
-                    // Handles errors that occur during the search operation.
                     print("Error fetching songs: \(error)")
                 }
             default:
-                // Handles cases where authorization to access MusicKit is not granted.
                 print("Not authorized to access MusicKit")
             }
         }

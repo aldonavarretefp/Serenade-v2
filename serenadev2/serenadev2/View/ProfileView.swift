@@ -21,7 +21,7 @@ struct ProfileView: View {
     @EnvironmentObject var postVM: PostViewModel
     @EnvironmentObject var userVM: UserViewModel
     
-    @State private var posts: [Post] = []
+    @State var posts: [Post] = []
     
     var body: some View {
         NavigationStack {
@@ -35,6 +35,20 @@ struct ProfileView: View {
                         VStack(spacing: 15) {
                             ForEach(posts) { post in
                                 PostView(post: post)
+                            }
+                            if postVM.posts.isEmpty {
+                                ContentUnavailableView(label: {
+                                    Label(LocalizedStringKey("No posts"), systemImage: "music.note")
+                                }, description: {
+                                    Text(LocalizedStringKey("Try posting your first one!"))
+                                })
+                            } else {
+                                ForEach(postVM.posts, id: \.self) { post in
+                                    // Ensure PostView can handle nil or incomplete data gracefully
+                                    if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID], let song = postVM.songsDetails[post.songId] {
+                                        PostView(post: post, sender: senderUser, song: song)
+                                    }
+                                }
                             }
                             
                         }
@@ -84,26 +98,30 @@ struct ProfileView: View {
                     }
                     .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top) {
-                        ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: sebastian)
-                            .opacity(headerOpacity)
-                            .padding(.top, safeArea().top)
-                        
-                            .padding(.bottom)
-                            .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
-                        
-                        // Get the header height
-                            .overlayPreferenceValue(HeaderBoundsKey.self){ value in
-                                GeometryReader{ proxy in
-                                    if let anchor = value {
-                                        Color.clear
-                                            .onAppear(){
-                                                // MARK: - Retreiving rect using proxy
-                                                headerHeight = proxy[anchor].height
-                                            }
+                        if let user = userVM.user {
+                            
+                            
+                            ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: user)
+                                .opacity(headerOpacity)
+                                .padding(.top, safeArea().top)
+                            
+                                .padding(.bottom)
+                                .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
+                            
+                            // Get the header height
+                                .overlayPreferenceValue(HeaderBoundsKey.self){ value in
+                                    GeometryReader{ proxy in
+                                        if let anchor = value {
+                                            Color.clear
+                                                .onAppear(){
+                                                    // MARK: - Retreiving rect using proxy
+                                                    headerHeight = proxy[anchor].height
+                                                }
+                                        }
                                     }
                                 }
-                            }
-                            .offset(y: -headerOffset < headerHeight ? headerOffset : (headerOffset < 0 ? headerOffset : 0))
+                                .offset(y: -headerOffset < headerHeight ? headerOffset : (headerOffset < 0 ? headerOffset : 0))
+                        }
                     }
                     .ignoresSafeArea(.all, edges: .top)
                 }
@@ -121,10 +139,12 @@ struct ProfileView: View {
                     return
                 }
                 postVM.fetchAllPostsFromUserID(id: user.record.recordID) { posts in
+                    
                     guard let posts else {
                         print("Didn't fetch any posts")
                         return
                     }
+                    
                     self.posts = posts
                     print(posts)
                 }

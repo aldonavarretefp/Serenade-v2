@@ -166,21 +166,19 @@ class UserViewModel: ObservableObject {
     }
     
     func updateUser(updatedUser: User) {
-        var copyUser = updatedUser
-        guard let newUser = copyUser.update(newUser: updatedUser) else { return }
-        
-        user = newUser
-        
-        CloudKitUtility.update(item: newUser) { result in
-            switch result {
-            case .success(_):
-                break;
-            case .failure(let error):
-                print("Error while updating the user ", error.localizedDescription)
-                break;
+            var copyUser = updatedUser
+            guard let newUser = copyUser.update(newUser: updatedUser) else { return }
+            
+            CloudKitUtility.update(item: newUser) { result in
+                switch result {
+                case .success(_):
+                    break;
+                case .failure(let error):
+                    print("Error while updating the user ", error.localizedDescription)
+                    break;
+                }
             }
         }
-    }
     
     func deleteUser(){
         user?.isActive = false
