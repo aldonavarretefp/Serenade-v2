@@ -9,12 +9,9 @@ import SwiftUI
 
 struct ContentItem: Identifiable {
     let id = UUID()
-    var imageUrl: URL?
-    var title: String?
-    var subtitle: String?
     var isPerson: Bool// True for person, false for song
     var song: SongModel?
-    
+    var user: User? 
 }
 
 struct ItemSmall: View {
@@ -34,8 +31,8 @@ struct ItemSmall: View {
     
     var body: some View {
         HStack {
-            if let imageUrl = item.isPerson ? item.imageUrl : item.song?.artworkUrlSmall {
-                AsyncImage(url: imageUrl) { phase in
+            if(item.isPerson){
+                AsyncImage(url: item.song?.artworkUrlSmall) { phase in
                     switch phase {
                     case .empty:
                         // Displays a loading animation while the image is being fetched
@@ -66,14 +63,12 @@ struct ItemSmall: View {
             }
             
             VStack(alignment: .leading, spacing: 4){
-                Text(item.isPerson ? (item.title ?? "Unknown Title") : item.song?.title ?? "Unknown Song Title")
+                Text(item.isPerson ? (item.user?.name ?? "No name") : item.song?.title ?? "Unknown Song Title")
                     .font(.footnote)
                     .fontWeight(.bold)
                     .lineLimit(2)
                 
-                
-                
-                Text(item.isPerson ? (item.subtitle ?? "No Subtitle") : (item.song?.artists ?? "Unknown Artists"))
+                Text(item.isPerson ? (item.user?.tagName ?? "No tagname") : (item.song?.artists ?? "Unknown Artists"))
                     .font(.caption)
                     .foregroundStyle(.callout)
                     .lineLimit(2)
@@ -105,20 +100,6 @@ extension View {
             transform(self)
         } else {
             self
-        }
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            ItemSmall(item: ContentItem(imageUrl: URL(string: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"), title: "Fernando Fernández", subtitle: "janedoe", isPerson: true), showArrow: false)
-                .previewLayout(.sizeThatFits)
-                .previewDisplayName("Person Preview")
-            
-            ItemSmall(item: ContentItem(imageUrl: URL(string: "https://i.scdn.co/image/ab67616d0000b2738940ac99f49e44f59e6f7fb3"), title: "See you again (feat. Kali Uchis)", subtitle: "Tyler, The Creator, Kali Uchis", isPerson: false), showArrow: true)
-                .previewLayout(.sizeThatFits)
-                .previewDisplayName("Song Preview")
         }
     }
 }

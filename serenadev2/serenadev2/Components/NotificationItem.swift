@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct NotificationItem: View {
-    
     // MARK: - Properties
     var user: User
     var friendRequest: FriendRequest
@@ -49,7 +48,6 @@ struct NotificationItem: View {
                 
                 NotificationActionButton(icon: "checkmark"){
                     friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
-                        guard let user = userViewModel.user else { return }
                         userViewModel.makeFriend(withID: friendRequest.sender.recordID)
                     }
                 }

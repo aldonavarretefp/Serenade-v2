@@ -5,6 +5,35 @@
 //  Created by Alejandro Oliva Ochoa on 01/03/24.
 //
 
+/*
+ Button {
+     print(friendRequestViewModel.friendRequests)
+ } label: {
+     Text("Print model")
+ }
+ 
+ Button {
+     let ale = CKRecord.init(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "87BF288A-BB93-467E-B342-838DE0292B87"))
+     guard let miID = userViewModel.user?.record.recordID else {
+         print("No user")
+         return
+     }
+     friendRequestViewModel.createFriendRequest(senderID: ale.recordID, receiverID: miID)
+ } label: {
+     Text("Create Friend Request")
+ }
+ 
+ Button {
+     let friendRequest = friendRequestViewModel.friendRequests[0]
+     
+     friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
+         userViewModel.makeFriend(withID: friendRequest.sender.recordID)
+     }
+ } label: {
+     Text("Accept Friend Request")
+ }
+ */
+
 import SwiftUI
 import CloudKit
 struct NotificationsView: View {
@@ -22,60 +51,12 @@ struct NotificationsView: View {
                 VStack{
                     ScrollView{
                         VStack(spacing: 35){
-                            
                             ForEach(friendRequestViewModel.friendRequests, id: \.self) { request in
                                 if let user = friendRequestViewModel.userDetails[request.sender.recordID] {
-                                    
                                     NotificationItem(user: user, friendRequest: request)
                                         .environmentObject(friendRequestViewModel)
                                 }
                             }
-                            
-                            Button {
-                                print(friendRequestViewModel.friendRequests)
-                            } label: {
-                                Text("Print model")
-                            }
-                            
-                            Button {
-                                if var user = userViewModel.user {
-                                    user.streak = 666
-                                    userViewModel.updateUser(updatedUser: user)
-                                }
-                                
-                                userViewModel.searchUsers(tagname: "sebatoo") { user in
-                                    if var user = user {
-                                        user[0].streak = 999
-                                        userViewModel.updateUser(updatedUser: user[0])
-                                    }
-                                }
-                                
-                            } label: {
-                                Text("Accept")
-                            }
-                            
-//                            Button {
-//                                guard let friendRequests = friendRequestViewModel.friendRequests else {
-//                                    print("NO friend requests")
-//                                    return
-//                                }
-//                                friendRequestViewModel?.declineFriendRequest(friendRequest: friendRequests[0])
-//                            } label: {
-//                                Text("Decline")
-//                            }
-                            
-                            
-//                            Button {
-//                                let ale = CKRecord.init(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "110590A8-297A-495C-929D-B9951EAFF752"))
-//                                guard let aldoID = userViewModel.user?.record.recordID else {
-//                                    print("No user")
-//                                    return
-//                                }
-//                                friendRequestViewModel?.createFriendRequest(senderID: ale.recordID, receiverID: aldoID)
-//                            } label: {
-//                                Text("Create")
-//                            }
-                            
                         }
                         .padding()
                     }
@@ -89,14 +70,9 @@ struct NotificationsView: View {
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     if let currentUser = userViewModel.user {
-    //                    self.friendRequestViewModel = FriendRequestsViewModel(user: currentUser)
                         self.friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser)
-                        
                     }
                 }
-                
-                
-                
             }
         }
     }

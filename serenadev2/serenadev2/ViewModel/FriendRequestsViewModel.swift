@@ -52,8 +52,6 @@ class FriendRequestsViewModel: ObservableObject {
                     let record = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: request.sender.recordID)
                     self?.fetchUserDetails(for: record.recordID)
                 }
-                
-                
             }
             .store(in: &cancellables)
     }

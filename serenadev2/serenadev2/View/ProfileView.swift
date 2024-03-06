@@ -24,6 +24,7 @@ struct ProfileView: View {
     @EnvironmentObject var authManager: AuthManager
     
     @State var posts: [Post] = []
+    
     var user: User?
     
     var body: some View {
@@ -33,7 +34,6 @@ struct ProfileView: View {
                     .ignoresSafeArea()
                 
                 VStack(spacing: 0){
-                    
                     ScrollView (.vertical, showsIndicators: false) {
                         VStack(spacing: 15) {
 //                            ForEach(posts) { post in

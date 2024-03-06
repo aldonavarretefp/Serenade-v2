@@ -57,6 +57,7 @@
 		F137D2482B839A84006264C1 /* serenadev2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2472B839A84006264C1 /* serenadev2Tests.swift */; };
 		F137D2522B839A84006264C1 /* serenadev2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2512B839A84006264C1 /* serenadev2UITests.swift */; };
 		F137D2542B839A84006264C1 /* serenadev2UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */; };
+		F1CF7BFA2B987E15004AC18C /* PeopleHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1CF7BF92B987E15004AC18C /* PeopleHistoryManager.swift */; };
 		F1FC0FD82B8E1DB300FD50CB /* CloudKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FC0FD72B8E1DB300FD50CB /* CloudKitUtility.swift */; };
 		F709F6C22B90CA0000B60216 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F709F6C12B90CA0000B60216 /* PostViewModel.swift */; };
 		F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */; };
@@ -143,6 +144,7 @@
 		F137D24D2B839A84006264C1 /* serenadev2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = serenadev2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F137D2512B839A84006264C1 /* serenadev2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITests.swift; sourceTree = "<group>"; };
 		F137D2532B839A84006264C1 /* serenadev2UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F1CF7BF92B987E15004AC18C /* PeopleHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleHistoryManager.swift; sourceTree = "<group>"; };
 		F1FC0FD72B8E1DB300FD50CB /* CloudKitUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitUtility.swift; sourceTree = "<group>"; };
 		F709F6C12B90CA0000B60216 /* PostViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitConfig.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */,
 				C4AF431B2B9679150089C62A /* UserDefaultsKeys.swift */,
 				F73FC0A02B96206A00D0537D /* AuthManager.swift */,
+				F1CF7BF92B987E15004AC18C /* PeopleHistoryManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -586,6 +589,7 @@
 				446800292B90C87D00A858F1 /* SongMetaData.swift in Sources */,
 				C40C09B62B863CA2009BE4C5 /* Extensions.swift in Sources */,
 				F7AE69252B90B5C5003C6A7C /* FriendRequestsViewModel.swift in Sources */,
+				F1CF7BFA2B987E15004AC18C /* PeopleHistoryManager.swift in Sources */,
 				E0540C772B8E71AF001A7561 /* SelectSongView.swift in Sources */,
 				EA216FC82B8E3FAC00A715EB /* StreamingAppPickerSheet.swift in Sources */,
 				EA9BC9F22B87861C00292705 /* Post.swift in Sources */,
