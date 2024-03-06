@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct ProfileView: View {
     
@@ -25,6 +26,17 @@ struct ProfileView: View {
     @State var posts: [Post] = []
     
     var user: User?
+    
+    func isFriendCheck(user: User) -> Bool {
+        if self.user != nil {
+            if userVM.user!.friends.contains(where: { $0 == user.record.recordID }) {
+                return true
+            } else {
+                return false
+            }
+        }
+        else { return false }
+    }
     
     var body: some View {
         NavigationStack {
@@ -49,6 +61,9 @@ struct ProfileView: View {
                                     // Ensure PostView can handle nil or incomplete data gracefully
                                     if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID], let song = postVM.songsDetails[post.songId] {
                                         PostView(post: post, sender: senderUser, song: song)
+                                    }
+                                    else {
+                                        PostView(post: post)
                                     }
                                 }
                             }
@@ -100,9 +115,28 @@ struct ProfileView: View {
                     .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top) {
                         if let user = self.user {
-                            
-                            
-                            ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: user)
+                            var isFriend = isFriendCheck(user: user)
+                            ProfileBar(isFriendRequestSent: false, isCurrentUser: user == userVM.user, isFriend: isFriend, user: user)
+                                .opacity(headerOpacity)
+                                .padding(.top, safeArea().top)
+                                .padding(.bottom)
+                                .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
+                            // Get the header height
+                                .overlayPreferenceValue(HeaderBoundsKey.self){ value in
+                                    GeometryReader{ proxy in
+                                        if let anchor = value {
+                                            Color.clear
+                                                .onAppear(){
+                                                    // MARK: - Retreiving rect using proxy
+                                                    headerHeight = proxy[anchor].height
+                                                }
+                                        }
+                                    }
+                                }
+                                .offset(y: -headerOffset < headerHeight ? headerOffset : (headerOffset < 0 ? headerOffset : 0))
+                        }
+                        else {
+                            ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: User(name: "", tagName: "", email: "", streak: 0, profilePicture: "", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: CKRecord.ID(recordName: "placeholder"))))
                                 .opacity(headerOpacity)
                                 .padding(.top, safeArea().top)
                             

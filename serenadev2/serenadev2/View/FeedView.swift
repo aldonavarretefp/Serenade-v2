@@ -94,6 +94,9 @@ struct FeedView: View {
                                     if let sender = post.sender, let senderUser = postViewModel.senderDetails[sender.recordID], let song = postViewModel.songsDetails[post.songId] {
                                         PostView(post: post, sender: senderUser, song: song)
                                     }
+                                    else {
+                                        PostView(post: post)
+                                    }
                                 }
                             }
                             
