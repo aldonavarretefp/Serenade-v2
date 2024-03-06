@@ -109,7 +109,7 @@ enum ButtonType: CaseIterable {
                 if let encodedArtist = songArtist.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                    let encodedTitle = songTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                     
-                    let urlString = "https://music.youtube.com/search?q=\(encodedTitle)%20\(encodedArtist)?filter=IsLibrary%7Cfalse&sc=none"
+                    let urlString = "https://music.youtube.com/search?q=\(encodedTitle)%20\(encodedArtist)"
                     guard let youtubeMusicUrl = URL(string: urlString) else { return }
                     UIApplication.shared.open(youtubeMusicUrl)
                 } else {
