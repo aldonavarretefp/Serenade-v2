@@ -91,20 +91,11 @@ struct FeedView: View {
                             } else {
                                 ForEach(postViewModel.posts, id: \.self) { post in
                                     // Ensure PostView can handle nil or incomplete data gracefully
-                                    if let sender = post.sender, let senderUser = postViewModel.senderDetails[sender.recordID] {
-                                        PostView(post: post, sender: senderUser)
+                                    if let sender = post.sender, let senderUser = postViewModel.senderDetails[sender.recordID], let song = postViewModel.songsDetails[post.songId] {
+                                        PostView(post: post, sender: senderUser, song: song)
                                     }
                                 }
                             }
-                            
-                            ForEach(postViewModel.posts, id: \.self) { post in
-                                
-                                if let sender = post.sender, let senderUser = postViewModel.senderDetails[sender.recordID], let song = postViewModel.songsDetails[post.songId] {
-                                    PostView(post: post, sender: senderUser, song: song)
-                                }
-                                
-                            }
-                            
                             
                         }
                         .padding(.top, headerHeight)
@@ -262,10 +253,13 @@ struct FeedView: View {
             }
         }
         .task {
-            if let user = userViewModel.user {
-                print("Fetching posts...")
-                postViewModel.fetchAllPosts(user: user)
+            Task {
+                if let user = userViewModel.user {
+                    print("Fetching posts...")
+                    await postViewModel.fetchAllPostsAsync(user: user)
+                }
             }
+            
         }
     }
 }

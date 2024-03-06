@@ -10,7 +10,6 @@ import CloudKit
 import Combine
 
 class PostViewModel: ObservableObject {
-    @Published var error: String = ""
     @Published var senderDetails: [CKRecord.ID: User] = [:]
     @Published var songsDetails: [String: SongModel] = [:]
     @Published var posts: [Post] = []
@@ -37,25 +36,87 @@ class PostViewModel: ObservableObject {
         }
     }
     
+    //MARK: AsyncFunc
     
-    func fetchUserFromRecord(record: CKRecord, completion: @escaping (User?) -> Void) {
-        let predicate = NSPredicate(format: "recordID == %@", record.recordID)
-        let recordType = UserRecordKeys.type.rawValue
-        
-        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                //completion(nil) // Llamada asincrónica fallida, devolver nil
-            } receiveValue: { (returnedUsers: [User]?) in
-                guard let users = returnedUsers, users.count != 0 else {
-                    completion(nil) // Llamada asincrónica exitosa pero sin usuarios devueltos
-                    return
+    func fetchSenderDetailsAsync(for recordID: CKRecord.ID) async {
+        do {
+            let record = try await CKContainer.default().publicCloudDatabase.record(for: recordID)
+            if let user = User(record: record) {
+                await MainActor.run {
+                    self.senderDetails[recordID] = user
+                    print("Sender details", self.senderDetails)
                 }
-                let userR = users[0]
-                completion(userR) // Llamada asincrónica exitosa con usuario devuelto
             }
-            .store(in: &cancellables)
+        } catch {
+            print("Error fetching user details: \(error.localizedDescription)")
+        }
     }
+    
+    func fetchAllPostsFromUserIDAsync(id: CKRecord.ID) async -> [Post]? {
+        let recordToMatch = CKRecord.Reference(recordID: id, action: .none)
+        let predicate = NSPredicate(format: "sender == %@ && isActive == 1", recordToMatch)
+        let recordType = PostRecordKeys.type.rawValue
+        
+        do {
+            let posts: [Post] = try await CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            return posts
+        } catch {
+            print("Error fetching posts: \(error)")
+            return nil
+        }
+    }
+    
+    func fetchAllPostsAsync(user: User) async {
+        let userID: CKRecord.Reference = CKRecord.Reference(recordID: user.record.recordID, action: .none)
+        
+        // Your logic to determine if user.friends is nil remains the same
+        if user.friends.count == 0 {
+            // Now call an async version of `fetchAllPostsFromUserID`
+            if let posts = await fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
+                self.posts = posts
+                for post in posts {
+                    print("Post: ", post.songId)
+                    guard let sender = post.sender else {
+                        print("Post has no sender")
+                        return
+                    }
+                    // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
+                    await fetchSenderDetailsAsync(for: sender.recordID)
+                    let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
+                    switch result {
+                    case .success(let songModel):
+                        self.songsDetails[post.songId] = songModel
+                    default:
+                        print("ERROR: Couldn't bring song details")
+                        break;
+                    }
+                    
+                }
+            }
+        } else {
+            let userFriends = user.friends
+            var userList = userFriends
+            userList.append(userID)
+            
+            let predicate = NSPredicate(format: "sender IN %@ && isActive == 1", userList)
+            let recordType = PostRecordKeys.type.rawValue
+            
+            CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+                .receive(on: DispatchQueue.main)
+                .sink { _ in
+                    
+                } receiveValue: { (returnedPosts: [Post]?) in
+                    guard let posts = returnedPosts else {
+                        print("No returned posts userfriends is NIL")
+                        return
+                    }
+                    self.posts = posts
+                }
+                .store(in: &cancellables)
+        }
+    }
+    
+    //MARK: Closure Functions
     
     func fetchAllPosts(user: User) {
         let userID: CKRecord.Reference = CKRecord.Reference(recordID: user.record.recordID, action: .none)
@@ -73,7 +134,6 @@ class PostViewModel: ObservableObject {
                         return
                     }
                     self.fetchSenderDetails(for: sender.recordID)
-                    
                 }
             }
         }
@@ -98,6 +158,25 @@ class PostViewModel: ObservableObject {
                 }
                 .store(in: &cancellables)
         }
+    }
+    
+    func fetchUserFromRecord(record: CKRecord, completion: @escaping (User?) -> Void) {
+        let predicate = NSPredicate(format: "recordID == %@", record.recordID)
+        let recordType = UserRecordKeys.type.rawValue
+        
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                //completion(nil) // Llamada asincrónica fallida, devolver nil
+            } receiveValue: { (returnedUsers: [User]?) in
+                guard let users = returnedUsers, users.count != 0 else {
+                    completion(nil) // Llamada asincrónica exitosa pero sin usuarios devueltos
+                    return
+                }
+                let userR = users[0]
+                completion(userR) // Llamada asincrónica exitosa con usuario devuelto
+            }
+            .store(in: &cancellables)
     }
     
     func fetchAllPostsFromUserID(id: CKRecord.ID, completion: @escaping ([Post]?) -> Void){
