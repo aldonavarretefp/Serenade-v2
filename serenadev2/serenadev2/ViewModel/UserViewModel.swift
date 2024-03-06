@@ -22,15 +22,14 @@ class UserViewModel: ObservableObject {
                 self.user = returnedUser
                 self.userID = userID
                 self.isLoggedIn = true
+                self.tagNameExists = user.tagName != ""
             }
         }
 
     }
     
     func handleAuthorization(userID: String, fullName: String, email: String) {
-        UserDefaults.standard.setValue(UserDefaultsKeys.userID, forKey: userID)
-        let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? ""
-        print("UserID: ", userID)
+        UserDefaults.standard.setValue(userID, forKey: UserDefaultsKeys.userID)
         fetchUserFromAccountID(accountID: userID) { returnedUser in
             guard let user = returnedUser else {
                 // User does not exists

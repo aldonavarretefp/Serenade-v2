@@ -20,8 +20,6 @@ struct ProfileBar: View {
     @State var isFriend: Bool?
     
     @EnvironmentObject var userViewModel: UserViewModel
-    @EnvironmentObject var authManager: AuthManager
-    
     
     var user: User
     
@@ -77,7 +75,7 @@ struct ProfileBar: View {
                         }
                         Spacer()
                         if isCurrentUser {
-                            NavigationLink(destination: SettingsView().environmentObject(authManager).toolbarRole(.editor)) {
+                            NavigationLink(destination: SettingsView().toolbarRole(.editor)) {
                                 Image(systemName: "gearshape.fill")
                                     .resizable()
                                     .frame(width: 22, height: 22)

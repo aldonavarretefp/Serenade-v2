@@ -21,7 +21,6 @@ struct ProfileView: View {
     
     @EnvironmentObject var postVM: PostViewModel
     @EnvironmentObject var userVM: UserViewModel
-    @EnvironmentObject var authManager: AuthManager
     
     @State var posts: [Post] = []
     
@@ -109,7 +108,7 @@ struct ProfileView: View {
                             
                                 .padding(.bottom)
                                 .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
-                                .environmentObject(authManager)
+                            
                             
                             // Get the header height
                                 .overlayPreferenceValue(HeaderBoundsKey.self){ value in

@@ -14,8 +14,6 @@ struct ContentView: View {
     @State var selectedTab: Tabs = .feed
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var postViewModel: PostViewModel
-    @EnvironmentObject var authManager: AuthManager
-    
     
     @Environment(\.colorScheme) var colorScheme
     @State var user: User? = nil
@@ -36,7 +34,7 @@ struct ContentView: View {
                     }
                 
                 ProfileView(user: user)
-                    .environmentObject(authManager)
+                
                     .tabItem {
                         Label(LocalizedStringKey("Profile"), systemImage: "person.fill")
                     }

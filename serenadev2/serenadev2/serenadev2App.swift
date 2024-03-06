@@ -12,7 +12,6 @@ import SwiftData
 struct serenadev2App: App {
     @StateObject var userViewModel: UserViewModel = UserViewModel()
     @StateObject var postViewModel: PostViewModel = PostViewModel()
-    @StateObject var authManager: AuthManager = AuthManager()
     
     @State private var isShowingSplashScreen = true
     
@@ -32,7 +31,7 @@ struct serenadev2App: App {
                         .zIndex(1)
                     
                 } else if userViewModel.user == nil && !userViewModel.isLoggedIn {
-                    SignInView(authManager: authManager)
+                    SignInView()
                         .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
                         .zIndex(0)
                 } else if userViewModel.user != nil && !userViewModel.tagNameExists {
@@ -51,7 +50,6 @@ struct serenadev2App: App {
             .environmentObject(userViewModel)
             .environmentObject(postViewModel)
             .environmentObject(songViewModel)
-            .environmentObject(authManager)
             .onAppear {
 //                authManager.checkAuthenticationState()
                 

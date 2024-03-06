@@ -11,18 +11,11 @@ import AuthenticationServices
 struct SignInView: View {
     
     @Environment(\.colorScheme) var colorScheme
-    
-    @ObservedObject var authManager: AuthManager
-    
+
     @EnvironmentObject var userViewModel: UserViewModel
     
     @State private var shouldShowUserDetails = false
-    
-    
-    init(authManager: AuthManager) {
-        self.authManager = authManager
-    }
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -55,12 +48,6 @@ struct SignInView: View {
                     .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
                     .frame(height: 45)
                     .padding()
-                    //                    SignInWithAppleButton(.signIn) { _ in
-                    //                        authManager.signInWithApple()
-                    //                    } onCompletion: { result in
-                    //
-                    //                    }
-                    
                     
                 }
                 .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)

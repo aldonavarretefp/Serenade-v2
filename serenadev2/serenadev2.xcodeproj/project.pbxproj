@@ -61,8 +61,6 @@
 		F1FC0FD82B8E1DB300FD50CB /* CloudKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FC0FD72B8E1DB300FD50CB /* CloudKitUtility.swift */; };
 		F709F6C22B90CA0000B60216 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F709F6C12B90CA0000B60216 /* PostViewModel.swift */; };
 		F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */; };
-		F73FC09F2B961FBA00D0537D /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73FC09E2B961FBA00D0537D /* LoginView.swift */; };
-		F73FC0A12B96206A00D0537D /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73FC0A02B96206A00D0537D /* AuthManager.swift */; };
 		F7AE69252B90B5C5003C6A7C /* FriendRequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */; };
 		F7AE69272B90B61A003C6A7C /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69262B90B61A003C6A7C /* FriendRequest.swift */; };
 		F7E810CF2B921E6A00000946 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F928612B878D8E00050926 /* UserViewModel.swift */; };
@@ -148,8 +146,6 @@
 		F1FC0FD72B8E1DB300FD50CB /* CloudKitUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitUtility.swift; sourceTree = "<group>"; };
 		F709F6C12B90CA0000B60216 /* PostViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitConfig.swift; sourceTree = "<group>"; };
-		F73FC09E2B961FBA00D0537D /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		F73FC0A02B96206A00D0537D /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestsViewModel.swift; sourceTree = "<group>"; };
 		F7AE69262B90B61A003C6A7C /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		F7F928612B878D8E00050926 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserViewModel.swift; path = serenadev2/ViewModel/UserViewModel.swift; sourceTree = SOURCE_ROOT; };
@@ -194,7 +190,6 @@
 			children = (
 				4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */,
 				C4AF431B2B9679150089C62A /* UserDefaultsKeys.swift */,
-				F73FC0A02B96206A00D0537D /* AuthManager.swift */,
 				F1CF7BF92B987E15004AC18C /* PeopleHistoryManager.swift */,
 			);
 			path = Manager;
@@ -286,7 +281,6 @@
 				C4AF43132B965AF40089C62A /* SignInView.swift */,
 				C4AF43172B9663E10089C62A /* OnboardingView.swift */,
 				C4AF43192B9670D90089C62A /* SplashScreenView.swift */,
-				F73FC09E2B961FBA00D0537D /* LoginView.swift */,
 				C4A7635C2B9697CC002A3A5B /* UserDetailsView.swift */,
 			);
 			path = View;
@@ -556,7 +550,6 @@
 				4447C07C2B95B97A00593AF5 /* SongHistoryManager.swift in Sources */,
 				F137D2352B839A82006264C1 /* ContentView.swift in Sources */,
 				EA9BC9F62B87960900292705 /* ProfileView.swift in Sources */,
-				F73FC09F2B961FBA00D0537D /* LoginView.swift in Sources */,
 				EA9BC9E82B83A44800292705 /* ProfileBar.swift in Sources */,
 				EA36A1A72B8F7900007F56FD /* AppInfoSheet.swift in Sources */,
 				F7E810CF2B921E6A00000946 /* UserViewModel.swift in Sources */,
@@ -599,7 +592,6 @@
 				C4D5111B2B8F759300E95549 /* SongModel.swift in Sources */,
 				C40C09B82B863EFA009BE4C5 /* ActionButton.swift in Sources */,
 				EA5A43DE2B88F66800F6F04C /* SettingsView.swift in Sources */,
-				F73FC0A12B96206A00D0537D /* AuthManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

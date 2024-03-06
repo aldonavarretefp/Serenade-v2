@@ -16,7 +16,7 @@ struct SettingsView: View {
     @State var isLogOutSheetDisplayed: Bool = false
     @State var isDeleteAccountSheetDisplayed: Bool = false
     
-    @EnvironmentObject var authManager: AuthManager
+
     @EnvironmentObject var userViewModel: UserViewModel
     
     
@@ -64,7 +64,7 @@ struct SettingsView: View {
                             
                             ConfirmationSheet(titleStart: LocalizedStringKey("LogOut"), descriptionStart: LocalizedStringKey("LogOutMessage"), buttonLabel: LocalizedStringKey("LogOut")){
 //                                isFriend = false
-                                authManager.logOut()
+                            
                                 userViewModel.logOut()
                             }
                             .presentationDetents([.fraction(0.3)])
