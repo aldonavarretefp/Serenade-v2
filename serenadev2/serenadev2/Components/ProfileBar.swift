@@ -95,7 +95,7 @@ struct ProfileBar: View {
                         }
                         .font(.caption)
                         VStack {
-                            Text(user.friends != nil ? String(user.friends!.count) : "0")
+                            Text(String(user.friends.count))
                             Text(LocalizedStringKey("Friends"))
                         }
                         .font(.caption)
@@ -148,7 +148,7 @@ struct ProfileBar: View {
                                             return
                                         }
                                         let friendID = user.record.recordID
-                                        userViewModel.unmakeFriends(withId: currentUser, friendId: friendID)
+                                        userViewModel.unmakeFriend(withID: friendID)
                                     }
                                     .presentationDetents([.fraction(0.3)])
                                 })

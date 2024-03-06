@@ -44,16 +44,13 @@ struct NotificationItem: View {
             
             HStack(spacing: 5){
                 NotificationActionButton(icon: "xmark"){
-                    friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {
-                        guard let user = userViewModel.user else { return }
-                        userViewModel.unmakeFriends(withId: user, friendId: friendRequest.sender.recordID)
-                    }
+                    friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {}
                 }
                 
                 NotificationActionButton(icon: "checkmark"){
                     friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
                         guard let user = userViewModel.user else { return }
-                        userViewModel.makeFriends(withId: user, friendId: friendRequest.sender.recordID)
+                        userViewModel.makeFriend(withID: friendRequest.sender.recordID)
                     }
                 }
             }

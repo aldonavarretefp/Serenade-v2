@@ -35,7 +35,7 @@ struct UserDetailsView: View {
     }
 
     private func saveUserDetails() {
-        guard let newUser = User(accountID: userId, name: userName, tagName: tagname, email: userEmail, friends: nil, posts: nil, streak: 0, profilePicture: "", isActive: true)
+        guard let newUser = User(accountID: userId, name: userName, tagName: tagname, email: userEmail, posts: nil, streak: 0, profilePicture: "", isActive: true)
         else {
             return
         }

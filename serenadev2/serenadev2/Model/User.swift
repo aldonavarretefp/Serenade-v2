@@ -26,7 +26,7 @@ struct User: Hashable, CloudKitableProtocol {
     var name: String
     var tagName: String
     var email: String
-    var friends: [CKRecord.Reference]?
+    var friends: [CKRecord.Reference] = []
     var posts: [CKRecord.Reference]?
     var streak: Int
     var profilePicture: String
@@ -51,7 +51,7 @@ extension User {
             print("Didn't find property email")
             return nil
         }
-        guard let friends = record[UserRecordKeys.friends.rawValue] as? [CKRecord.Reference]? else {
+        guard let friends = record[UserRecordKeys.friends.rawValue] as? [CKRecord.Reference] else {
             print("Didn't find property friends")
             return nil
         }
@@ -74,7 +74,7 @@ extension User {
         self.init(accountID: accountID, name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, record: record)
     }
     
-    init?(accountID: String?, name: String, tagName: String, email: String, friends: [CKRecord.Reference]?, posts: [CKRecord.Reference]?, streak: Int, profilePicture: String, isActive: Bool) {
+    init?(accountID: String?, name: String, tagName: String, email: String, friends: [CKRecord.Reference] = [], posts: [CKRecord.Reference]?, streak: Int, profilePicture: String, isActive: Bool) {
         let record = CKRecord(recordType: UserRecordKeys.type.rawValue)
         record[UserRecordKeys.accountID.rawValue] = accountID
         record[UserRecordKeys.name.rawValue] = name

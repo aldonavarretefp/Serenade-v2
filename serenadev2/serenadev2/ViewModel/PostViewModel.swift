@@ -79,10 +79,7 @@ class PostViewModel: ObservableObject {
         }
         
         else {
-            guard let userFriends = user.friends else {
-                return
-            }
-            var userList = userFriends
+            var userList = user.friends
             userList.append(userID)
             
             let predicate = NSPredicate(format: "sender IN %@ && isActive == 1", userList)

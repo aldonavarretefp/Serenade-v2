@@ -31,8 +31,6 @@ struct NotificationsView: View {
                                 }
                             }
                             
-//                            NotificationItem(user: User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", streak: 15, profilePicture: "AfterHoursCoverArt", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "B5E07FDA-EB68-4C72-B547-ACE39273D662"))))
-                            
                             Button {
                                 print(friendRequestViewModel.friendRequests)
                             } label: {
@@ -40,13 +38,15 @@ struct NotificationsView: View {
                             }
                             
                             Button {
-                                guard friendRequestViewModel.friendRequests.count != 0 else {
-                                    return
+                                if var user = userViewModel.user {
+                                    user.streak = 666
+                                    userViewModel.updateUser(updatedUser: user)
                                 }
-                                Task {
-                                    friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequestViewModel.friendRequests[0]) {
-                                        guard let user = userViewModel.user else { return }
-                                        userViewModel.makeFriends(withId: user, friendId: friendRequestViewModel.friendRequests[0].sender.recordID)
+                                
+                                userViewModel.searchUsers(tagname: "sebatoo") { user in
+                                    if var user = user {
+                                        user[0].streak = 999
+                                        userViewModel.updateUser(updatedUser: user[0])
                                     }
                                 }
                                 
