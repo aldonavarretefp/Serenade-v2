@@ -46,13 +46,23 @@ struct UserDetailsView: View {
                     
                     VStack(alignment: .leading, spacing: 40){
                         VStack(spacing: 20){
-                            TextField("Full name", text: $userName)
+                            TextField("", text: $userName)
+                                .placeholder(when: userName.isEmpty) {
+                                    Text("Full name")
+                                        .foregroundColor(.gray)
+                                }
+                                .foregroundStyle(.black)
                                 .padding()
                                 .background(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
-                                
                             
-                            TextField("Username", text: $tagname)
+                            
+                            TextField("", text: $tagname)
+                                .placeholder(when: tagname.isEmpty) {
+                                    Text("Username")
+                                        .foregroundColor(.gray)
+                                }
+                                .foregroundStyle(.black)
                                 .padding()
                                 .background(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -70,13 +80,13 @@ struct UserDetailsView: View {
         }
         .foregroundStyle(.white)
     }
-
+    
     private func saveUserDetails() {
         guard let newUser = User(accountID: userId, name: userName, tagName: tagname, email: userEmail, posts: nil, streak: 0, profilePicture: "", isActive: true)
         else {
             return
         }
-
+        
         userViewModel.createUser(user: newUser)
         
         print(userViewModel.isLoggedIn)
@@ -86,3 +96,15 @@ struct UserDetailsView: View {
     }
 }
 
+extension View {
+    func placeholder<Content: View>(
+        when shouldShow: Bool,
+        alignment: Alignment = .leading,
+        @ViewBuilder placeholder: () -> Content) -> some View {
+            
+            ZStack(alignment: alignment) {
+                placeholder().opacity(shouldShow ? 1 : 0)
+                self
+            }
+        }
+}
