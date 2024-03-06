@@ -32,6 +32,7 @@
 		C4D511242B8FC42700E95549 /* SongServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D511232B8FC42700E95549 /* SongServiceTest.swift */; };
 		C4F14A7B2B88FBC800D7111E /* CreateUsernameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F14A7A2B88FBC800D7111E /* CreateUsernameView.swift */; };
 		C4F14A7D2B88FBD800D7111E /* CreatePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F14A7C2B88FBD800D7111E /* CreatePasswordView.swift */; };
+		E0491C692B99053800892FEE /* IGStoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = E0491C682B99053800892FEE /* IGStoryKit */; };
 		E0540C732B8E703A001A7561 /* DailySongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0540C722B8E703A001A7561 /* DailySongView.swift */; };
 		E0540C772B8E71AF001A7561 /* SelectSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0540C762B8E71AF001A7561 /* SelectSongView.swift */; };
 		E0C891572B9387D70065234F /* OpenWithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C891562B9387D70065234F /* OpenWithView.swift */; };
@@ -145,6 +146,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E0491C692B99053800892FEE /* IGStoryKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,6 +390,9 @@
 			dependencies = (
 			);
 			name = serenadev2;
+			packageProductDependencies = (
+				E0491C682B99053800892FEE /* IGStoryKit */,
+			);
 			productName = serenadev2;
 			productReference = F137D22F2B839A82006264C1 /* serenadev2.app */;
 			productType = "com.apple.product-type.application";
@@ -462,6 +467,9 @@
 				it,
 			);
 			mainGroup = F137D2262B839A81006264C1;
+			packageReferences = (
+				E0491C672B99053800892FEE /* XCRemoteSwiftPackageReference "IGStoryKit" */,
+			);
 			productRefGroup = F137D2302B839A82006264C1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -910,6 +918,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E0491C672B99053800892FEE /* XCRemoteSwiftPackageReference "IGStoryKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwapnanilDhol/IGStoryKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E0491C682B99053800892FEE /* IGStoryKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E0491C672B99053800892FEE /* XCRemoteSwiftPackageReference "IGStoryKit" */;
+			productName = IGStoryKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F137D2272B839A81006264C1 /* Project object */;
 }
