@@ -16,7 +16,7 @@ struct SettingsView: View {
     @State var isLogOutSheetDisplayed: Bool = false
     @State var isDeleteAccountSheetDisplayed: Bool = false
     
-    @StateObject var authManager: AuthManager = AuthManager()
+    @EnvironmentObject var authManager: AuthManager
     
     var body: some View {
         NavigationStack {

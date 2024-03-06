@@ -18,8 +18,10 @@ struct ProfileView: View {
     
     // Opacity variables for the button and the header
     @State var headerOpacity: Double = 1.0
+    
     @EnvironmentObject var postVM: PostViewModel
     @EnvironmentObject var userVM: UserViewModel
+    @EnvironmentObject var authManager: AuthManager
     
     @State var posts: [Post] = []
     
@@ -107,6 +109,7 @@ struct ProfileView: View {
                             
                                 .padding(.bottom)
                                 .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
+                                .environmentObject(authManager)
                             
                             // Get the header height
                                 .overlayPreferenceValue(HeaderBoundsKey.self){ value in

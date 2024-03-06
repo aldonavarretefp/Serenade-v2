@@ -68,6 +68,10 @@ class AuthManager: NSObject, ObservableObject, ASAuthorizationControllerDelegate
     }
 
     func logOut() {
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userID)
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userName)
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userEmail)
+        
         
         DispatchQueue.main.async {
             self.isAuthenticated = false

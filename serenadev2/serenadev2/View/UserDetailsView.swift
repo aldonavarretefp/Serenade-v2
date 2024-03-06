@@ -15,11 +15,12 @@ struct UserDetailsView: View {
     
     @EnvironmentObject var userViewModel: UserViewModel
     
-    @State var userId: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? "")
-    @State var userName: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userName) ?? "")
-    @State var userEmail: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? "")
-    
+    @State private var name: String = ""
+    @State private var email: String = ""
     @State var tagname: String = ""
+    
+    @State var userId: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? "")
+    
     
     var body: some View {
         NavigationView {
@@ -46,8 +47,8 @@ struct UserDetailsView: View {
                     
                     VStack(alignment: .leading, spacing: 40){
                         VStack(spacing: 20){
-                            TextField("", text: $userName)
-                                .placeholder(when: userName.isEmpty) {
+                            TextField("", text: $name)
+                                .placeholder(when: name.isEmpty) {
                                     Text("Full name")
                                         .foregroundColor(.gray)
                                 }
@@ -77,12 +78,25 @@ struct UserDetailsView: View {
                 }
                 .padding()
             }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+                // Clear UserDefaults here if leaving UserDetailsView
+                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userID)
+                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userName)
+                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userEmail)
+                // Remove other details as necessary
+            }
+            .onAppear {
+                // Pre-fill the user details if available
+                name = UserDefaults.standard.string(forKey: UserDefaultsKeys.userName) ?? ""
+                email = UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? ""
+                // Assume tagName is not stored in UserDefaults initially, or add logic if it is.
+            }
         }
         .foregroundStyle(.white)
     }
     
     private func saveUserDetails() {
-        guard let newUser = User(accountID: userId, name: userName, tagName: tagname, email: userEmail, posts: nil, streak: 0, profilePicture: "", isActive: true)
+        guard let newUser = User(accountID: userId, name: name, tagName: tagname, email: email, posts: nil, streak: 0, profilePicture: "", isActive: true)
         else {
             return
         }

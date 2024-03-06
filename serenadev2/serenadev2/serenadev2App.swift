@@ -34,16 +34,16 @@ struct serenadev2App: App {
                     UserDetailsView(authManager: authManager)
                 } else if authManager.isAuthenticated {
                     ContentView()
-                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 1.0).delay(0.5)))
+                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
                         .zIndex(0)
                 } else if !hasCompletedOnboarding {
                     OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
-                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 1.0).delay(0.5)))
+                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
                         .zIndex(1)
                     
                 } else if isShowingSplashScreen {
                     SplashScreenView(isShowingSplashScreen: $isShowingSplashScreen)
-                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 1.0).delay(0.5)))
+                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
                         .zIndex(2)
                 } else {
                     SignInView(authManager: authManager)
@@ -54,6 +54,7 @@ struct serenadev2App: App {
             .environmentObject(userViewModel)
             .environmentObject(postViewModel)
             .environmentObject(songViewModel)
+            .environmentObject(authManager)
             .onAppear {
                 authManager.checkAuthenticationState()
                 

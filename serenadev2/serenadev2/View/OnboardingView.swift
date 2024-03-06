@@ -12,35 +12,36 @@ struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
     
     var body: some View {
-        
         VStack(){
-            Text("Welcome to Serenade")
-                .font(.title)
-                .fontWeight(.bold)
-                .padding(.bottom, 20)
-            
-            VStack(alignment: .leading, spacing: 40){
-                FeatureView(icon: "heart.fill", title: "Add Friends", description: "Connect effortlessly with friends to share and explore musical tastes together.")
+            VStack(){
+                Text("Welcome to Serenade")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .padding(.bottom, 20)
                 
+                VStack(alignment: .leading, spacing: 40){
+                    FeatureView(icon: "heart.fill", title: "Add Friends", description: "Connect effortlessly with friends to share and explore musical tastes together.")
+                    
+                    
+                    FeatureView(icon: "hearingdevice.ear.fill", title: "Hear Previews", description: "Listen to 15-second previews of songs before diving into the full experience.")
+                    
+                    FeatureView(icon: "clock.arrow.circlepath", title: "Daily Song Posting", description: "Share your daily song once every 24 hours with the community, enriching everyone's musical journey.")
+                    
+                    FeatureView(icon: "play.circle.fill", title: "Open with Favorite Streaming App", description: "Enjoy uninterrupted listening by opening songs directly in your preferred streaming app.")
+                }
                 
-                FeatureView(icon: "hearingdevice.ear.fill", title: "Hear Previews", description: "Listen to 15-second previews of songs before diving into the full experience.")
-                
-                FeatureView(icon: "clock.arrow.circlepath", title: "Daily Song Posting", description: "Share your daily song once every 24 hours with the community, enriching everyone's musical journey.")
-                
-                FeatureView(icon: "play.circle.fill", title: "Open with Favorite Streaming App", description: "Enjoy uninterrupted listening by opening songs directly in your preferred streaming app.")
             }
+            .padding()
             
+            Spacer ()
+            ActionButton(label: "Start", symbolName: "", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: false) {
+                
+                UserDefaults.standard.set(true, forKey: UserDefaultsKeys.hasCompletedOnboarding)
+                hasCompletedOnboarding = true
+                
+            }
+            .padding()
         }
-        .padding()
-        
-        Spacer ()
-        ActionButton(label: "Start", symbolName: "", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: false) {
-            
-            UserDefaults.standard.set(true, forKey: UserDefaultsKeys.hasCompletedOnboarding)
-            hasCompletedOnboarding = true
-            
-        }
-        .padding()
     }
 }
 
