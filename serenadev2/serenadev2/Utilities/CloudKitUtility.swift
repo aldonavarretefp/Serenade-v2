@@ -188,3 +188,82 @@ extension CloudKitUtility {
         }
     }
 }
+
+// MARK: Async functions
+extension CloudKitUtility {
+    static func fetch<T: CloudKitableProtocol>(
+        predicate: NSPredicate,
+        recordType: CKRecord.RecordType,
+        sortDescriptions: [NSSortDescriptor]? = nil,
+        resultsLimit: Int? = nil
+    ) async throws -> [T] {
+        let query = CKQuery(recordType: recordType, predicate: predicate)
+        query.sortDescriptors = sortDescriptions
+        let queryOperation = CKQueryOperation(query: query)
+        if let limit = resultsLimit {
+            queryOperation.resultsLimit = limit
+        }
+
+        var records: [CKRecord] = []
+        let database = CKContainer.default().publicCloudDatabase
+        
+        // Here we assume a helper function to run the operation and collect results.
+        // See below for the implementation.
+        records = try await runQueryOperation(queryOperation, in: database)
+
+        // Convert CKRecords to your model objects
+        let items: [T] = records.compactMap { T(record: $0) }
+        return items
+    }
+}
+
+// Helper function to run a CKQueryOperation and collect the results into an array
+extension CloudKitUtility {
+    static func runQueryOperation(_ operation: CKQueryOperation, in database: CKDatabase) async throws -> [CKRecord] {
+        var records: [CKRecord] = []
+        var cursor: CKQueryOperation.Cursor? = nil
+        repeat {
+            let (fetchedRecords, newCursor) = try await database.performQueryOperation(operation, cursor: cursor)
+            records.append(contentsOf: fetchedRecords)
+            cursor = newCursor
+        } while cursor != nil
+        return records
+    }
+}
+
+
+extension CKDatabase {
+    func performQueryOperation(_ operation: CKQueryOperation, cursor: CKQueryOperation.Cursor? = nil) async throws -> ([CKRecord], CKQueryOperation.Cursor?) {
+        try await withCheckedThrowingContinuation { continuation in
+            // Initialize an empty array to collect records.
+            var fetchedRecords: [CKRecord] = []
+
+            // Handle each fetched record.
+            operation.recordFetchedBlock = { record in
+                fetchedRecords.append(record)
+            }
+
+            // Completion block to resume the continuation.
+            operation.queryCompletionBlock = { cursor, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: (fetchedRecords, cursor))
+                }
+            }
+
+            // Add the operation to the database.
+            if let cursor = cursor {
+                // If a cursor is provided, initialize a new operation with the cursor.
+                let cursorOperation = CKQueryOperation(cursor: cursor)
+                cursorOperation.recordFetchedBlock = operation.recordFetchedBlock
+                cursorOperation.queryCompletionBlock = operation.queryCompletionBlock
+                self.add(cursorOperation)
+            } else {
+                self.add(operation)
+            }
+        }
+    }
+}
+
+
