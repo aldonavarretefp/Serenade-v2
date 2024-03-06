@@ -8,7 +8,7 @@
 import SwiftUI
 import CloudKit
 
-var sebastian = User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", friends: [], posts: [], streak: 15, profilePicture: "", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "B5E07FDA-EB68-4C72-B547-ACE39273D662")))
+var sebastian = User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", friends: [], posts: [], streak: 15, profilePicture: "", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "B5E07FDA-EB68-4C72-B547-ACE39273D66")))
 
 struct ProfileBar: View {
     
@@ -17,9 +17,10 @@ struct ProfileBar: View {
     @State var isUnfriendSheetDisplayed: Bool = false
     @State var isFriendRequestSent: Bool
     @State var isCurrentUser: Bool
-    @State var isFriend: Bool?
+    @State var isFriend: Bool
     
     @EnvironmentObject var userViewModel: UserViewModel
+    @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
     
     var user: User
     
@@ -103,10 +104,14 @@ struct ProfileBar: View {
                         .padding(.horizontal)
                         Spacer()
                         if !isCurrentUser {
-                            if !isFriend! {
+                            if !isFriend {
                                 if !isFriendRequestSent {
                                     Button(action: {
-                                        
+                                        guard let myID = userViewModel.user?.record.recordID else {
+                                            print("No user")
+                                            return
+                                        }
+                                        friendRequestViewModel.createFriendRequest(senderID: user.record.recordID, receiverID: myID)
                                         isFriendRequestSent = true
                                     }, label: {
                                         ZStack {
@@ -117,19 +122,29 @@ struct ProfileBar: View {
                                                 .font(.headline)
                                         }
                                     })
+                                } else {
+                                    Button(action: {
+                                        guard let me = userViewModel.user else {
+                                            print("No user")
+                                            return
+                                        }
+                                        friendRequestViewModel.fetchFriendRequest(for: me, and: user) { returnedFriendRequest in
+                                            guard let returnedFriendRequest = returnedFriendRequest.first else {return}
+                                            friendRequestViewModel.deleteFriendReques(friendRequest: returnedFriendRequest) {}
+                                            isFriendRequestSent = false
+                                        }
+                                    }, label: {
+                                        ZStack {
+                                            Capsule()
+                                                .fill(.secondaryButton)
+                                            Text(LocalizedStringKey("PendingFriend"))
+                                            //                                        .foregroundStyle(.callout)
+                                                .fontWeight(.bold)
+                                                .font(.subheadline)
+                                        }
+                                    })
                                 }
-                                else {
-                                    ZStack {
-                                        Capsule()
-                                            .fill(.secondaryButton)
-                                        Text(LocalizedStringKey("PendingFriend"))
-                                        //                                        .foregroundStyle(.callout)
-                                            .fontWeight(.bold)
-                                            .font(.subheadline)
-                                    }
-                                }
-                            }
-                            else {
+                            } else {
                                 Button(action: {
                                     isUnfriendSheetDisplayed = true
                                 }, label: {
@@ -142,14 +157,10 @@ struct ProfileBar: View {
                                     }
                                 })
                                 .sheet(isPresented: $isUnfriendSheetDisplayed, content: {
-                                    
                                     ConfirmationSheet(titleStart: LocalizedStringKey("UnfriendTitleStart"), titleEnd: LocalizedStringKey("UnfriendTitleEnd"), user: user.tagName, descriptionStart: LocalizedStringKey("UnfriendDescriptionStart"), descriptionEnd: LocalizedStringKey("UnfriendDescriptionEnd"), buttonLabel: "DeleteFriend"){
-                                        guard let currentUser = userViewModel.user else {
-                                            print("ERROR: Couldn't unmake friends")
-                                            return
-                                        }
-                                        let friendID = user.record.recordID
-                                        userViewModel.unmakeFriend(withID: friendID)
+                                        
+                                        isFriend = false
+                                        userViewModel.unmakeFriend(friend: user)           
                                     }
                                     .presentationDetents([.fraction(0.3)])
                                 })
@@ -167,6 +178,6 @@ struct ProfileBar: View {
 }
 
 #Preview {
-    ProfileBar(isFriendRequestSent: false, isCurrentUser: false, isFriend: false, user: sebastian)
-        .environment(\.locale, .init(identifier: "it"))
+    ProfileBar(isFriendRequestSent: false, isCurrentUser: false, isFriend: true, user: sebastian)
+        .environment(\.locale, .init(identifier: "us"))
 }

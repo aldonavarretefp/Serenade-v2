@@ -25,7 +25,7 @@ class UserViewModel: ObservableObject {
                 self.tagNameExists = user.tagName != ""
             }
         }
-
+        
     }
     
     func handleAuthorization(userID: String, fullName: String, email: String) {
@@ -33,7 +33,7 @@ class UserViewModel: ObservableObject {
         fetchUserFromAccountID(accountID: userID) { returnedUser in
             guard let user = returnedUser else {
                 // User does not exists
-//                let user = User(name: fullName, tagName: "", email: email, streak: 0, profilePicture: "", isActive: true, record: .init(recordType: UserRecordKeys.type.rawValue))
+                //                let user = User(name: fullName, tagName: "", email: email, streak: 0, profilePicture: "", isActive: true, record: .init(recordType: UserRecordKeys.type.rawValue))
                 guard let user = User(accountID: userID, name: fullName, tagName: "", email: email, posts: .init(), streak: 0, profilePicture: "", isActive: true) else {
                     return
                 }
@@ -279,5 +279,14 @@ class UserViewModel: ObservableObject {
         newUser.posts = newUser.posts ?? []
         newUser.posts?.append(CKRecord.Reference(recordID: post.record.recordID, action: .none))
         updateUser(updatedUser: newUser)
+    }
+    
+    func isFriend(of friend: User) -> Bool{
+        if let user = self.user {
+            let friendIDs = user.friends.map { $0.recordID }
+            return friendIDs.contains(friend.record.recordID)
+        } else {
+            return false
+        }
     }
 }

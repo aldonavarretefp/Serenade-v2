@@ -17,26 +17,26 @@ class FriendRequestsViewModel: ObservableObject {
     var cancellables = Set<AnyCancellable>()
     
     private func fetchUserDetails(for recordID: CKRecord.ID) {
-            // Use CloudKit to fetch the CKRecord for the given recordID
-            // Then initialize a User object with the fetched CKRecord and store it in `userDetails`
-            CKContainer.default().publicCloudDatabase.fetch(withRecordID: recordID) { [weak self] record, error in
-                guard let record = record, error == nil else {
-                    print("Error fetching user details: \(error?.localizedDescription ?? "Unknown error")")
-                    return
-                }
-                
-                if let user = User(record: record) {
-                    DispatchQueue.main.async {
-                        self?.userDetails[recordID] = user
-                    }
+        // Use CloudKit to fetch the CKRecord for the given recordID
+        // Then initialize a User object with the fetched CKRecord and store it in `userDetails`
+        CKContainer.default().publicCloudDatabase.fetch(withRecordID: recordID) { [weak self] record, error in
+            guard let record = record, error == nil else {
+                print("Error fetching user details: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            
+            if let user = User(record: record) {
+                DispatchQueue.main.async {
+                    self?.userDetails[recordID] = user
                 }
             }
         }
+    }
     
     /**
      Fetches the friend requests for the user.
      - Parameters:
-        - user: The user to fetch the friend requests for.
+     - user: The user to fetch the friend requests for.
      */
     func fetchFriendRequestsForUser(user: User) {
         let recordToMatch = CKRecord.Reference(record: user.record, action: .none)
@@ -55,13 +55,29 @@ class FriendRequestsViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-
+    
+    func fetchFriendRequest(for sender: User, and reciever: User, completionHandler: @escaping ([FriendRequest]) -> Void){
+        let recordSenderToMatch = CKRecord.Reference(record: sender.record, action: .none)
+        
+        let recordReceiverToMatch = CKRecord.Reference(record: reciever.record, action: .none)
+        
+        let predicate = NSPredicate(format: "receiver == %@ && sender == %@ && status == %@", recordSenderToMatch, recordReceiverToMatch, FriendRequestStatus.pending.rawValue)
+        let recordType = FriendRequestsRecordKeys.type.rawValue
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+            } receiveValue: { (returnedFriendRequests: [FriendRequest]) in
+                completionHandler(returnedFriendRequests)
+            }
+            .store(in: &cancellables)
+    }
+    
     /**
-        Creates a friend request that links two users with their IDs.
-        - Parameters:
-            - senderID: The ID of the user that is sending the friend request.
-            - receiverID: The ID of the user that is receiving the friend request.
-    */
+     Creates a friend request that links two users with their IDs.
+     - Parameters:
+     - senderID: The ID of the user that is sending the friend request.
+     - receiverID: The ID of the user that is receiving the friend request.
+     */
     func createFriendRequest(senderID: CKRecord.ID, receiverID: CKRecord.ID) {
         
         let senderReference = CKRecord.Reference(recordID: senderID, action: .none)
@@ -85,12 +101,12 @@ class FriendRequestsViewModel: ObservableObject {
             }
         }
     }
-
+    
     /**
-        Accepts a friend request from certain  and updates the status of the friend request to accepted.
-        - Parameters:
-            - friendRequest: The friend request to accept.
-    */
+     Accepts a friend request from certain  and updates the status of the friend request to accepted.
+     - Parameters:
+     - friendRequest: The friend request to accept.
+     */
     func acceptFriendRequest(friendRequest: FriendRequest, completionHandler: @escaping () -> Void) {
         friendRequest.record["status"] = FriendRequestStatus.accepted.rawValue
         CloudKitUtility.update(item: friendRequest) { result in
@@ -105,12 +121,12 @@ class FriendRequestsViewModel: ObservableObject {
             }
         }
     }
-
+    
     /**
-        Declines a friend request from certain  and updates the status of the friend request to declined.
-        - Parameters:
-            - friendRequest: The friend request to decline.
-    */
+     Declines a friend request from certain  and updates the status of the friend request to declined.
+     - Parameters:
+     - friendRequest: The friend request to decline.
+     */
     func declineFriendRequest(friendRequest: FriendRequest, completionHandler: @escaping () -> Void) {
         
         friendRequest.record["status"] = FriendRequestStatus.rejected.rawValue
@@ -125,6 +141,10 @@ class FriendRequestsViewModel: ObservableObject {
                 break;
             }
         }
+    }
+    
+    func deleteFriendReques(friendRequest: FriendRequest, completionHandler: @escaping () -> Void) {
+        _ = CloudKitUtility.delete(item: friendRequest)
     }
 
 }

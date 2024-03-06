@@ -92,38 +92,69 @@ struct SearchView: View {
                     .frame(height: 50)
                     .background()
                     
-                    if self.historySong.count != 0 && viewModel.searchText.isEmpty && selectedTab == .music{
-                        ScrollView{
-                            VStack(spacing: 0){
-                                ForEach(self.historySong, id:\.self) { song in
-                                    ItemSmall(item: ContentItem(isPerson: false, song: song), showXMark: true){
-                                        historySongManager.removeSong(songId: song.id)
-                                        loadHistory()
-                                    }
-                                    .padding([.leading, .top, .bottom])
-                                    .onTapGesture{
-                                        selectedSong = ContentItem(isPerson: false, song: song)
-                                        historySongManager.addToHistory(song.id)
-                                        loadHistory()
-                                    }
-                                }
-                            }
-                        }
-                    } else if self.historyPeople.count != 0 && viewModel.searchText.isEmpty && selectedTab == .people {
-                        ScrollView {
-                            VStack(spacing: 0){
-                                ForEach(self.historyPeople, id:\.self) { user in
-                                    NavigationLink(destination: ProfileView(user: user), label: {
-                                        ItemSmall(item: ContentItem(isPerson: true, user: user), showXMark: true){
-                                            historyPeopleManager.removeUser(userID: user.record.recordID.recordName)
+                    if selectedTab == .music {
+                        if self.historySong.count != 0 && viewModel.searchText.isEmpty{
+                            ScrollView{
+                                VStack(spacing: 0){
+                                    ForEach(self.historySong, id:\.self) { song in
+                                        ItemSmall(item: ContentItem(isPerson: false, song: song), showXMark: true){
+                                            historySongManager.removeSong(songId: song.id)
                                             loadHistory()
                                         }
                                         .padding([.leading, .top, .bottom])
-                                    })
+                                        .onTapGesture{
+                                            selectedSong = ContentItem(isPerson: false, song: song)
+                                            historySongManager.addToHistory(song.id)
+                                            loadHistory()
+                                        }
+                                    }
                                 }
                             }
+                        } else {
+                            ScrollView {
+                                VStack(spacing: 0) {
+                                    ForEach(filteredResults) { value in
+                                        ItemSmall(item: value)
+                                            .padding()
+                                            .onTapGesture{
+                                                selectedSong = value
+                                                historySongManager.addToHistory(value.song!.id)
+                                                loadHistory()
+                                            }
+                                    }
+                                }
+                            }
+                            .scrollDismissesKeyboard(.immediately)
                         }
-                        .scrollDismissesKeyboard(.immediately)
+                    } else {
+                        if self.historyPeople.count != 0 && viewModel.searchText.isEmpty {
+                            ScrollView {
+                                VStack(spacing: 0){
+                                    ForEach(self.historyPeople, id:\.self) { user in
+                                        NavigationLink(destination: ProfileView(user: user), label: {
+                                            ItemSmall(item: ContentItem(isPerson: true, user: user), showXMark: true){
+                                                historyPeopleManager.removeUser(userID: user.record.recordID.recordName)
+                                                loadHistory()
+                                            }
+                                            .padding([.leading, .top, .bottom])
+                                        })
+                                    }
+                                }
+                            }
+                            .scrollDismissesKeyboard(.immediately)
+                        } else {
+                            ScrollView {
+                                VStack(spacing: 0) {
+                                    ForEach(filteredResults) { value in
+                                        NavigationLink(destination: ProfileView(user: value.user), label: {
+                                            ItemSmall(item: ContentItem(isPerson: true, user: value.user), showArrow: true)                                            
+                                            .padding([.leading, .top, .bottom])
+                                        })
+                                    }
+                                }
+                            }
+                            .scrollDismissesKeyboard(.immediately)
+                        }
                     }
                 }
             }
@@ -134,7 +165,7 @@ struct SearchView: View {
                         ProgressView()
                             .progressViewStyle(.circular)
                     } else if viewModel.searchText.isEmpty {
-                        if self.historyPeople.count == 0 {
+                        if self.historySong.count == 0 {
                             // Display this when no search has been made yet (for Music tab only)
                             ContentUnavailableView(label: {
                                 Label(LocalizedStringKey("SearchForMusic"), systemImage: "music.note")
@@ -161,9 +192,9 @@ struct SearchView: View {
                         if self.historyPeople.count == 0 {
                             // Display this when no search has been made yet (for Music tab only)
                             ContentUnavailableView(label: {
-                                Label(LocalizedStringKey("SearchForPeople"), systemImage: "person.3")
+                                Label(LocalizedStringKey("SearchForPeople"), systemImage: "person.3.fill")
                             }, description: {
-                                Text(LocalizedStringKey("SearchDescription"))
+                                Text(LocalizedStringKey("SearchPeopleDescription"))
                             })
                         }
                         

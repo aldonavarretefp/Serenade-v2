@@ -32,6 +32,10 @@ class PeopleHistoryManager: ObservableObject {
             history.removeLast()
         }
         
+        for user in history {
+            print(user)
+        }
+        
         // Save the updated history to UserDefaults
         UserDefaults.standard.set(history, forKey: "PeopleHistory")
     }
@@ -40,6 +44,7 @@ class PeopleHistoryManager: ObservableObject {
         var users: [User] = []
         
         for historyId in history {
+            
             userViewModel.fetchUserFromRecord(record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: historyId))) { user in
                 if let user = user {
                     users.append(user)
