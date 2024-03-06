@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MusicKit
 
 // Struct definition for a custom brand button
 struct BrandButton : View {
@@ -73,16 +74,20 @@ enum ButtonType: CaseIterable {
         switch self {
         case .appleMusic:
             return BrandButton(label: "Apple Music", brandLogo: "AppleMusicBrandLogo", fontColor: .black, startColor: .appleMusicStart, endColor: .appleMusicEnd) {
-                let baseURL = "https://music.apple.com/us/album/"
-                    // Asumiendo que songId es el identificador único de la canción.
-                    let fullURL = baseURL + songId
+                
+                Task{
+                    let albumID = await requestIDAlbum(songId: songId)
                     
-                    guard let url = URL(string: fullURL) else {
-                        print("Invalid URL")
-                        return
+                    DispatchQueue.main.async {
+                        let urlString = "https://music.apple.com/us/album/\(albumID)?i=\(songId)"
+                        if let url = URL(string: urlString), !albumID.isEmpty {
+                            UIApplication.shared.open(url)
+                        } else {
+                            // Handle error, e.g., show an alert
+                            print("Invalid URL or Album ID")
+                        }
                     }
-                    
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
             }
         case .spotify:
             return BrandButton(label: "Spotify", brandLogo: "SpotifyBrandLogo", fontColor: .black, startColor: .spotifyStart, endColor: .spotifyEnd) {
@@ -100,11 +105,11 @@ enum ButtonType: CaseIterable {
             }
         case .youtubeMusic:
             return BrandButton(label: "Youtube Music", brandLogo: "YoutubeBrandLogo", fontColor: .black, startColor: .youtubeMusicStart, endColor: .youtubeMusicEnd) {
-                   
+                
                 if let encodedArtist = songArtist.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                    let encodedTitle = songTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                     
-                    let urlString = "https://music.youtube.com/search?q=\(encodedTitle)%20\(encodedArtist)?filter=IsLibrary%7Cfalse&sc=none"
+                    let urlString = "https://music.youtube.com/search?q=\(encodedTitle)%20\(encodedArtist)"
                     guard let youtubeMusicUrl = URL(string: urlString) else { return }
                     UIApplication.shared.open(youtubeMusicUrl)
                 } else {
@@ -117,7 +122,8 @@ enum ButtonType: CaseIterable {
                 if let encodedArtist = songArtist.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                    let encodedTitle = songTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                     
-                    let urlString = "https://music.amazon.com/search/\(encodedTitle)%20\(encodedArtist)"
+                    let urlString = "https://music.amazon.com/search/\(encodedTitle)%20\(encodedArtist)?filter=IsLibrary%7Cfalse&sc=none"
+                    print(urlString)
                     guard let amazonMusicUrl = URL(string: urlString) else { return }
                     UIApplication.shared.open(amazonMusicUrl)
                 } else {
@@ -128,6 +134,26 @@ enum ButtonType: CaseIterable {
         }
     }
     
+}
+
+func requestIDAlbum(songId: String) async -> String{
+    do {
+        // Replace 'songID' with your specific song's identifier
+        let songs = try await MusicCatalogResourceRequest<Song>(matching: \.id, equalTo: MusicItemID(rawValue: songId)).response()
+        
+        // Assuming the song exists and has an album
+        if let song = songs.items.first{
+            let detailedSong = try await song.with([.albums])
+            if let album = detailedSong.albums?.first {
+                return album.id.rawValue
+            }
+        } else {
+            print("Song or album not found.")
+        }
+    } catch {
+        print("An error occurred: \(error.localizedDescription)")
+    }
+    return ""
 }
 
 // Extension to UIScreen to get screen dimensions

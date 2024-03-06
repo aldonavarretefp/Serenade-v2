@@ -105,8 +105,8 @@ struct SongDetailView: View {
                         ActionButton(label: LocalizedStringKey("OpenWith"), symbolName: "arrow.up.forward.circle.fill", fontColor: Color(song.priColor!), backgroundColor: Color(song.bgColor!), isShareDaily: false, isDisabled: false) {
                             isOpenWithSheetDisplayed.toggle()
                         }.sheet(isPresented: $isOpenWithSheetDisplayed){
-                            OpenWithView(buttonTypes: [.appleMusic, .spotify, .youtubeMusic, .amazonMusic] , songTitle: song.title, songArtist: song.artists, songId: song.id)
-                                .presentationDetents([.fraction(0.55)])
+                            OpenWithView(buttonTypes: [.appleMusic, .spotify, .youtubeMusic] , songTitle: song.title, songArtist: song.artists, songId: song.id)
+                                .presentationDetents([.fraction(0.4)])
                         }
                         
                     }

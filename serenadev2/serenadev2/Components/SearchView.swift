@@ -204,7 +204,6 @@ struct SearchView: View {
         }
     }
     
-    
     var filteredResults: [ContentItem] {
         if selectedTab == .music {
             return viewModel.songs.map { song in

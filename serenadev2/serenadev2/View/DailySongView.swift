@@ -116,7 +116,7 @@ struct DailySongView: View {
                             
                             Text("\(caption.count)/\(characterLimit)")
                                 .font(.callout)
-                                .foregroundColor(caption.count < characterLimit ? (colorScheme == .dark ? .white : .black) : .red)
+                                .foregroundColor(caption.count < characterLimit ? .callout : .red)
                         }
                         CaptionView(caption: $caption, characterLimit: $characterLimit, isSongFromDaily: false)
                     }
@@ -171,6 +171,9 @@ struct DailySongView: View {
 }
 
 struct CaptionView: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    
     @Binding var caption: String
     @Binding var characterLimit: Int
     var isSongFromDaily: Bool
@@ -189,7 +192,7 @@ struct CaptionView: View {
                                 .multilineTextAlignment(.leading)
                                 .font(.subheadline)
                                 .padding()
-                                .foregroundColor(.white) // Adjust as needed; white text may not be visible on a light background
+                                .foregroundStyle(colorScheme == .light ? .black : .white) // Adjust as needed; white text may not be visible on a light background
                                 .focused($isTextFieldFocused)
                                 .onSubmit {
                                     // This will dismiss the keyboard
