@@ -61,6 +61,26 @@ struct NotificationsView: View {
                         .padding()
                     }
                     .padding()
+                    
+                    Button {
+                        let ale = CKRecord.init(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "87BF288A-BB93-467E-B342-838DE0292B87"))
+                        guard let miID = userViewModel.user?.record.recordID else {
+                            print("No user")
+                            return
+                        }
+                        friendRequestViewModel.createFriendRequest(senderID: ale.recordID, receiverID: miID)
+                    } label: {
+                        Text("Create Friend Request")
+                    }
+                    
+                    Button {
+                        let friendRequest = friendRequestViewModel.friendRequests[0]
+                        friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
+                            userViewModel.makeFriend(withID: friendRequest.sender.recordID)
+                        }
+                    } label: {
+                        Text("Accept Friend Request")
+                    }
                 }
             }
             .toolbarBackground(.visible, for: .navigationBar)

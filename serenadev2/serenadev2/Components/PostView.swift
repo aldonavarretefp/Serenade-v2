@@ -29,8 +29,6 @@ struct PostView: View {
     }
     var sender: User?
     var song: SongModel?
-
-    var action: (() -> Void)?
     
     var body: some View {
         
@@ -203,27 +201,33 @@ struct PostView: View {
                         .lineLimit(2)
                     }
                     
-                    if let receivedAction = action {
-                        
+                    
+                    if let colorPri = song?.priColor, let colorBg = song?.bgColor {
                         Spacer()
                         
                         VStack{
                             Spacer()
                             
-                            Button(action: receivedAction){
+                            Button{
+                                // Aqui poner la logica de abrir en insta
+                                print(colorPri)
+                            } label : {
                                 
                                 Image(systemName: "square.and.arrow.up.circle.fill")
                                     .bold()
                                     .font(.title)
                                     .symbolRenderingMode(.palette)
-                                    .foregroundStyle(Color((song?.priColor)!), Color((song?.bgColor)!))
+                                    .foregroundStyle(Color(colorPri), Color(colorBg))
                                 
                                     .padding([.horizontal, .top])
                                     .padding(.bottom, 12)
                             }
                             .buttonStyle(.plain)
                         }
+                    } else {
+                        
                     }
+                    
                     
                 }
                 .frame(height: 95)

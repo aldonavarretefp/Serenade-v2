@@ -11,7 +11,7 @@ struct ContentItem: Identifiable {
     let id = UUID()
     var isPerson: Bool// True for person, false for song
     var song: SongModel?
-    var user: User? 
+    var user: User?
 }
 
 struct ItemSmall: View {
@@ -31,7 +31,7 @@ struct ItemSmall: View {
     
     var body: some View {
         HStack {
-            if(item.isPerson){
+            if(!item.isPerson){
                 AsyncImage(url: item.song?.artworkUrlSmall) { phase in
                     switch phase {
                     case .empty:
@@ -39,9 +39,12 @@ struct ItemSmall: View {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle())
                             .scaleEffect(1.5) // Adjust the size of the ProgressView as needed
+                            .frame(width: 50, height: 50)
                     case .success(let image):
                         image.resizable()
                             .aspectRatio(contentMode: .fit)
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                            .frame(width: 50, height: 50)
                     case .failure(_):
                         // Displays a placeholder in case of failure to load the image
                         Color.gray
@@ -50,16 +53,10 @@ struct ItemSmall: View {
                         EmptyView()
                     }
                 }
-                .if(item.isPerson) { view in
-                    view.clipShape(Circle())
-                }
-                .if(!item.isPerson) { view in
-                    view.clipShape(RoundedRectangle(cornerRadius: 5))
-                }
-                .frame(width: 50, height: 50)
             } else {
-                // Provide a fallback view or image here if imageUrl is nil
-                Color.gray.frame(width: 50, height: 50)
+                Image(systemName: "person.crop.circle.fill")
+                    .frame(width: 50, height: 50)
+                    .clipShape(Circle())
             }
             
             VStack(alignment: .leading, spacing: 4){
