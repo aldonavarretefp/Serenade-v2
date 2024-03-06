@@ -75,7 +75,6 @@ class PostViewModel: ObservableObject {
             if let posts = await fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
                 self.posts = posts
                 for post in posts {
-                    print("Post: ", post.songId)
                     guard let sender = post.sender else {
                         print("Post has no sender")
                         return
@@ -85,7 +84,9 @@ class PostViewModel: ObservableObject {
                     let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
                     switch result {
                     case .success(let songModel):
-                        self.songsDetails[post.songId] = songModel
+                        DispatchQueue.main.async {
+                            self.songsDetails[post.songId] = songModel
+                        }
                     default:
                         print("ERROR: Couldn't bring song details")
                         break;
@@ -101,18 +102,32 @@ class PostViewModel: ObservableObject {
             let predicate = NSPredicate(format: "sender IN %@ && isActive == 1", userList)
             let recordType = PostRecordKeys.type.rawValue
             
-            CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
-                .receive(on: DispatchQueue.main)
-                .sink { _ in
-                    
-                } receiveValue: { (returnedPosts: [Post]?) in
-                    guard let posts = returnedPosts else {
-                        print("No returned posts userfriends is NIL")
+            do {
+                let posts: [Post] = try await CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+                self.posts = posts
+                for post in posts {
+                    guard let sender = post.sender else {
+                        print("Post has no sender")
                         return
                     }
-                    self.posts = posts
+                    // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
+                    await fetchSenderDetailsAsync(for: sender.recordID)
+                    let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
+                    switch result {
+                    case .success(let songModel):
+                        DispatchQueue.main.async {
+                            self.songsDetails[post.songId] = songModel
+                        }
+                    default:
+                        print("ERROR: Couldn't bring song details")
+                        break;
+                    }
+                    
                 }
-                .store(in: &cancellables)
+            } catch {
+                print("Error fetching posts: \(error)")
+            }
+            
         }
     }
     
@@ -120,7 +135,7 @@ class PostViewModel: ObservableObject {
     
     func fetchAllPosts(user: User) {
         let userID: CKRecord.Reference = CKRecord.Reference(recordID: user.record.recordID, action: .none)
-        if user.friends == nil {
+        if user.friends.count == 0 {
             fetchAllPostsFromUserID(id: user.record.recordID) { (returnedPosts:[Post]?) in
                 guard let posts = returnedPosts else {
                     print("No posts")
@@ -137,7 +152,6 @@ class PostViewModel: ObservableObject {
                 }
             }
         }
-        
         else {
             var userList = user.friends
             userList.append(userID)

@@ -12,6 +12,7 @@ enum selectedTab {
     case music
     case people
 }
+
 struct SearchView: View {
     @Environment(\.colorScheme) private var colorScheme
     @StateObject private var viewModel = SearchViewModel() // Initialize the view model
