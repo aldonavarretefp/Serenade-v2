@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
+import CloudKit
 
-var sebastian = User(name: "Sebastian Leon", email: "mail@domain.com", streak: 15, profilePicture: "", isActive: true, tagName: "sebatoo")
+var sebastian = User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", friends: [], posts: [], streak: 15, profilePicture: "", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "B5E07FDA-EB68-4C72-B547-ACE39273D662")))
 
 struct ProfileBar: View {
     
@@ -17,6 +18,8 @@ struct ProfileBar: View {
     @State var isFriendRequestSent: Bool
     @State var isCurrentUser: Bool
     @State var isFriend: Bool?
+    
+    @EnvironmentObject var userViewModel: UserViewModel
     
     var user: User
     
@@ -88,12 +91,12 @@ struct ProfileBar: View {
                     }
                     HStack {
                         VStack {
-                            
+                            Text(user.posts != nil ? String(user.posts!.count) : "0")
                             Text(LocalizedStringKey("Posts"))
                         }
                         .font(.caption)
                         VStack {
-                            
+                            Text(String(user.friends.count))
                             Text(LocalizedStringKey("Friends"))
                         }
                         .font(.caption)
@@ -103,7 +106,7 @@ struct ProfileBar: View {
                             if !isFriend! {
                                 if !isFriendRequestSent {
                                     Button(action: {
-                                        //                                    sendFriendRequest()
+                                        
                                         isFriendRequestSent = true
                                     }, label: {
                                         ZStack {
@@ -140,8 +143,13 @@ struct ProfileBar: View {
                                 })
                                 .sheet(isPresented: $isUnfriendSheetDisplayed, content: {
                                     
-                                    ConfirmationSheet(titleStart: LocalizedStringKey("UnfriendTitleStart"), titleEnd: LocalizedStringKey("UnfriendTitleEnd"), user: "alex10liva", descriptionStart: LocalizedStringKey("UnfriendDescriptionStart"), descriptionEnd: LocalizedStringKey("UnfriendDescriptionEnd"), buttonLabel: "DeleteFriend"){
-                                        isFriend = false
+                                    ConfirmationSheet(titleStart: LocalizedStringKey("UnfriendTitleStart"), titleEnd: LocalizedStringKey("UnfriendTitleEnd"), user: user.tagName, descriptionStart: LocalizedStringKey("UnfriendDescriptionStart"), descriptionEnd: LocalizedStringKey("UnfriendDescriptionEnd"), buttonLabel: "DeleteFriend"){
+                                        guard let currentUser = userViewModel.user else {
+                                            print("ERROR: Couldn't unmake friends")
+                                            return
+                                        }
+                                        let friendID = user.record.recordID
+                                        userViewModel.unmakeFriend(withID: friendID)
                                     }
                                     .presentationDetents([.fraction(0.3)])
                                 })

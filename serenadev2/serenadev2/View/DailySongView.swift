@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct DailySongView: View {
     
@@ -18,6 +19,9 @@ struct DailySongView: View {
     @State private var isPresentingSearchSong = false //for modal presentation of SearchSong
     
     @State var song: SongModel? // Optional to handle the case where no song is selected
+    
+    @EnvironmentObject var userViewModel: UserViewModel
+    @EnvironmentObject var postViewModel: PostViewModel
     
     var isSongFromDaily : Bool
     
@@ -36,7 +40,7 @@ struct DailySongView: View {
                         
                         if isSongFromDaily {
                             Button(action: {
-                                // This will toggle the state variable to present the sheet
+                                
                                 isPresentingSearchSong = true
                             }) {
                                 VStack(alignment: .leading) {
@@ -120,7 +124,20 @@ struct DailySongView: View {
                     // Enable the 'Daily' button only if a song is selected
                     
                     ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: song == nil) {
-                        print("Shared daily")
+                        
+                        guard let user = userViewModel.user, let song = song else {
+                            print("ERROR: User does not exist")
+                            return
+                        }
+                        let reference = CKRecord.Reference(recordID: user.record.recordID, action: .none)
+                        let post = Post(postType: .daily, sender: reference, caption: self.caption,  songId: song.id, date: Date.now, isAnonymous: false, isActive: true)
+                        
+                        postViewModel.createAPost(post: post) {
+                            userViewModel.addPostToUser(sender: user, post: post)
+                            self.dismiss()
+                            print("Shared daily")
+                        }
+                        
                     }
                     
                 }
@@ -204,10 +221,6 @@ struct CaptionView: View {
     }
 }
 
-
-
-
-
 struct SelectSong: View {
     @Environment(\.colorScheme) private var colorScheme
     var action: () -> Void
@@ -235,29 +248,6 @@ struct SelectSong: View {
         }
         
         .foregroundColor(.white) // The color of the content (icon and text)
-    }
-}
-
-
-
-
-//MARK: Previews
-
-// Define a wrapper view for preview purposes
-
-
-
-struct DailyFromSongView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            // Preview without a song
-            // DailySongView()
-            // .previewDisplayName("No Song Selected")
-            
-            // Preview with a song
-            // DailySongView(song: Song(id: "1", title: "See you again (feat. Kali Uchis)", artist: "Tyler, The Creator, Kali Uchis", album: "Example Album", coverArt: "https://i.scdn.co/image/ab67616d0000b2738940ac99f49e44f59e6f7fb3"), isSongFromDaily: true)
-            // .previewDisplayName("With Song Selected")
-        }
     }
 }
 

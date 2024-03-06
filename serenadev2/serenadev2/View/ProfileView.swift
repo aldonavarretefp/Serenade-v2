@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct ProfileView: View {
     
@@ -19,6 +20,24 @@ struct ProfileView: View {
     // Opacity variables for the button and the header
     @State var headerOpacity: Double = 1.0
     
+    @EnvironmentObject var postVM: PostViewModel
+    @EnvironmentObject var userVM: UserViewModel
+    
+    @State var posts: [Post] = []
+    
+    var user: User?
+    
+    func isFriendCheck(user: User) -> Bool {
+        if self.user != nil {
+            if userVM.user!.friends.contains(where: { $0 == user.record.recordID }) {
+                return true
+            } else {
+                return false
+            }
+        }
+        else { return false }
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
@@ -26,26 +45,28 @@ struct ProfileView: View {
                     .ignoresSafeArea()
                 
                 VStack(spacing: 0){
-                    
-                    ScrollView (.vertical, showsIndicators: false){
+                    ScrollView (.vertical, showsIndicators: false) {
                         VStack(spacing: 15) {
-                            PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(
-                                id: "1",
-                                title: "Robbers",
-                                artists: "The 1975",
-                                artworkUrlSmall: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/100x100bb.jpg"), artworkUrlMedium: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/500x500bb.jpg"),
-                                artworkUrlLarge: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/1000x1000bb.jpg"),
-                                bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
-                                priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),
-                                secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
-                                terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
-                                quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
-                                previewUrl: URL(string: "https://example.com/preview.mp3"), albumTitle: "",
-                                duration: 295.502,
-                                composerName: "Greg Kurstin & Adele Adkins",
-                                genreNames: ["Pop"],
-                                releaseDate: Date(timeIntervalSince1970: 1445558400))), profileImg: "AfterHoursCoverArt")
-                            
+//                            ForEach(posts) { post in
+//                                PostView(post: post)
+//                            }
+                            if postVM.posts.isEmpty {
+                                ContentUnavailableView(label: {
+                                    Label(LocalizedStringKey("No posts"), systemImage: "music.note")
+                                }, description: {
+                                    Text(LocalizedStringKey("Try posting your first one!"))
+                                })
+                            } else {
+                                ForEach(postVM.posts, id: \.self) { post in
+                                    // Ensure PostView can handle nil or incomplete data gracefully
+                                    if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID], let song = postVM.songsDetails[post.songId] {
+                                        PostView(post: post, sender: senderUser, song: song)
+                                    }
+                                    else {
+                                        PostView(post: post)
+                                    }
+                                }
+                            }
                         }
                         .padding(.top, headerHeight)
                         .padding(.bottom)
@@ -92,29 +113,107 @@ struct ProfileView: View {
                         }
                     }
                     .coordinateSpace(name: "SCROLL")
-                    .overlay(alignment: .top){
-                        ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: sebastian)
-                            .opacity(headerOpacity)
-                            .padding(.top, safeArea().top)
-                        //                            .background(colorScheme == .dark ? .black : .white)
-                            .padding(.bottom)
-                            .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
-                        
-                        // Get the header height
-                            .overlayPreferenceValue(HeaderBoundsKey.self){ value in
-                                GeometryReader{ proxy in
-                                    if let anchor = value {
-                                        Color.clear
-                                            .onAppear(){
-                                                // MARK: - Retreiving rect using proxy
-                                                headerHeight = proxy[anchor].height
-                                            }
+                    .overlay(alignment: .top) {
+                        if let user = self.user {
+                            var isFriend = isFriendCheck(user: user)
+                            ProfileBar(isFriendRequestSent: false, isCurrentUser: user == userVM.user, isFriend: isFriend, user: user)
+                                .opacity(headerOpacity)
+                                .padding(.top, safeArea().top)
+                                .padding(.bottom)
+                                .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
+                            // Get the header height
+                                .overlayPreferenceValue(HeaderBoundsKey.self){ value in
+                                    GeometryReader{ proxy in
+                                        if let anchor = value {
+                                            Color.clear
+                                                .onAppear(){
+                                                    // MARK: - Retreiving rect using proxy
+                                                    headerHeight = proxy[anchor].height
+                                                }
+                                        }
                                     }
                                 }
-                            }
-                            .offset(y: -headerOffset < headerHeight ? headerOffset : (headerOffset < 0 ? headerOffset : 0))
+                                .offset(y: -headerOffset < headerHeight ? headerOffset : (headerOffset < 0 ? headerOffset : 0))
+                        }
+                        else {
+                            ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: User(name: "", tagName: "", email: "", streak: 0, profilePicture: "", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: CKRecord.ID(recordName: "placeholder"))))
+                                .opacity(headerOpacity)
+                                .padding(.top, safeArea().top)
+                            
+                                .padding(.bottom)
+                                .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
+                            
+                            
+                            // Get the header height
+                                .overlayPreferenceValue(HeaderBoundsKey.self){ value in
+                                    GeometryReader{ proxy in
+                                        if let anchor = value {
+                                            Color.clear
+                                                .onAppear(){
+                                                    // MARK: - Retreiving rect using proxy
+                                                    headerHeight = proxy[anchor].height
+                                                }
+                                        }
+                                    }
+                                }
+                                .offset(y: -headerOffset < headerHeight ? headerOffset : (headerOffset < 0 ? headerOffset : 0))
+                        }
                     }
                     .ignoresSafeArea(.all, edges: .top)
+                    .refreshable {
+                        if self.user == nil {
+                            print("USER IS NIL")
+                            guard let user = userVM.user else {
+                                print("NO USER FROM PROFILE")
+                                return
+                            }
+                            if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
+                                postVM.posts = posts
+                                for post in posts {
+                                    print("Post: ", post.songId)
+                                    guard let sender = post.sender else {
+                                        print("Post has no sender")
+                                        return
+                                    }
+                                    // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
+                                    await postVM.fetchSenderDetailsAsync(for: sender.recordID)
+                                    let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
+                                    switch result {
+                                    case .success(let songModel):
+                                        postVM.songsDetails[post.songId] = songModel
+                                    default:
+                                        print("ERROR: Couldn't bring song details")
+                                        break;
+                                    }
+                                    
+                                }
+                            }
+                        }
+                        else {
+                            let user = self.user
+                            if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user!.record.recordID) {
+                                postVM.posts = posts
+                                for post in posts {
+                                    print("Post: ", post.songId)
+                                    guard let sender = post.sender else {
+                                        print("Post has no sender")
+                                        return
+                                    }
+                                    // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
+                                    await postVM.fetchSenderDetailsAsync(for: sender.recordID)
+                                    let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
+                                    switch result {
+                                    case .success(let songModel):
+                                        postVM.songsDetails[post.songId] = songModel
+                                    default:
+                                        print("ERROR: Couldn't bring song details")
+                                        break;
+                                    }
+                                    
+                                }
+                            }
+                        }
+                    }
                 }
             }
             // This overlay is to show a bar behind the status bar
@@ -124,10 +223,66 @@ struct ProfileView: View {
                     .ignoresSafeArea(edges: .top)
                     .frame(height: 0)
             }
+            .task {
+                if self.user == nil {
+                    print("USER IS NIL")
+                    guard let user = userVM.user else {
+                        print("NO USER FROM PROFILE")
+                        return
+                    }
+                    if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
+                        postVM.posts = posts
+                        for post in posts {
+                            print("Post: ", post.songId)
+                            guard let sender = post.sender else {
+                                print("Post has no sender")
+                                return
+                            }
+                            // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
+                            await postVM.fetchSenderDetailsAsync(for: sender.recordID)
+                            let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
+                            switch result {
+                            case .success(let songModel):
+                                postVM.songsDetails[post.songId] = songModel
+                            default:
+                                print("ERROR: Couldn't bring song details")
+                                break;
+                            }
+                            
+                        }
+                    }
+                }
+                else {
+                    let user = self.user
+                    if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user!.record.recordID) {
+                        postVM.posts = posts
+                        for post in posts {
+                            print("Post: ", post.songId)
+                            guard let sender = post.sender else {
+                                print("Post has no sender")
+                                return
+                            }
+                            // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
+                            await postVM.fetchSenderDetailsAsync(for: sender.recordID)
+                            let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
+                            switch result {
+                            case .success(let songModel):
+                                postVM.songsDetails[post.songId] = songModel
+                            default:
+                                print("ERROR: Couldn't bring song details")
+                                break;
+                            }
+                            
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
-#Preview {
-    ProfileView()
-}
+//#Preview {
+//    ProfileView()
+//}
+
+

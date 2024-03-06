@@ -68,37 +68,4 @@ class SongHistoryManager: ObservableObject {
             UserDefaults.standard.set(history, forKey: "SongHistory")
         }
     }
-    
-    func fetchSongById(_ id: String) async throws -> SongModel {
-        let status = await MusicAuthorization.request()
-        switch status {
-        case .authorized:
-            let request = MusicCatalogResourceRequest<Song>(matching: \.id, equalTo: MusicItemID(rawValue: id))
-            let response = try await request.response()
-            guard let song = response.items.first else {
-                throw NSError(domain: "SongService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Song not found."])
-            }
-            return SongModel(
-                id: song.id.rawValue,
-                title: song.title,
-                artists: song.artistName,
-                artworkUrlSmall: song.artwork?.url(width: 100, height: 100),
-                artworkUrlMedium: song.artwork?.url(width: 500, height: 500),
-                artworkUrlLarge: song.artwork?.url(width: 1000, height: 1000),
-                bgColor: song.artwork?.backgroundColor,
-                priColor: song.artwork?.primaryTextColor,
-                secColor: song.artwork?.secondaryTextColor,
-                terColor: song.artwork?.tertiaryTextColor,
-                quaColor: song.artwork?.quaternaryTextColor,
-                previewUrl: song.previewAssets?.first?.url,
-                albumTitle: song.albumTitle,
-                duration: song.duration,
-                composerName: song.composerName,
-                genreNames: song.genreNames,
-                releaseDate: song.releaseDate
-            )
-        default:
-            throw NSError(domain: "SongService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Not authorized to access MusicKit"])
-        }
-    }
 }

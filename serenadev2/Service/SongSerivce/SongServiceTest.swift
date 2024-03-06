@@ -11,12 +11,13 @@ class SongViewModelTest: ObservableObject {
     @Published var song: SongModel?
     @Published var error: Error?
     
-    func fetchSong(id: String) {
+    func fetchSong(id: String, completionHandler: @escaping (SongModel) -> Void) {
         Task {
             do {
                 let fetchedSong = try await SongService.fetchSongById(id)
                 DispatchQueue.main.async {
                     self.song = fetchedSong
+                    completionHandler(fetchedSong)
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -38,7 +39,9 @@ struct SongServiceTest: View {
                 .padding()
 
             Button("Fetch Song") {
-                viewModel.fetchSong(id: inputId)
+                viewModel.fetchSong(id: inputId) { _ in
+                    
+                }
             }
             .padding()
 

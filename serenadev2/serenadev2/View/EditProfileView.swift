@@ -11,11 +11,14 @@ struct EditProfileView: View {
     // MARK: - Properties
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var userVM: UserViewModel
     var user: User
     
     // MARK: - Properties
     @State private var name: String = ""
-    @State private var username: String = ""
+    @State private var tagName: String = ""
+    @State private var error: String = ""
+    @State private var lastTagName: String = ""
     
     // MARK: - Body
     var body: some View {
@@ -63,26 +66,39 @@ struct EditProfileView: View {
                             }
                             .frame(maxWidth: 100)
                             Spacer()
-                            TextField("New username",text: $username)
+                            TextField("New username",text: $tagName)
+                                .autocapitalization(.none)
                         }
                         Divider()
+                        if self.error != "" && tagName == self.lastTagName {
+                            Text(error)
+                                .foregroundStyle(.red)
+                        }
                     }
                     .padding(.vertical)
                     Spacer()
-                    Button{
-//                        saveUserChangesToCloudKit()
-                    } label: {
-                        Spacer()
-                        Image(systemName: "checkmark.circle.fill")
-                        Text(LocalizedStringKey("SaveChanges"))
-                            .font(.subheadline)
-                        Spacer()
+                    ActionButton(label: "Save changes", symbolName: "checkmark.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagName != "" && name != "" ? false : true) {
+                        guard var newUser = userVM.user else {
+                            return
+                        }
+                        let trimmedTagName: String = tagName.trimmingCharacters(in: .whitespacesAndNewlines)
+                        lastTagName = trimmedTagName
+                        newUser.name = name
+                        newUser.tagName = trimmedTagName
+                        userVM.searchUsers(tagname: trimmedTagName) { users in
+                            if let users, users.count > 0 {
+                                let user = users[0]
+                                if user == self.user {
+                                    print("user is the same")
+                                } else {
+                                    self.error = "Sorry! \(trimmedTagName) is already in use."
+                                }
+                                return
+                            }
+                            userVM.updateUser(updatedUser: newUser)
+                            self.dismiss()
+                        }
                     }
-                    .padding()
-                    .foregroundStyle(.white)
-                    .background(.accent)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .padding(.top, 12)
                 }
                 .padding()
             }
@@ -90,7 +106,7 @@ struct EditProfileView: View {
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 name = user.name 
-                username = user.tagName
+                tagName = user.tagName
             }
         }
     }

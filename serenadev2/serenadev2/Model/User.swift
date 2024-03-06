@@ -10,70 +10,109 @@ import CloudKit
 
 enum UserRecordKeys: String {
     case type = "User"
+    case accountID
     case name
-    case username
+    case tagName
     case email
     case friends
     case posts
     case streak
-    case queue
     case profilePicture
-    case notifications
     case isActive
-    case tagName
-    case friendRequestSent
-    case friendRequestReceived
 }
 
-struct User: Identifiable {
-    var id: CKRecord.ID?
+struct User: Hashable, CloudKitableProtocol {
+    var accountID: String?
     var name: String
+    var tagName: String
     var email: String
-    var friends: [CKRecord.Reference]?
+    var friends: [CKRecord.Reference] = []
     var posts: [CKRecord.Reference]?
     var streak: Int
     var profilePicture: String
     var isActive: Bool
-    var tagName: String
-    var friendRequestSent: [CKRecord.Reference]?
-    var friendRequestReceived: [CKRecord.Reference]?
+    var record: CKRecord
 }
 
 extension User {
     init?(record: CKRecord) {
-        guard let name = record[UserRecordKeys.name.rawValue] as? String,
-                let email = record[UserRecordKeys.email.rawValue] as? String,
-              let friends = record[UserRecordKeys.friends.rawValue] as? [CKRecord.Reference]?,
-                let posts = record[UserRecordKeys.posts.rawValue] as? [CKRecord.Reference]?,
-                let streak = record[UserRecordKeys.streak.rawValue] as? Int,
-                let profilePicture = record[UserRecordKeys.profilePicture.rawValue] as? String,
-                let isActive = record[UserRecordKeys.isActive.rawValue] as? Bool,
-              let tagName = record[UserRecordKeys.tagName.rawValue] as? String,
-              let friendRequestSent = record[UserRecordKeys.friendRequestSent.rawValue] as? [CKRecord.Reference]?,
-              let friendRequestReceived = record[UserRecordKeys.friendRequestReceived.rawValue] as? [CKRecord.Reference]? else {
+        guard let accountID = record[UserRecordKeys.accountID.rawValue] as? String? else {
             return nil
         }
-        
-        self.init(id: record.recordID, name: name, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, tagName: tagName, friendRequestSent: friendRequestSent, friendRequestReceived: friendRequestReceived)
+        guard let tagName = record[UserRecordKeys.tagName.rawValue] as? String else {
+            print("Didn't find property tagName")
+            return nil
+        }
+        guard let name = record[UserRecordKeys.name.rawValue] as? String else {
+            print("Didn't find property name")
+            return nil
+        }
+        guard let email = record[UserRecordKeys.email.rawValue] as? String else {
+            print("Didn't find property email")
+            return nil
+        }
+        guard let friends = record[UserRecordKeys.friends.rawValue] as? [CKRecord.Reference] else {
+            print("Didn't find property friends")
+            return nil
+        }
+        guard let posts = record[UserRecordKeys.posts.rawValue] as? [CKRecord.Reference]? else {
+            print("Didn't find property posts")
+            return nil
+        }
+        guard let streak = record[UserRecordKeys.streak.rawValue] as? Int else {
+            print("Didn't find property streak")
+            return nil
+        }
+        guard let profilePicture = record[UserRecordKeys.profilePicture.rawValue] as? String else {
+            print("Didn't find property profilePicture")
+            return nil
+        }
+        guard let isActive = record[UserRecordKeys.isActive.rawValue] as? Bool else {
+            print("Didn't find property isActive")
+            return nil
+        }
+        self.init(accountID: accountID, name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, record: record)
     }
-}
-
-extension User {
-    var record: CKRecord {
+    
+    init?(accountID: String?, name: String, tagName: String, email: String, friends: [CKRecord.Reference] = [], posts: [CKRecord.Reference]?, streak: Int, profilePicture: String, isActive: Bool) {
         let record = CKRecord(recordType: UserRecordKeys.type.rawValue)
-        
+        record[UserRecordKeys.accountID.rawValue] = accountID
         record[UserRecordKeys.name.rawValue] = name
+        record[UserRecordKeys.tagName.rawValue] = tagName
         record[UserRecordKeys.email.rawValue] = email
         record[UserRecordKeys.friends.rawValue] = friends
         record[UserRecordKeys.posts.rawValue] = posts
         record[UserRecordKeys.streak.rawValue] = streak
         record[UserRecordKeys.profilePicture.rawValue] = profilePicture
         record[UserRecordKeys.isActive.rawValue] = isActive
-        record[UserRecordKeys.tagName.rawValue] = tagName
-        record[UserRecordKeys.friendRequestSent.rawValue] = friendRequestSent
-        record[UserRecordKeys.friendRequestReceived.rawValue] = friendRequestReceived
-        
-        return record
-        
+        self.init(record: record)
     }
+}
+
+extension User {
+    mutating func update(newUser: User) -> User? {
+        
+        self.accountID = newUser.accountID
+        self.name = newUser.name
+        self.tagName = newUser.tagName
+        self.email = newUser.email
+        self.friends = newUser.friends
+        self.posts = newUser.posts
+        self.streak = newUser.streak
+        self.profilePicture = newUser.profilePicture
+        self.isActive = newUser.isActive
+        
+        let record = self.record
+        record[UserRecordKeys.accountID.rawValue] = newUser.accountID
+        record[UserRecordKeys.name.rawValue] = newUser.name
+        record[UserRecordKeys.tagName.rawValue] = newUser.tagName
+        record[UserRecordKeys.email.rawValue] = newUser.email
+        record[UserRecordKeys.friends.rawValue] = newUser.friends
+        record[UserRecordKeys.posts.rawValue] = newUser.posts
+        record[UserRecordKeys.streak.rawValue] = newUser.streak
+        record[UserRecordKeys.profilePicture.rawValue] = newUser.profilePicture
+        record[UserRecordKeys.isActive.rawValue] = newUser.isActive
+        return User(record: record)
+    }
+    
 }

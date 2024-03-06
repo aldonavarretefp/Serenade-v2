@@ -15,6 +15,9 @@ struct SettingsView: View {
     @State var isInfoSheetDisplayed: Bool = false
     @State var isLogOutSheetDisplayed: Bool = false
     @State var isDeleteAccountSheetDisplayed: Bool = false
+
+    @EnvironmentObject var userViewModel: UserViewModel
+    
     
     var body: some View {
         NavigationStack {
@@ -23,14 +26,17 @@ struct SettingsView: View {
                     .ignoresSafeArea()
                 VStack(spacing: 10) {
                     GroupBox {
-                        NavigationLink(destination: EditProfileView(user: sebastian).toolbarRole(.editor), label: {
-                            Image(systemName: "square.and.pencil")
-                                .foregroundStyle(.accent)
-                            Text(LocalizedStringKey("EditProfile"))
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.callout)
-                        })
+                        if let user = userViewModel.user {
+                            NavigationLink(destination: EditProfileView(user: user).toolbarRole(.editor), label: {
+                                Image(systemName: "square.and.pencil")
+                                    .foregroundStyle(.accent)
+                                Text(LocalizedStringKey("EditProfile"))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.callout)
+                            })
+                        }
+                        
                     }
                     .backgroundStyle(.card)
                     .foregroundStyle(.primary)
@@ -60,6 +66,8 @@ struct SettingsView: View {
                             
                             ConfirmationSheet(titleStart: LocalizedStringKey("LogOut"), descriptionStart: LocalizedStringKey("LogOutMessage"), buttonLabel: LocalizedStringKey("LogOut")){
 //                                isFriend = false
+                            
+                                userViewModel.logOut()
                             }
                             .presentationDetents([.fraction(0.3)])
                         })

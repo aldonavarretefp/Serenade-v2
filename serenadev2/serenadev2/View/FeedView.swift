@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CloudKit
 
 // MARK: - Swipe direction
 enum SwipeDirection{
@@ -14,7 +15,30 @@ enum SwipeDirection{
     case none
 }
 
+let songObj: SongModel = SongModel(
+    id: "1",
+    title: "Hello",
+    artists: "Adele",
+    artworkUrlSmall: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/100x100bb.jpg"), artworkUrlMedium: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/500x500bb.jpg"),
+    artworkUrlLarge: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/1000x1000bb.jpg"),
+    bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
+    priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),
+    secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
+    terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
+    quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
+    previewUrl: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5e/46/de/5e46de64-70d7-01a9-438f-8395a0e41b58/mzaf_15694838464598234027.plus.aac.p.m4a"), albumTitle: "",
+    duration: 295.502,
+    composerName: "Greg Kurstin & Adele Adkins",
+    genreNames: ["Pop"],
+    releaseDate: Date(timeIntervalSince1970: 1445558400))
+
 struct FeedView: View {
+    @State var userId: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? "")
+    @State var userName: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userName) ?? "")
+    @State var userEmail: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? "")
+    
+    @EnvironmentObject var userViewModel: UserViewModel
+    @EnvironmentObject var postViewModel: PostViewModel
     
     // MARK: - Environment properties
     // Color scheme of the phone
@@ -37,43 +61,47 @@ struct FeedView: View {
     @State var isDailySheetOpened: Bool = false
     
     // Posts array to see some hardcoded posts
-    let posts: [PostView] = [
-        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: SongModel(
-            id: "1",
-            title: "Hello",
-            artists: "Adele",
-            artworkUrlSmall: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/100x100bb.jpg"), artworkUrlMedium: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/500x500bb.jpg"),
-            artworkUrlLarge: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/1000x1000bb.jpg"),
-            bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
-            priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),
-            secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
-            terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
-            quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
-            previewUrl: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5e/46/de/5e46de64-70d7-01a9-438f-8395a0e41b58/mzaf_15694838464598234027.plus.aac.p.m4a"), albumTitle: "",
-            duration: 295.502,
-            composerName: "Greg Kurstin & Adele Adkins",
-            genreNames: ["Pop"],
-            releaseDate: Date(timeIntervalSince1970: 1445558400))), profileImg: "AfterHoursCoverArt")
+    var postsViews: [PostView] = [
+        
+//        PostView(post: Post(postType: .daily, caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isActive: true), song: songObj),
+//        PostView(post: Post(postType: .daily, caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isActive: true), song: songObj)
+        
     ]
+    
     
     // MARK: - Body
     var body: some View {
         NavigationStack{
-            ZStack (alignment: .top){
-                // Background of the view
+            ZStack (alignment: .top) {
                 Color.viewBackground
                     .ignoresSafeArea()
-                
-                ZStack (alignment: .bottom){
-                    
-                    // Scrollview with all the posts
+                ZStack (alignment: .bottom) {
                     ScrollView (.vertical, showsIndicators: false){
-                        VStack (spacing: 15){
-                            
-                            ForEach(posts, id: \.post.id) { postView in
-                                PostView(post: postView.post, profileImg: postView.profileImg)
-                                
+                        VStack (spacing: 15) {
+                            ForEach(self.postsViews, id: \.post) { postView in
+                                postView
                             }
+                            
+                            if postViewModel.posts.isEmpty {
+                                ContentUnavailableView(label: {
+                                    Label(LocalizedStringKey("No posts"), systemImage: "music.note")
+                                }, description: {
+                                    Text(LocalizedStringKey("Try posting your first one!"))
+                                })
+                            } else {
+                                ForEach(postViewModel.posts, id: \.self) { post in
+                                    // Ensure PostView can handle nil or incomplete data gracefully
+                                    if let sender = post.sender, let senderUser = postViewModel.senderDetails[sender.recordID], let song = postViewModel.songsDetails[post.songId] {
+                                        PostView(post: post, sender: senderUser, song: song){
+                                            print(song.title) // Aqui es donde se pone lo de instagram
+                                        }
+                                    }
+                                    else {
+                                        PostView(post: post)
+                                    }
+                                }
+                            }
+                            
                         }
                         .padding(.top, headerHeight)
                         .padding(.bottom)
@@ -122,7 +150,12 @@ struct FeedView: View {
                             }
                         }
                         .padding(.horizontal)
-                        
+                        .onChange(of: postViewModel.posts) {
+                            print("changed posts")
+                        }
+                        .onChange(of: postViewModel.senderDetails) {
+                            print("changed sender details")
+                        }
                         // This spacer puts space at the bottom of the list if the post daily button is shown
                         Spacer()
                             .frame(height: isDailyPosted ? 0 : 80)
@@ -224,9 +257,21 @@ struct FeedView: View {
                 }
             }
         }
+        .task {
+            let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? ""
+            print("UserID: ", userID)
+            Task {
+                if let user = userViewModel.user {
+                    print("Fetching posts...")
+                    await postViewModel.fetchAllPostsAsync(user: user)
+                }
+            }
+            
+        }
     }
 }
 
 #Preview {
     FeedView()
 }
+
