@@ -112,7 +112,7 @@ struct DailySongView: View {
                             
                             Text("\(caption.count)/\(characterLimit)")
                                 .font(.callout)
-                                .foregroundColor(caption.count < characterLimit ? (colorScheme == .dark ? .white : .black) : .red)
+                                .foregroundColor(caption.count < characterLimit ? .callout : .red)
                         }
                         CaptionView(caption: $caption, characterLimit: $characterLimit, isSongFromDaily: false)
                     }
