@@ -71,7 +71,7 @@ struct UserDetailsView: View {
                     
                     Spacer()
                     
-                    ActionButton(label: "Create account", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: false){
+                    ActionButton(label: "Create account", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname != "" ? false : true){
                         saveUserDetails()
                     }
                 }
