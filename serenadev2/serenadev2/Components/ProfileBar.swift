@@ -23,7 +23,7 @@ struct ProfileBar: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
     
-    var user: User
+    @State var user: User
     @State var friendRequest: FriendRequest? = nil
     
     var body: some View {
@@ -215,6 +215,11 @@ struct ProfileBar: View {
                 if(!resultFriendRequest.isEmpty){
                     self.friendRequest = resultFriendRequest.first
                     isFriendRequestSent = true
+                }
+            }
+            if userViewModel.user != nil {
+                if user.accountID == userViewModel.user!.accountID {
+                    user = userViewModel.user!
                 }
             }
         }
