@@ -71,7 +71,7 @@ struct PostView: View {
                         Text(sender.tagName).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
                     }
                     else {
-                        Text("user").fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
+                        Text(LocalizedStringKey("LoadingSender")).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
                     }
                     Spacer()
                     formattedDate
@@ -193,9 +193,9 @@ struct PostView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10.0))
                             .padding()
                         VStack(alignment: .leading) {
-                            Text("Loading song")
+                            Text(LocalizedStringKey("LoadingSongTitle"))
                                 .fontWeight(.bold)
-                            Text("...")
+                            Text(LocalizedStringKey("LoadingSongArtist"))
                                 .font(.footnote)
                                 .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
                         }

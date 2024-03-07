@@ -17,6 +17,9 @@
 "Yesterday" = "Ieri";
 "TypePostDaily" = " canzone del giorno";
 "ShareDailyButton" = "Condividi canzone del giorno";
+"LoadingSender" = "utente";
+"LoadingSongTitle" = "Canzone in caricamento";
+"LoadingSongArtist" = "...";
 
 // Notifications View
 "Notifications" = "Notifiche";

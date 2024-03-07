@@ -54,8 +54,7 @@ struct ProfileViewFromSearch: View {
                             }
                         }
                     }
-                    .padding(.bottom)
-                    .padding(.horizontal)
+                    .padding()
                 }
                 .ignoresSafeArea(.all, edges: .top)
 //                .ignoresSafeArea(.all)
