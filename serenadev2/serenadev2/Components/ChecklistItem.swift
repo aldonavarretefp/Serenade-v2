@@ -9,9 +9,11 @@ import SwiftUI
 
 struct ChecklistItem: View {
     
-    @State var selected: Bool
+    @Binding var selected: Bool
     var image: String?
     var label: String?
+    var key: String
+    var disableIfLastOne: Bool
     
     var body: some View {
         GroupBox {
@@ -39,11 +41,23 @@ struct ChecklistItem: View {
         .backgroundStyle(.card)
         .padding(.vertical, 3)
         .onTapGesture {
+            if selected && disableIfLastOne && countSelectedItems() <= 1 {
+                return // No deshabilitar si solo queda una opción activa
+            }
             selected.toggle()
+            UserDefaults.standard.set(selected, forKey: key)
         }
+    }
+    
+    private func countSelectedItems() -> Int {
+        let selectedAppleMusic = UserDefaults.standard.bool(forKey: "selectedAppleMusic") ? 1 : 0
+        let selectedSpotify = UserDefaults.standard.bool(forKey: "selectedSpotify") ? 1 : 0
+        let selectedYouTubeMusic = UserDefaults.standard.bool(forKey: "selectedYouTubeMusic") ? 1 : 0
+        return selectedAppleMusic + selectedSpotify + selectedYouTubeMusic
     }
 }
 
 #Preview {
-    ChecklistItem(selected: false, image: "AppleMusicAppIcon", label: "Apple Music")
+    
+    ChecklistItem(selected: .constant(true), image: "AppleMusicAppIcon", label: "Apple Music", key: "selectedAppleMusic", disableIfLastOne: true)
 }
