@@ -36,7 +36,7 @@ class UserViewModel: ObservableObject {
             guard let user = returnedUser else {
                 // User does not exists
                 //                let user = User(name: fullName, tagName: "", email: email, streak: 0, profilePicture: "", isActive: true, record: .init(recordType: UserRecordKeys.type.rawValue))
-                guard let user = User(accountID: userID, name: fullName, tagName: "", email: email, posts: .init(), streak: 0, profilePicture: "", isActive: true) else {
+                guard let user = User(accountID: userID, name: fullName, tagName: "", email: email, posts: .init(), streak: 0, profilePicture: "", isActive: true, profilePictureAsset: nil) else {
                     return
                 }
                 self.createUser(user: user)
@@ -118,7 +118,7 @@ class UserViewModel: ObservableObject {
             if(!returnedUsers.isEmpty){
                 return
             } else {
-                guard let newUser = User(accountID: user.accountID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive) else { return }
+                guard let newUser = User(accountID: user.accountID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, profilePictureAsset: nil) else { return }
                 
                 CloudKitUtility.add(item: newUser) { result in
                     switch result {

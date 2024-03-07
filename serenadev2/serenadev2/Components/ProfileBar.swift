@@ -29,19 +29,32 @@ struct ProfileBar: View {
         NavigationStack {
             HStack(alignment: .top) {
                 ZStack(alignment: .top) {
-                    if user.profilePicture != "" {
-                        Image(user.profilePicture)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 80)
-                            .clipShape(Circle())
+                    if let asset = user.profilePictureAsset {
+                        AsyncImage(url: asset.fileURL) { phase in
+                            switch phase {
+                            case .success(let img):
+                                img
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 80, height: 80)
+                                    .clipShape(Circle())
+
+                            default:
+                                Image(systemName: "person.circle.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 80, height: 80)
+                                    .clipShape(Circle())
+                            }
+                        }
                     } else {
-                        Image(systemName: "person.crop.circle.fill")
+                        Image(systemName: "person.circle.fill")
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 80)
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 80, height: 80)
                             .clipShape(Circle())
                     }
+                    
                     VStack {
                         Spacer()
                         HStack {

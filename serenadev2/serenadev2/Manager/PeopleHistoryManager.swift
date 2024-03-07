@@ -32,10 +32,6 @@ class PeopleHistoryManager: ObservableObject {
             history.removeLast()
         }
         
-        for user in history {
-            print(user)
-        }
-        
         // Save the updated history to UserDefaults
         UserDefaults.standard.set(history, forKey: "PeopleHistory")
     }
