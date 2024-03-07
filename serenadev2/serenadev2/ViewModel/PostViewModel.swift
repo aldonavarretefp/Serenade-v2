@@ -27,10 +27,6 @@ class PostViewModel: ObservableObject {
             if let user = User(record: record) {
                 DispatchQueue.main.async {
                     self?.senderDetails[recordID] = user
-                    if let senderDetails = self?.senderDetails {
-                        print("Sender details", senderDetails)
-                    }
-                    
                 }
             }
         }
@@ -42,12 +38,12 @@ class PostViewModel: ObservableObject {
         do {
             let record = try await CKContainer.default().publicCloudDatabase.record(for: recordID)
             if let user = User(record: record) {
-                await MainActor.run {
-                    DispatchQueue.main.async {
-                        self.senderDetails[recordID] = user
-                        print("Sender details", self.senderDetails)
-                    }
+                
+                DispatchQueue.main.async {
+                    self.senderDetails[recordID] = user
+                    print("Sender details", self.senderDetails)
                 }
+                
             }
         } catch {
             print("Error fetching user details: \(error.localizedDescription)")

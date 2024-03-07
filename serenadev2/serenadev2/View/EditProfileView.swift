@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct EditProfileView: View {
     // MARK: - Properties
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var userVM: UserViewModel
+    @StateObject var profilePicViewModel: ProfilePicViewModel = ProfilePicViewModel()
     var user: User
     
     // MARK: - Properties
@@ -19,6 +21,14 @@ struct EditProfileView: View {
     @State private var tagName: String = ""
     @State private var error: String = ""
     @State private var lastTagName: String = ""
+    
+    // Initializer to inject ProfilePicViewModel with an existing profile picture URL if available
+        init(user: User) {
+            self.user = user
+            _profilePicViewModel = StateObject(wrappedValue: ProfilePicViewModel(profileImageUrl: ""))
+            _name = State(initialValue: user.name)
+            _tagName = State(initialValue: user.tagName)
+        }
     
     // MARK: - Body
     var body: some View {
@@ -41,10 +51,15 @@ struct EditProfileView: View {
                             .frame(width: 100, height: 100)
                             .clipShape(Circle())
                     }
-                    Button(LocalizedStringKey("ChangeProfilePhoto")) {
+                    
+                    EditableCircularProfileImage(viewModel: profilePicViewModel)
+                    
+                    /*
+                     Button(LocalizedStringKey("ChangeProfilePhoto")) {
 //                        PhotosPicker()
                     }
                         .padding(.top)
+                     */
                     VStack{
                         Divider()
                             .padding(.vertical, 4)
@@ -85,18 +100,35 @@ struct EditProfileView: View {
                         lastTagName = trimmedTagName
                         newUser.name = name
                         newUser.tagName = trimmedTagName
-                        userVM.searchUsers(tagname: trimmedTagName) { users in
-                            if let users, users.count > 0 {
-                                let user = users[0]
-                                if user == self.user {
-                                    print("user is the same")
-                                } else {
-                                    self.error = "Sorry! \(trimmedTagName) is already in use."
-                                }
+                        switch profilePicViewModel.imageState {
+                        case .empty:
+                            break;
+                        case .loading(_):
+                            break;
+                        case .success(let uIImage):
+                            guard let imageAsset: CKAsset = profilePicViewModel.imageToCKAsset(image: uIImage), let profilePicUrlString = imageAsset.fileURL?.absoluteString else {
+                                print("Couldn't bring the profileImgURL")
                                 return
+                                
                             }
-                            userVM.updateUser(updatedUser: newUser)
-                            self.dismiss()
+                            newUser.profilePictureAsset = imageAsset
+                            
+                            userVM.searchUsers(tagname: trimmedTagName) { users in
+                                if let users, users.count > 0 {
+                                    let user = users[0]
+                                    if user == self.user {
+                                        print("user is the same")
+                                    } else  {
+                                        self.error = "Sorry! \(trimmedTagName) is already in use."
+                                    }
+                                    return
+                                }
+                                
+                                userVM.updateUser(updatedUser: newUser)
+                                self.dismiss()
+                            }
+                        case .failure(_):
+                            break;
                         }
                     }
                 }
@@ -105,8 +137,8 @@ struct EditProfileView: View {
             .navigationTitle(LocalizedStringKey("EditProfile"))
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
-                name = user.name 
-                tagName = user.tagName
+//                name = user.name 
+//                tagName = user.tagName
             }
         }
     }

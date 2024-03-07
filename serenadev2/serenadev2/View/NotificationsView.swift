@@ -36,6 +36,7 @@
 
 import SwiftUI
 import CloudKit
+
 struct NotificationsView: View {
     
     @Environment(\.colorScheme) var colorScheme

@@ -59,16 +59,7 @@ struct FeedView: View {
     @State var headerOpacity: Double = 1.0
     @State var dailyButtonOpacity: Double = 1.0
     @State var isDailySheetOpened: Bool = false
-    
-    // Posts array to see some hardcoded posts
-    var postsViews: [PostView] = [
-        
-//        PostView(post: Post(postType: .daily, caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isActive: true), song: songObj),
-//        PostView(post: Post(postType: .daily, caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isActive: true), song: songObj)
-        
-    ]
-    
-    
+
     // MARK: - Body
     var body: some View {
         NavigationStack{
@@ -78,9 +69,6 @@ struct FeedView: View {
                 ZStack (alignment: .bottom) {
                     ScrollView (.vertical, showsIndicators: false){
                         VStack (spacing: 15) {
-                            ForEach(self.postsViews, id: \.post) { postView in
-                                postView
-                            }
                             
                             if postViewModel.posts.isEmpty {
                                 ContentUnavailableView(label: {
@@ -148,13 +136,6 @@ struct FeedView: View {
                             }
                         }
                         .padding(.horizontal)
-                        .onChange(of: postViewModel.posts) {
-                            print("changed posts")
-                        }
-                        .onChange(of: postViewModel.senderDetails) {
-                            print("changed sender details")
-                        }
-                        // This spacer puts space at the bottom of the list if the post daily button is shown
                         Spacer()
                             .frame(height: isDailyPosted ? 0 : 80)
                         
