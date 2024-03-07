@@ -35,21 +35,30 @@ struct PostView: View {
     var song: SongModel?
     
     var body: some View {
-        
-        //let strokeGradient = LinearGradient(gradient: Gradient(colors: [(colorScheme == .light ? Color.black : Color.white).opacity(0.46), (colorScheme == .light ? Color.black : Color.white).opacity(0.23)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-        
         ZStack(alignment: .bottom) {
             RoundedRectangle(cornerRadius: 15)
                 .fill(.card)
                 .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0.0), radius: 18, y: 5)
             VStack(alignment: .leading) {
                 HStack {
-                    if let sender, sender.profilePicture != "" {
-                        Image(sender.profilePicture)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .clipShape(Circle())
-                            .frame(height: 28)
+                    if let sender, let asset = sender.profilePictureAsset {
+                        AsyncImage(url: asset.fileURL) { phase in
+                            switch phase {
+                            case .success(let img):
+                                img
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 30, height: 30)
+                                    .clipShape(Circle())
+                                
+                            default:
+                                Image(systemName: "person.circle.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                    .frame(height: 28)
+                            }
+                        }
                     } else {
                         Image(systemName: "person.circle.fill")
                             .resizable()
@@ -80,12 +89,6 @@ struct PostView: View {
                             .padding(.bottom, 2)
                     }
                 }
-                //                Image()
-                //                    .resizable()
-                //                    .aspectRatio(contentMode: .fill)
-                //                    .frame(height: 95)
-                //                    .blur(radius: 20.0)
-                //                    .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
                 
                 // Back card song cover art
                 if let song {
@@ -109,7 +112,7 @@ struct PostView: View {
                                 .blur(radius: 20.0)
                                 .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
                                 .transition(.opacity.animation(.easeIn(duration: 0.5)))
-                                
+                            
                         case .failure(_):
                             Rectangle()
                                 .fill(Color((song.bgColor)!))
@@ -250,28 +253,14 @@ struct PostView: View {
             }
         }
         .font(.subheadline)
-        .task {
-            print("POSTVIEW: ")
-            print(self.post)
-            print(self.sender ?? "NO SENDER")
-            //            let senderRecord = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: post.sender!.recordID)
-            //            userViewModel.fetchUserFromRecord(record: senderRecord) { (returnedUser: User?) in
-            //                print(returnedUser ?? "No user")
-            //                if returnedUser != nil {
-            //                    sender = returnedUser!
-            //                }
-            //            }
-            //            songViewModel.fetchSong(id: post.songId) { song in
-            //                self.song = songViewModel.song
-            //            }
-            //
-        }
     }
     
     func shareImageToInstagramStory(image: UIImage) {
-        // Ensure "frameInstagram" exists in your asset catalog
         if let backgroundImage = UIImage(named: "frameInstagram") {
-            let story = IGStory(contentSticker: image, background: .image(image: backgroundImage))
+            guard let song = song, let topColor = song.bgColor , let bottomColor = song.priColor else {
+                return
+            }
+            let story = IGStory(contentSticker: image, background: .gradient(colorTop: UIColor(cgColor: topColor), colorBottom: UIColor(red: 0, green: 0, blue: 0, alpha: 1)))
             
             let dispatcher = IGDispatcher(story: story, facebookAppID: "instagram-stories")
             

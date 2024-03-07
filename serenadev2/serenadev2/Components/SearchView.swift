@@ -224,7 +224,6 @@ struct SearchView: View {
                     }
                 }
             }
-            
         }
         
         .fullScreenCover(item: $selectedSong){ item in

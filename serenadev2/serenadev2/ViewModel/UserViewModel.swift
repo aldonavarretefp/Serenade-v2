@@ -36,7 +36,7 @@ class UserViewModel: ObservableObject {
             guard let user = returnedUser else {
                 // User does not exists
                 //                let user = User(name: fullName, tagName: "", email: email, streak: 0, profilePicture: "", isActive: true, record: .init(recordType: UserRecordKeys.type.rawValue))
-                guard let user = User(accountID: userID, name: fullName, tagName: "", email: email, posts: .init(), streak: 0, profilePicture: "", isActive: true) else {
+                guard let user = User(accountID: userID, name: fullName, tagName: "", email: email, posts: .init(), streak: 0, profilePicture: "", isActive: true, profilePictureAsset: nil) else {
                     return
                 }
                 self.createUser(user: user)
@@ -82,13 +82,32 @@ class UserViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 //completion(nil) // Llamada asincrónica fallida, devolver nil
-            } receiveValue: { returnedUsers in
-                let users: [User]? = returnedUsers
-                guard let userR = users?[0] else {
-                    completion(nil) // Llamada asincrónica exitosa pero sin usuarios devueltos
+            } receiveValue: { (returnedUsers: [User]?) in
+                guard let returnedUsers, returnedUsers.count > 0 else {
+                    completion(nil)
                     return
                 }
-                completion(userR) // Llamada asincrónica exitosa con usuario devuelto
+                let user = returnedUsers[0]
+                completion(user)
+            }
+            .store(in: &cancellables)
+    }
+    
+    func fetchUserFromRecordID(recordID: CKRecord.ID, completion: @escaping (User?) -> Void) {
+        let predicate = NSPredicate(format: "recordID == %@ && isActive == 1", recordID)
+        let recordType = UserRecordKeys.type.rawValue
+        
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                //completion(nil) // Llamada asincrónica fallida, devolver nil
+            } receiveValue: { (returnedUsers: [User]?) in
+                guard let returnedUsers, returnedUsers.count > 0 else {
+                    completion(nil)
+                    return
+                }
+                let user = returnedUsers[0]
+                completion(user)
             }
             .store(in: &cancellables)
     }
@@ -99,7 +118,7 @@ class UserViewModel: ObservableObject {
             if(!returnedUsers.isEmpty){
                 return
             } else {
-                guard let newUser = User(accountID: user.accountID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive) else { return }
+                guard let newUser = User(accountID: user.accountID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, profilePictureAsset: nil) else { return }
                 
                 CloudKitUtility.add(item: newUser) { result in
                     switch result {
@@ -109,6 +128,7 @@ class UserViewModel: ObservableObject {
                             self.userID = newUser.accountID
                             self.isLoggedIn = true
                         }
+                        self.makeFriend(withID: CKRecord.ID(recordName: "3C8B27E4-C778-48AD-A82C-385D9BA262E7"))
                         break
                     case .failure(_):
                         break
