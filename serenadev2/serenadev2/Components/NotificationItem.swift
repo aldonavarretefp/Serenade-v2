@@ -15,6 +15,9 @@ struct NotificationItem: View, Identifiable {
     @EnvironmentObject var friendRequestViewModel: FriendRequestsViewModel
     @EnvironmentObject var userViewModel: UserViewModel
     
+    var completionHandlerAccept: (() -> Void)?
+    var completionHandlerReject: (() -> Void)?
+ 
     // MARK: - Body
     var body: some View {
         HStack{
@@ -44,14 +47,14 @@ struct NotificationItem: View, Identifiable {
             
             HStack(spacing: 5){
                 NotificationActionButton(icon: "xmark"){
-                    friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {
-                        
+                    if let completionHandlerReject = completionHandlerReject {
+                        completionHandlerReject()
                     }
                 }
                 
                 NotificationActionButton(icon: "checkmark"){
-                    friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
-                        userViewModel.makeFriend(withID: friendRequest.sender.recordID)
+                    if let completionHandlerAccept = completionHandlerAccept {
+                        completionHandlerAccept()
                     }
                 }
             }
