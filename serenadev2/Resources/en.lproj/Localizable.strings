@@ -30,7 +30,7 @@
 "NoMatchesFound" = "No matches found";
 "NoMatchesDescription" = "We couldn't find anything for your search. Try different keywords or check for typos";
 "SearchForPeople" = "Search for people";
-"SearchPeopleDescription" = "Search for friends";
+"SearchPeopleDescription" = "Search for friends. (Right now you need to type the exact tagname)";
 
 // Profile View
 "Posts" = "Posts";
