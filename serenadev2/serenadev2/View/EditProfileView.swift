@@ -37,29 +37,9 @@ struct EditProfileView: View {
                 Color.viewBackground
                     .ignoresSafeArea()
                 VStack {
-                    if user.profilePicture != "" {
-                        Image(user.profilePicture)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                    }
-                    else {
-                        Image(systemName: "person.crop.circle.fill")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                    }
                     
                     EditableCircularProfileImage(viewModel: profilePicViewModel)
-                    
-                    /*
-                     Button(LocalizedStringKey("ChangeProfilePhoto")) {
-//                        PhotosPicker()
-                    }
-                        .padding(.top)
-                     */
+
                     VStack{
                         Divider()
                             .padding(.vertical, 4)
@@ -112,23 +92,23 @@ struct EditProfileView: View {
                                 
                             }
                             newUser.profilePictureAsset = imageAsset
-                            
-                            userVM.searchUsers(tagname: trimmedTagName) { users in
-                                if let users, users.count > 0 {
-                                    let user = users[0]
-                                    if user == self.user {
-                                        print("user is the same")
-                                    } else  {
-                                        self.error = "Sorry! \(trimmedTagName) is already in use."
-                                    }
-                                    return
-                                }
-                                
-                                userVM.updateUser(updatedUser: newUser)
-                                self.dismiss()
-                            }
                         case .failure(_):
                             break;
+                        }
+                        
+                        userVM.searchUsers(tagname: trimmedTagName) { users in
+                            if let users, users.count > 0 {
+                                let user = users[0]
+                                if user == self.user {
+                                    print("user is the same")
+                                } else {
+                                    self.error = "Sorry! \(trimmedTagName) is already in use."
+                                }
+                                return
+                            }
+                            
+                            userVM.updateUser(updatedUser: newUser)
+                            self.dismiss()
                         }
                     }
                 }
