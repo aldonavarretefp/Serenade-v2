@@ -48,7 +48,9 @@ class FriendRequestsViewModel: ObservableObject {
             .sink { _ in
             } receiveValue: { [weak self] (returnedFriendRequests: [FriendRequest]) in
                 print(returnedFriendRequests)
-                self?.friendRequests = returnedFriendRequests
+                DispatchQueue.main.async {
+                    self?.friendRequests = returnedFriendRequests
+                }
                 for request in returnedFriendRequests {
                     let record = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: request.sender.recordID)
                     self?.fetchUserDetails(for: record.recordID)

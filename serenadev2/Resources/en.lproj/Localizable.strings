@@ -17,6 +17,9 @@
 "Yesterday" = "Yesterday";
 "TypePostDaily" = "'s daily song";
 "ShareDailyButton" = "Share daily song";
+"LoadingSender" = "user";
+"LoadingSongTitle" = "Loading song";
+"LoadingSongArtist" = "...";
 
 // Notifications View
 "Notifications" = "Notifications";

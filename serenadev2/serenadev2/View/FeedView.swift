@@ -253,7 +253,7 @@ struct FeedView: View {
                         }
                         .opacity(dailyButtonOpacity)
                         .fullScreenCover(isPresented: $isDailySheetOpened){
-                            DailySongView(isSongFromDaily: true )
+                            DailySongView(isSongFromDaily: true)
                         }
                         .padding()
                     }
