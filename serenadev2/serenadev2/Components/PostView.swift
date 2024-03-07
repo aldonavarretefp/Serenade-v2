@@ -50,7 +50,7 @@ struct PostView: View {
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 30, height: 30)
                                     .clipShape(Circle())
-
+                                
                             default:
                                 Image(systemName: "person.circle.fill")
                                     .resizable()
@@ -256,9 +256,11 @@ struct PostView: View {
     }
     
     func shareImageToInstagramStory(image: UIImage) {
-        // Ensure "frameInstagram" exists in your asset catalog
         if let backgroundImage = UIImage(named: "frameInstagram") {
-            let story = IGStory(contentSticker: image, background: .image(image: backgroundImage))
+            guard let song = song, let topColor = song.bgColor , let bottomColor = song.priColor else {
+                return
+            }
+            let story = IGStory(contentSticker: image, background: .gradient(colorTop: UIColor(cgColor: topColor), colorBottom: UIColor(red: 0, green: 0, blue: 0, alpha: 1)))
             
             let dispatcher = IGDispatcher(story: story, facebookAppID: "instagram-stories")
             
