@@ -11,7 +11,6 @@ import CloudKit
 import Combine
 
 class FriendRequestsViewModel: ObservableObject {
-    
     @Published var friendRequests = [FriendRequest]()
     @Published var userDetails: [CKRecord.ID: User] = [:]
     var cancellables = Set<AnyCancellable>()
@@ -61,7 +60,7 @@ class FriendRequestsViewModel: ObservableObject {
         let recordSenderToMatch = CKRecord.Reference(record: sender.record, action: .none)
         let recordReceiverToMatch = CKRecord.Reference(record: reciever.record, action: .none)
         
-        let predicate = NSPredicate(format: "receiver == %@ && sender == %@ && status == %@", recordSenderToMatch, recordReceiverToMatch, FriendRequestStatus.pending.rawValue)
+        let predicate = NSPredicate(format: "receiver == %@ && sender == %@ && status == %@", recordReceiverToMatch, recordSenderToMatch, FriendRequestStatus.pending.rawValue)
         let recordType = FriendRequestsRecordKeys.type.rawValue
         
         let sortDescriptor = NSSortDescriptor(key: FriendRequestsRecordKeys.timeStamp.rawValue, ascending: false)
@@ -82,7 +81,6 @@ class FriendRequestsViewModel: ObservableObject {
      - receiverID: The ID of the user that is receiving the friend request.
      */
     func createFriendRequest(senderID: CKRecord.ID, receiverID: CKRecord.ID) {
-        
         let senderReference = CKRecord.Reference(recordID: senderID, action: .none)
         let receiverReference = CKRecord.Reference(recordID: receiverID, action: .none)
         let requestStatus: FriendRequestStatus = .pending
@@ -131,7 +129,6 @@ class FriendRequestsViewModel: ObservableObject {
      - friendRequest: The friend request to decline.
      */
     func declineFriendRequest(friendRequest: FriendRequest, completionHandler: @escaping () -> Void) {
-        
         friendRequest.record[FriendRequestsRecordKeys.status.rawValue] = FriendRequestStatus.rejected.rawValue
         CloudKitUtility.update(item: friendRequest) { result in
             switch result {
@@ -149,5 +146,4 @@ class FriendRequestsViewModel: ObservableObject {
     func deleteFriendReques(friendRequest: FriendRequest, completionHandler: @escaping () -> Void) {
         _ = CloudKitUtility.delete(item: friendRequest)
     }
-
 }

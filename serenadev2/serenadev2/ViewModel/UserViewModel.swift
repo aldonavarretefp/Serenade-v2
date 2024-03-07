@@ -91,6 +91,25 @@ class UserViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func fetchUserFromRecordID(recordID: CKRecord.ID, completion: @escaping (User?) -> Void) {
+        let predicate = NSPredicate(format: "recordID == %@ && isActive == 1", recordID)
+        let recordType = UserRecordKeys.type.rawValue
+        
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                //completion(nil) // Llamada asincrónica fallida, devolver nil
+            } receiveValue: { returnedUsers in
+                let users: [User]? = returnedUsers
+                guard let userR = users?[0] else {
+                    completion(nil) // Llamada asincrónica exitosa pero sin usuarios devueltos
+                    return
+                }
+                completion(userR) // Llamada asincrónica exitosa con usuario devuelto
+            }
+            .store(in: &cancellables)
+    }
+    
     func createUser(user: User){
         self.searchUsers(tagname: user.tagName) { returnedUsers in
             guard let returnedUsers = returnedUsers else { return }

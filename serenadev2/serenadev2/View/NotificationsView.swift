@@ -40,7 +40,8 @@ struct NotificationsView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var userViewModel: UserViewModel
-    @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
+    @EnvironmentObject var friendRequestViewModel: FriendRequestsViewModel
+    @State var notifications: [NotificationItem] = []
     
     var body: some View {
         NavigationStack{
@@ -50,11 +51,8 @@ struct NotificationsView: View {
                 VStack{
                     ScrollView{
                         VStack(spacing: 35){
-                            ForEach(friendRequestViewModel.friendRequests, id: \.self) { request in
-                                if let user = friendRequestViewModel.userDetails[request.sender.recordID] {
-                                    NotificationItem(user: user, friendRequest: request)
-                                        .environmentObject(friendRequestViewModel)
-                                }
+                            ForEach(notifications){ notification in
+                                notification
                             }
                         }
                         .padding()
@@ -70,6 +68,13 @@ struct NotificationsView: View {
                 if let currentUser = userViewModel.user {
                     self.friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser)
                     print("Fetching requests...")
+                    
+                    for friendRequest in self.friendRequestViewModel.friendRequests {
+                        userViewModel.fetchUserFromRecordID(recordID: friendRequest.sender.recordID) { user in
+                            guard let user = user else { return }
+                            notifications.append(NotificationItem(user: user, friendRequest: friendRequest))
+                        }
+                    }
                 }
             }
         }

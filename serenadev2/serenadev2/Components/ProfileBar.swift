@@ -11,7 +11,6 @@ import CloudKit
 var sebastian = User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", friends: [], posts: [], streak: 15, profilePicture: "", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "B5E07FDA-EB68-4C72-B547-ACE39273D66")))
 
 struct ProfileBar: View {
-    
     @Environment(\.colorScheme) var colorScheme
     @State var isSettingsSheetDisplayed: Bool = false
     @State var isUnfriendSheetDisplayed: Bool = false
@@ -21,7 +20,7 @@ struct ProfileBar: View {
     @State var isFriendRequestRecieved: Bool = false
     
     @EnvironmentObject var userViewModel: UserViewModel
-    @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
+    @EnvironmentObject var friendRequestViewModel: FriendRequestsViewModel
     
     var user: User
     @State var friendRequest: FriendRequest? = nil
@@ -139,7 +138,7 @@ struct ProfileBar: View {
                                             print("No user")
                                             return
                                         }
-                                        friendRequestViewModel.createFriendRequest(senderID: user.record.recordID, receiverID: myID)
+                                        friendRequestViewModel.createFriendRequest(senderID: myID, receiverID: user.record.recordID)
                                         isFriendRequestSent = true
                                     }, label: {
                                         ZStack {

@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-struct NotificationItem: View {
+struct NotificationItem: View, Identifiable {
     // MARK: - Properties
+    let id = UUID()
     var user: User
     var friendRequest: FriendRequest
     @EnvironmentObject var friendRequestViewModel: FriendRequestsViewModel
