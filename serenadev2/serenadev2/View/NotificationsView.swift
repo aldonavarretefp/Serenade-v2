@@ -67,10 +67,9 @@ struct NotificationsView: View {
             .navigationTitle(LocalizedStringKey("Notifications"))
             .toolbarTitleDisplayMode(.inline)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    if let currentUser = userViewModel.user {
-                        self.friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser)
-                    }
+                if let currentUser = userViewModel.user {
+                    self.friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser)
+                    print("Fetching requests...")
                 }
             }
         }
