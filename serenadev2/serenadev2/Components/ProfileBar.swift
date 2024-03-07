@@ -218,7 +218,9 @@ struct ProfileBar: View {
                 }
             }
             if userViewModel.user != nil {
-                user = userViewModel.user!
+                if user.accountID == userViewModel.user!.accountID {
+                    user = userViewModel.user!
+                }
             }
         }
     }
