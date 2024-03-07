@@ -82,13 +82,13 @@ class UserViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 //completion(nil) // Llamada asincrónica fallida, devolver nil
-            } receiveValue: { returnedUsers in
-                let users: [User]? = returnedUsers
-                guard let userR = users?[0] else {
-                    completion(nil) // Llamada asincrónica exitosa pero sin usuarios devueltos
+            } receiveValue: { (returnedUsers: [User]?) in
+                guard let returnedUsers, returnedUsers.count > 0 else {
+                    completion(nil)
                     return
                 }
-                completion(userR) // Llamada asincrónica exitosa con usuario devuelto
+                let user = returnedUsers[0]
+                completion(user)
             }
             .store(in: &cancellables)
     }
@@ -101,13 +101,13 @@ class UserViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 //completion(nil) // Llamada asincrónica fallida, devolver nil
-            } receiveValue: { returnedUsers in
-                let users: [User]? = returnedUsers
-                guard let userR = users?[0] else {
-                    completion(nil) // Llamada asincrónica exitosa pero sin usuarios devueltos
+            } receiveValue: { (returnedUsers: [User]?) in
+                guard let returnedUsers, returnedUsers.count > 0 else {
+                    completion(nil)
                     return
                 }
-                completion(userR) // Llamada asincrónica exitosa con usuario devuelto
+                let user = returnedUsers[0]
+                completion(user)
             }
             .store(in: &cancellables)
     }

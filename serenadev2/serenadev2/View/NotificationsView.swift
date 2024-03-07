@@ -80,32 +80,31 @@ struct NotificationsView: View {
     }
     
     func accept(friendRequest: FriendRequest){
+        notifications.removeAll()
         friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
             userViewModel.makeFriend(withID: friendRequest.sender.recordID)
-            if let currentUser = userViewModel.user {
-                friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser){
-                    updateNotifications()
-                }
-            }
         }
+        updateNotifications()
     }
     
     func decline(friendRequest: FriendRequest){
+        notifications.removeAll()
         friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {
-            if let currentUser = userViewModel.user {
-                friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser) {
-                    updateNotifications()
-                }
-            }
         }
+        updateNotifications()
+        
     }
     
     func updateNotifications(){
         notifications.removeAll()
-        for friendRequest in self.friendRequestViewModel.friendRequests {
-            userViewModel.fetchUserFromRecordID(recordID: friendRequest.sender.recordID) { user in
-                guard let user = user else { return }
-                notifications.append(NotificationItem(user: user, friendRequest: friendRequest, completionHandlerAccept: {accept(friendRequest: friendRequest)}, completionHandlerReject: {decline(friendRequest: friendRequest)}))
+        if let currentUser = userViewModel.user {
+            friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser) {
+                for friendRequest in self.friendRequestViewModel.friendRequests {
+                    userViewModel.fetchUserFromRecordID(recordID: friendRequest.sender.recordID) { user in
+                        guard let user = user else { return }
+                        notifications.append(NotificationItem(user: user, friendRequest: friendRequest, completionHandlerAccept: {accept(friendRequest: friendRequest)}, completionHandlerReject: {decline(friendRequest: friendRequest)}))
+                    }
+                }
             }
         }
     }
