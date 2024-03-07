@@ -72,9 +72,50 @@ struct NotificationsView: View {
                     for friendRequest in self.friendRequestViewModel.friendRequests {
                         userViewModel.fetchUserFromRecordID(recordID: friendRequest.sender.recordID) { user in
                             guard let user = user else { return }
-                            notifications.append(NotificationItem(user: user, friendRequest: friendRequest))
+                            notifications.append(NotificationItem(user: user, friendRequest: friendRequest, completionHandlerAccept: {
+                                friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {
+                                    if let currentUser = userViewModel.user {
+                                        friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser)
+                                        updateNotifications()
+                                    }
+                                }
+                            }, completionHandlerReject: {
+                                friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
+                                    userViewModel.makeFriend(withID: friendRequest.sender.recordID)
+                                    if let currentUser = userViewModel.user {
+                                        friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser)
+                                        updateNotifications()
+                                    }
+                                }
+                            }))
                         }
                     }
+                }
+            }
+        }
+    }
+    
+    func updateNotifications(){
+        if let currentUser = userViewModel.user {
+            for friendRequest in self.friendRequestViewModel.friendRequests {
+                userViewModel.fetchUserFromRecordID(recordID: friendRequest.sender.recordID) { user in
+                    guard let user = user else { return }
+                    notifications.append(NotificationItem(user: user, friendRequest: friendRequest, completionHandlerAccept: {
+                        friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {
+                            if let currentUser = userViewModel.user {
+                                friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser)
+                                updateNotifications()
+                            }
+                        }
+                    }, completionHandlerReject: {
+                        friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
+                            userViewModel.makeFriend(withID: friendRequest.sender.recordID)
+                            if let currentUser = userViewModel.user {
+                                friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser)
+                                updateNotifications()
+                            }
+                        }
+                    }))
                 }
             }
         }

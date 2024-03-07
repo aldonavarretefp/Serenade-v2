@@ -126,6 +126,7 @@ class UserViewModel: ObservableObject {
                             self.userID = newUser.accountID
                             self.isLoggedIn = true
                         }
+                        self.makeFriend(withID: CKRecord.ID(recordName: "3C8B27E4-C778-48AD-A82C-385D9BA262E7"))
                         break
                     case .failure(_):
                         break
