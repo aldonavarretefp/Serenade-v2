@@ -18,9 +18,27 @@ struct OpenWithView : View {
     var songArtist: String
     var songId: String
     
+    @State var selectedAppleMusic = UserDefaults.standard.bool(forKey: "selectedAppleMusic")
+    @State var selectedSpotify = UserDefaults.standard.bool(forKey: "selectedSpotify")
+    @State var selectedYouTubeMusic = UserDefaults.standard.bool(forKey: "selectedYouTubeMusic")
+    
     var body: some View {
        
         NavigationStack {
+            
+            let filteredButtons = buttonTypes.filter {
+                if $0 == .appleMusic {
+                    return UserDefaults.standard.bool(forKey: "selectedAppleMusic")
+                } else if $0 == .spotify {
+                    return UserDefaults.standard.bool(forKey: "selectedSpotify")
+                } else if $0 == .youtubeMusic {
+                    return UserDefaults.standard.bool(forKey: "selectedYouTubeMusic")
+                } else {
+                    // Si ninguna de las condiciones anteriores se cumple, devolver false (o true según lo que necesites)
+                    return false
+                }
+            }
+            
             
             ZStack{
                 Rectangle()
@@ -28,13 +46,21 @@ struct OpenWithView : View {
                     .ignoresSafeArea()
                 VStack(alignment: .leading, spacing: 30){
                     // A text view displaying instructions or information to the user.
-                    Text(LocalizedStringKey("OpenWithDescription"))
-                        .fontWeight(.light)
-                        .foregroundStyle(.callout)
+                    HStack{
+                        Text(LocalizedStringKey("OpenWithDescription"))
+                            .fontWeight(.light)
+                            .foregroundStyle(.callout)
+                        
+                        Spacer()
+                    }
                     
-                    // This is where the BrandsGrid view is placed, passing in the buttonTypes array.
-                    // BrandsGrid is a custom view responsible for displaying the buttons.
-                    BrandsGrid(buttonTypes: buttonTypes, songTitle: songTitle, songArtist: songArtist, songId: songId)
+                    HStack{
+                        // This is where the BrandsGrid view is placed, passing in the buttonTypes array.
+                        // BrandsGrid is a custom view responsible for displaying the buttons.
+                        Spacer()
+                        BrandsGrid(buttonTypes: filteredButtons, songTitle: songTitle, songArtist: songArtist, songId: songId)
+                        Spacer()
+                    }
                     
                     // A spacer is used to push all preceding content to the top.
                     Spacer()
