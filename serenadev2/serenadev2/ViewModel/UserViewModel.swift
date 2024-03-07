@@ -19,10 +19,12 @@ class UserViewModel: ObservableObject {
                     return
                 }
                 print("Fetched User from DB: \(user)")
-                self.user = returnedUser
-                self.userID = userID
-                self.isLoggedIn = true
-                self.tagNameExists = user.tagName != ""
+                DispatchQueue.main.async {
+                    self.user = returnedUser
+                    self.userID = userID
+                    self.isLoggedIn = true
+                    self.tagNameExists = user.tagName != ""
+                }
             }
         }
         

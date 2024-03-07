@@ -140,18 +140,6 @@ struct PostView: View {
                     .frame(height: 95)
                 
                 HStack {
-                    //                    Image(post.song!.coverArt)
-                    //                        .resizable()
-                    //                        .aspectRatio(contentMode: .fit)
-                    //                        .frame(width: 70, height: 70)
-                    //                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                    //                        .padding()
-                    //                    VStack(alignment: .leading) {
-                    //                        Text(post.song!.title)
-                    //                            .fontWeight(.bold)
-                    //                        Text(post.song!.artist)
-                    //                            .font(.footnote)
-                    //                            .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
                     if let song {
                         AsyncImage(url: song.artworkUrlMedium, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
                             switch phase {
@@ -202,9 +190,9 @@ struct PostView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10.0))
                             .padding()
                         VStack(alignment: .leading) {
-                            Text("Song Title")
+                            Text("Loading song")
                                 .fontWeight(.bold)
-                            Text("Artist")
+                            Text("...")
                                 .font(.footnote)
                                 .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
                         }
@@ -325,6 +313,9 @@ extension UIView {
 
 #Preview {
     ScrollView {
+        PostView(post: Post(postType: .daily, songId: "songId", date: Date(), isAnonymous: false, isActive: true))
+        PostView(post: Post(postType: .daily, songId: "songId", date: Date(), isAnonymous: false, isActive: true))
+        PostView(post: Post(postType: .daily, songId: "songId", date: Date(), isAnonymous: false, isActive: true))
         PostView(post: Post(postType: .daily, songId: "songId", date: Date(), isAnonymous: false, isActive: true))
     }
 }
