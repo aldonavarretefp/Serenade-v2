@@ -37,7 +37,7 @@ class FriendRequestsViewModel: ObservableObject {
      - Parameters:
      - user: The user to fetch the friend requests for.
      */
-    func fetchFriendRequestsForUser(user: User) {
+    func fetchFriendRequestsForUser(user: User, completionHandler: @escaping () -> Void) {
         let recordToMatch = CKRecord.Reference(record: user.record, action: .none)
         let predicate = NSPredicate(format: "receiver == %@ && status == %@", recordToMatch, FriendRequestStatus.pending.rawValue)
         let recordType = FriendRequestsRecordKeys.type.rawValue
@@ -52,6 +52,7 @@ class FriendRequestsViewModel: ObservableObject {
                     let record = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: request.sender.recordID)
                     self?.fetchUserDetails(for: record.recordID)
                 }
+                completionHandler()
             }
             .store(in: &cancellables)
     }
