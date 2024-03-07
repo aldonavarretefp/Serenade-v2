@@ -131,7 +131,7 @@ struct SearchView: View {
                             ScrollView {
                                 VStack(spacing: 0){
                                     ForEach(self.historyPeople, id:\.self) { user in
-                                        NavigationLink(destination: ProfileView(user: user), label: {
+                                        NavigationLink(destination: ProfileViewFromSearch(user: user), label: {
                                             ItemSmall(item: ContentItem(isPerson: true, user: user), showXMark: true){
                                                 historyPeopleManager.removeUser(userID: user.record.recordID.recordName)
                                                 loadHistory()
@@ -146,7 +146,7 @@ struct SearchView: View {
                             ScrollView {
                                 VStack(spacing: 0) {
                                     ForEach(filteredResults) { value in
-                                        NavigationLink(destination: ProfileView(user: value.user), label: {
+                                        NavigationLink(destination: ProfileViewFromSearch(user: value.user!), label: {
                                             ItemSmall(item: ContentItem(isPerson: true, user: value.user), showArrow: true)                                            
                                             .padding([.leading, .top, .bottom])
                                         })

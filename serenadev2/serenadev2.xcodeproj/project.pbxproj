@@ -51,6 +51,7 @@
 		EA9BC9F62B87960900292705 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9BC9F52B87960900292705 /* ProfileView.swift */; };
 		EAB0C0D82B8CEC5A004F47F6 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0C0D72B8CEC5A004F47F6 /* EditProfileView.swift */; };
 		EAB0C0DC2B8CF489004F47F6 /* ConfirmationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0C0DB2B8CF489004F47F6 /* ConfirmationSheet.swift */; };
+		EAD6383F2B993877007E2B67 /* ProfileViewFromSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD6383E2B993877007E2B67 /* ProfileViewFromSearch.swift */; };
 		F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2322B839A82006264C1 /* serenadev2App.swift */; };
 		F137D2352B839A82006264C1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2342B839A82006264C1 /* ContentView.swift */; };
 		F137D2392B839A84006264C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F137D2382B839A84006264C1 /* Assets.xcassets */; };
@@ -131,6 +132,7 @@
 		EA9BC9F52B87960900292705 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		EAB0C0D72B8CEC5A004F47F6 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
 		EAB0C0DB2B8CF489004F47F6 /* ConfirmationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationSheet.swift; sourceTree = "<group>"; };
+		EAD6383E2B993877007E2B67 /* ProfileViewFromSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewFromSearch.swift; sourceTree = "<group>"; };
 		F137D22F2B839A82006264C1 /* serenadev2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = serenadev2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F137D2322B839A82006264C1 /* serenadev2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2App.swift; sourceTree = "<group>"; };
 		F137D2342B839A82006264C1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				C40C09B22B863C49009BE4C5 /* SongDetailView.swift */,
 				C49B42112B87869800FD66F9 /* SearchView.swift */,
 				EA9BC9F52B87960900292705 /* ProfileView.swift */,
+				EAD6383E2B993877007E2B67 /* ProfileViewFromSearch.swift */,
 				EA5A43DD2B88F66800F6F04C /* SettingsView.swift */,
 				C402E7DC2B8CD4E7004EC79C /* FeedView.swift */,
 				E0540C722B8E703A001A7561 /* DailySongView.swift */,
@@ -599,6 +602,7 @@
 				F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */,
 				C4D5111B2B8F759300E95549 /* SongModel.swift in Sources */,
 				C40C09B82B863EFA009BE4C5 /* ActionButton.swift in Sources */,
+				EAD6383F2B993877007E2B67 /* ProfileViewFromSearch.swift in Sources */,
 				EA5A43DE2B88F66800F6F04C /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

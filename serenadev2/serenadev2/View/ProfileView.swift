@@ -24,19 +24,7 @@ struct ProfileView: View {
     @EnvironmentObject var userVM: UserViewModel
     
     @State var posts: [Post] = []
-    
     @State var user: User?
-    
-    func isFriendCheck(user: User) -> Bool {
-        if self.user != nil {
-            if userVM.user!.friends.contains(where: { $0 == user.record.recordID }) {
-                return true
-            } else {
-                return false
-            }
-        }
-        else { return false }
-    }
     
     var body: some View {
         NavigationStack {
@@ -112,8 +100,7 @@ struct ProfileView: View {
                     .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top) {
                         if let user = self.user {
-                            let isFriend = userVM.isFriend(of: user)
-                            ProfileBar(isFriendRequestSent: false, isCurrentUser: user == userVM.user, isFriend: isFriend, user: user)
+                            ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: false, user: user)
                                 .opacity(headerOpacity)
                                 .padding(.top, safeArea().top)
                                 .padding(.bottom)
