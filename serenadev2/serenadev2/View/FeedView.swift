@@ -39,6 +39,7 @@ struct FeedView: View {
     
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var postViewModel: PostViewModel
+    @StateObject var pushNotificationsVM: PushNotificationViewModel = PushNotificationViewModel()
     
     // MARK: - Environment properties
     // Color scheme of the phone
@@ -270,6 +271,8 @@ struct FeedView: View {
             print("UserID: ", userID)
             Task {
                 if let user = userViewModel.user {
+                    pushNotificationsVM.requestNotificationPermissions()
+                    pushNotificationsVM.subscribeToNotifications(user: user)
                     print("Fetching posts...")
                     await postViewModel.fetchAllPostsAsync(user: user)
                 }
