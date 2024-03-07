@@ -24,9 +24,8 @@ struct ProfileView: View {
     @EnvironmentObject var userVM: UserViewModel
     
     @State var posts: [Post] = []
+    @State var user: User?
     
-    var user: User?
-
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
@@ -101,8 +100,7 @@ struct ProfileView: View {
                     .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top) {
                         if let user = self.user {
-                            let isFriend = userVM.isFriend(of: user)
-                            ProfileBar(isFriendRequestSent: false, isCurrentUser: user == userVM.user, isFriend: isFriend, user: user)
+                            ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: false, user: user)
                                 .opacity(headerOpacity)
                                 .padding(.top, safeArea().top)
                                 .padding(.bottom)

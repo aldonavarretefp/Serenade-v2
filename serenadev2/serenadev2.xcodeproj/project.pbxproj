@@ -23,6 +23,7 @@
 		C40C09B32B863C49009BE4C5 /* SongDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40C09B22B863C49009BE4C5 /* SongDetailView.swift */; };
 		C40C09B62B863CA2009BE4C5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40C09B52B863CA2009BE4C5 /* Extensions.swift */; };
 		C40C09B82B863EFA009BE4C5 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40C09B72B863EFA009BE4C5 /* ActionButton.swift */; };
+		C46C8B8B2B992B8300E77A65 /* IGStoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = C46C8B8A2B992B8300E77A65 /* IGStoryKit */; };
 		C47B8F082B84EE88002027CF /* ItemSmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47B8F072B84EE88002027CF /* ItemSmall.swift */; };
 		C49B42122B87869800FD66F9 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49B42112B87869800FD66F9 /* SearchView.swift */; };
 		C4A7635D2B9697CC002A3A5B /* UserDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A7635C2B9697CC002A3A5B /* UserDetailsView.swift */; };
@@ -54,6 +55,7 @@
 		EA9BC9F62B87960900292705 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9BC9F52B87960900292705 /* ProfileView.swift */; };
 		EAB0C0D82B8CEC5A004F47F6 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0C0D72B8CEC5A004F47F6 /* EditProfileView.swift */; };
 		EAB0C0DC2B8CF489004F47F6 /* ConfirmationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB0C0DB2B8CF489004F47F6 /* ConfirmationSheet.swift */; };
+		EAD6383F2B993877007E2B67 /* ProfileViewFromSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD6383E2B993877007E2B67 /* ProfileViewFromSearch.swift */; };
 		F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2322B839A82006264C1 /* serenadev2App.swift */; };
 		F137D2352B839A82006264C1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F137D2342B839A82006264C1 /* ContentView.swift */; };
 		F137D2392B839A84006264C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F137D2382B839A84006264C1 /* Assets.xcassets */; };
@@ -134,6 +136,7 @@
 		EA9BC9F52B87960900292705 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		EAB0C0D72B8CEC5A004F47F6 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
 		EAB0C0DB2B8CF489004F47F6 /* ConfirmationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationSheet.swift; sourceTree = "<group>"; };
+		EAD6383E2B993877007E2B67 /* ProfileViewFromSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewFromSearch.swift; sourceTree = "<group>"; };
 		F137D22F2B839A82006264C1 /* serenadev2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = serenadev2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F137D2322B839A82006264C1 /* serenadev2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = serenadev2App.swift; sourceTree = "<group>"; };
 		F137D2342B839A82006264C1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -161,7 +164,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E0491C692B99053800892FEE /* IGStoryKit in Frameworks */,
+
+				C46C8B8B2B992B8300E77A65 /* IGStoryKit in Frameworks */,
+
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +280,7 @@
 				C40C09B22B863C49009BE4C5 /* SongDetailView.swift */,
 				C49B42112B87869800FD66F9 /* SearchView.swift */,
 				EA9BC9F52B87960900292705 /* ProfileView.swift */,
+				EAD6383E2B993877007E2B67 /* ProfileViewFromSearch.swift */,
 				EA5A43DD2B88F66800F6F04C /* SettingsView.swift */,
 				C402E7DC2B8CD4E7004EC79C /* FeedView.swift */,
 				E0540C722B8E703A001A7561 /* DailySongView.swift */,
@@ -428,7 +434,8 @@
 			);
 			name = serenadev2;
 			packageProductDependencies = (
-				E0491C682B99053800892FEE /* IGStoryKit */,
+
+				C46C8B8A2B992B8300E77A65 /* IGStoryKit */,
 			);
 			productName = serenadev2;
 			productReference = F137D22F2B839A82006264C1 /* serenadev2.app */;
@@ -505,7 +512,8 @@
 			);
 			mainGroup = F137D2262B839A81006264C1;
 			packageReferences = (
-				E0491C672B99053800892FEE /* XCRemoteSwiftPackageReference "IGStoryKit" */,
+
+				C46C8B892B992B8300E77A65 /* XCRemoteSwiftPackageReference "IGStoryKit" */,
 			);
 			productRefGroup = F137D2302B839A82006264C1 /* Products */;
 			projectDirPath = "";
@@ -602,6 +610,7 @@
 				F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */,
 				C4D5111B2B8F759300E95549 /* SongModel.swift in Sources */,
 				C40C09B82B863EFA009BE4C5 /* ActionButton.swift in Sources */,
+				EAD6383F2B993877007E2B67 /* ProfileViewFromSearch.swift in Sources */,
 				EA5A43DE2B88F66800F6F04C /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -963,7 +972,8 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E0491C672B99053800892FEE /* XCRemoteSwiftPackageReference "IGStoryKit" */ = {
+
+		C46C8B892B992B8300E77A65 /* XCRemoteSwiftPackageReference "IGStoryKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwapnanilDhol/IGStoryKit";
 			requirement = {
@@ -974,9 +984,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E0491C682B99053800892FEE /* IGStoryKit */ = {
+
+		C46C8B8A2B992B8300E77A65 /* IGStoryKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E0491C672B99053800892FEE /* XCRemoteSwiftPackageReference "IGStoryKit" */;
+			package = C46C8B892B992B8300E77A65 /* XCRemoteSwiftPackageReference "IGStoryKit" */;
+
 			productName = IGStoryKit;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -42,7 +42,8 @@ class FriendRequestsViewModel: ObservableObject {
         let recordToMatch = CKRecord.Reference(record: user.record, action: .none)
         let predicate = NSPredicate(format: "receiver == %@ && status == %@", recordToMatch, FriendRequestStatus.pending.rawValue)
         let recordType = FriendRequestsRecordKeys.type.rawValue
-        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+        let sortDescriptor = NSSortDescriptor(key: FriendRequestsRecordKeys.timeStamp.rawValue, ascending: false)
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType, sortDescriptions: [sortDescriptor])
             .receive(on: DispatchQueue.main)
             .sink { _ in
             } receiveValue: { [weak self] (returnedFriendRequests: [FriendRequest]) in
@@ -56,14 +57,16 @@ class FriendRequestsViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func fetchFriendRequest(for sender: User, and reciever: User, completionHandler: @escaping ([FriendRequest]) -> Void){
+    func fetchFriendRequest(from sender: User, for reciever: User, completionHandler: @escaping ([FriendRequest]) -> Void){
         let recordSenderToMatch = CKRecord.Reference(record: sender.record, action: .none)
-        
         let recordReceiverToMatch = CKRecord.Reference(record: reciever.record, action: .none)
         
         let predicate = NSPredicate(format: "receiver == %@ && sender == %@ && status == %@", recordSenderToMatch, recordReceiverToMatch, FriendRequestStatus.pending.rawValue)
         let recordType = FriendRequestsRecordKeys.type.rawValue
-        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+        
+        let sortDescriptor = NSSortDescriptor(key: FriendRequestsRecordKeys.timeStamp.rawValue, ascending: false)
+        
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType, sortDescriptions: [sortDescriptor])
             .receive(on: DispatchQueue.main)
             .sink { _ in
             } receiveValue: { (returnedFriendRequests: [FriendRequest]) in
@@ -108,7 +111,7 @@ class FriendRequestsViewModel: ObservableObject {
      - friendRequest: The friend request to accept.
      */
     func acceptFriendRequest(friendRequest: FriendRequest, completionHandler: @escaping () -> Void) {
-        friendRequest.record["status"] = FriendRequestStatus.accepted.rawValue
+        friendRequest.record[FriendRequestsRecordKeys.status.rawValue] = FriendRequestStatus.accepted.rawValue
         CloudKitUtility.update(item: friendRequest) { result in
             switch result {
             case .success(_):
@@ -129,7 +132,7 @@ class FriendRequestsViewModel: ObservableObject {
      */
     func declineFriendRequest(friendRequest: FriendRequest, completionHandler: @escaping () -> Void) {
         
-        friendRequest.record["status"] = FriendRequestStatus.rejected.rawValue
+        friendRequest.record[FriendRequestsRecordKeys.status.rawValue] = FriendRequestStatus.rejected.rawValue
         CloudKitUtility.update(item: friendRequest) { result in
             switch result {
             case .success(_):

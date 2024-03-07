@@ -18,11 +18,13 @@ struct ProfileBar: View {
     @State var isFriendRequestSent: Bool
     @State var isCurrentUser: Bool
     @State var isFriend: Bool
+    @State var isFriendRequestRecieved: Bool = false
     
     @EnvironmentObject var userViewModel: UserViewModel
     @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
     
     var user: User
+    @State var friendRequest: FriendRequest? = nil
     
     var body: some View {
         NavigationStack {
@@ -103,7 +105,33 @@ struct ProfileBar: View {
                         .font(.caption)
                         .padding(.horizontal)
                         Spacer()
-                        if !isCurrentUser {
+                        
+                        if !isCurrentUser && isFriendRequestRecieved {
+                            HStack(spacing: 5){
+                                NotificationActionButton(icon: "xmark"){
+                                    guard let friendRequest = friendRequest else {return}
+                                    friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {
+                                        
+                                    }
+                                    isFriendRequestRecieved = false
+                                    isFriend = false
+                                    isFriendRequestSent = false
+                                }
+                                
+                                NotificationActionButton(icon: "checkmark"){
+                                    guard let friendRequest = friendRequest else {return}
+                                    
+                                    friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
+                                        userViewModel.makeFriend(withID: friendRequest.sender.recordID)
+                                    }
+                                    
+                                    isFriendRequestRecieved = false
+                                    isFriend = true
+                                    isFriendRequestSent = false
+                                }
+                            }
+                            .padding(.leading)
+                        } else if !isCurrentUser {
                             if !isFriend {
                                 if !isFriendRequestSent {
                                     Button(action: {
@@ -128,7 +156,7 @@ struct ProfileBar: View {
                                             print("No user")
                                             return
                                         }
-                                        friendRequestViewModel.fetchFriendRequest(for: me, and: user) { returnedFriendRequest in
+                                        friendRequestViewModel.fetchFriendRequest(from: me, for: user) { returnedFriendRequest in
                                             guard let returnedFriendRequest = returnedFriendRequest.first else {return}
                                             friendRequestViewModel.deleteFriendReques(friendRequest: returnedFriendRequest) {}
                                             isFriendRequestSent = false
@@ -174,10 +202,26 @@ struct ProfileBar: View {
             .frame(height: 130)
             .background()
         }
+        .task {
+            guard let me = userViewModel.user else { return }
+            friendRequestViewModel.fetchFriendRequest(from: user, for: me) { resultFriendRequest in
+                if(!resultFriendRequest.isEmpty){
+                    self.friendRequest = resultFriendRequest.first
+                    isFriendRequestRecieved = true
+                }
+            }
+            
+            friendRequestViewModel.fetchFriendRequest(from: me, for: user) { resultFriendRequest in
+                if(!resultFriendRequest.isEmpty){
+                    self.friendRequest = resultFriendRequest.first
+                    isFriendRequestSent = true
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    ProfileBar(isFriendRequestSent: false, isCurrentUser: false, isFriend: true, user: sebastian)
+    ProfileBar(isFriendRequestSent: true, isCurrentUser: false, isFriend: false, user: sebastian)
         .environment(\.locale, .init(identifier: "us"))
 }

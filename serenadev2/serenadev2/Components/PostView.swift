@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import IGStoryKit
 import CloudKit
 
 struct PostView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @Environment(\.colorScheme) var colorScheme
     @State var isSongInfoDisplayed: Bool = false
+    
+    @State private var imageLoaded = false
+    
     
     var post: Post
     var formattedDate: Text {
@@ -68,18 +72,20 @@ struct PostView: View {
                 .padding(.bottom, post.caption == "" ? 5 : 0)
                 //                Spacer()
                 if let postCaption = post.caption {
-                    Text(postCaption)
-                        .lineLimit(4)
-                        .padding(.horizontal)
-                        .padding(.top, 2)
-                        .padding(.bottom, 2)
+                    if postCaption != "" {
+                        Text(postCaption)
+                            .lineLimit(4)
+                            .padding(.horizontal)
+                            .padding(.top, 2)
+                            .padding(.bottom, 2)
+                    }
                 }
-//                Image()
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fill)
-//                    .frame(height: 95)
-//                    .blur(radius: 20.0)
-//                    .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
+                //                Image()
+                //                    .resizable()
+                //                    .aspectRatio(contentMode: .fill)
+                //                    .frame(height: 95)
+                //                    .blur(radius: 20.0)
+                //                    .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
                 
                 // Back card song cover art
                 if let song {
@@ -94,11 +100,16 @@ struct PostView: View {
                         case .success(let image):
                             image
                                 .resizable()
+                                .onAppear {
+                                    self.imageLoaded = true
+                                    print("image loaded")
+                                }
                                 .aspectRatio(contentMode: .fill)
                                 .frame(height: 95)
                                 .blur(radius: 20.0)
                                 .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
                                 .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                                
                         case .failure(_):
                             Rectangle()
                                 .fill(Color((song.bgColor)!))
@@ -209,8 +220,13 @@ struct PostView: View {
                             Spacer()
                             
                             Button{
-                                // Aqui poner la logica de abrir en insta
-                                print(colorPri)
+                                if imageLoaded {
+                                    let postViewInstance = PostView(post: post, sender: sender, song: song).environmentObject(userViewModel)
+                                    let image = snapshot(postViewInstance)
+                                    shareImageToInstagramStory(image: image)
+                                } else {
+                                    print("Image not loaded yet")
+                                }
                             } label : {
                                 
                                 Image(systemName: "square.and.arrow.up.circle.fill")
@@ -250,22 +266,54 @@ struct PostView: View {
             print("POSTVIEW: ")
             print(self.post)
             print(self.sender ?? "NO SENDER")
-//            let senderRecord = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: post.sender!.recordID)
-//            userViewModel.fetchUserFromRecord(record: senderRecord) { (returnedUser: User?) in
-//                print(returnedUser ?? "No user")
-//                if returnedUser != nil {
-//                    sender = returnedUser!
-//                }
-//            }
-//            songViewModel.fetchSong(id: post.songId) { song in
-//                self.song = songViewModel.song
-//            }
-//            
+            //            let senderRecord = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: post.sender!.recordID)
+            //            userViewModel.fetchUserFromRecord(record: senderRecord) { (returnedUser: User?) in
+            //                print(returnedUser ?? "No user")
+            //                if returnedUser != nil {
+            //                    sender = returnedUser!
+            //                }
+            //            }
+            //            songViewModel.fetchSong(id: post.songId) { song in
+            //                self.song = songViewModel.song
+            //            }
+            //
         }
     }
     
+    func shareImageToInstagramStory(image: UIImage) {
+        // Ensure "frameInstagram" exists in your asset catalog
+        if let backgroundImage = UIImage(named: "frameInstagram") {
+            let story = IGStory(contentSticker: image, background: .image(image: backgroundImage))
+            
+            let dispatcher = IGDispatcher(story: story, facebookAppID: "instagram-stories")
+            
+            dispatcher.start()
+        } else {
+            // Handle the error if the image does not exist in your assets
+            print("Background image not found in assets.")
+        }
+    }
+    
+    func snapshot<Content: View>(_ view: Content, asImageWithScale scale: CGFloat = 1.0) -> UIImage {
+        let controller = UIHostingController(rootView: view.background(.clear))
+        
+        // Transparent background
+        controller.view.backgroundColor = .clear
+        
+        let viewSize = controller.view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize, withHorizontalFittingPriority: .defaultLow, verticalFittingPriority: .defaultHigh)
+        controller.view.bounds = CGRect(origin: .zero, size: CGSize(width: viewSize.width + 200, height: viewSize.height + 75))
+        return controller.view.asImage()
+    }
+    
+    
 }
 
+extension UIView {
+    func asImage() -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: self.bounds.size)
+        return renderer.image { _ in drawHierarchy(in: bounds, afterScreenUpdates: true) }
+    }
+}
 //#Preview {
 //    ScrollView {
 //        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!! Give it a listen right now, you won't regret it!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears", artist: "The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
