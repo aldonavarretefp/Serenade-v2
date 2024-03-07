@@ -34,6 +34,9 @@ struct PostView: View {
     var sender: User?
     var song: SongModel?
     
+    @State var artworkToShare: Image?
+    @State var userImageToShare: Image?
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             RoundedRectangle(cornerRadius: 15)
@@ -50,6 +53,11 @@ struct PostView: View {
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 30, height: 30)
                                     .clipShape(Circle())
+                                    .onAppear{
+                                        DispatchQueue.main.async {
+                                            userImageToShare = img
+                                        }
+                                    }
                                 
                             default:
                                 Image(systemName: "person.circle.fill")
@@ -160,6 +168,13 @@ struct PostView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 10.0))
                                     .padding()
                                     .transition(.opacity.animation(.easeIn(duration: 0.5)))
+                                    .onAppear {
+                                        //                                        imageToShare = image.snapshot()
+                                        DispatchQueue.main.async {
+                                            artworkToShare = image
+                                        }
+                                    }
+                                
                             case .failure(_):
                                 Rectangle()
                                     .fill(Color((song.bgColor)!))
@@ -212,9 +227,11 @@ struct PostView: View {
                             
                             Button{
                                 if imageLoaded {
-                                    let postViewInstance = PostView(post: post, sender: sender, song: song).environmentObject(userViewModel)
+                                    
+                                    let postViewInstance = PostInstagramView(sender: self.sender, post: post, song: self.song, artwork: artworkToShare!, userImage: userImageToShare)
                                     let image = snapshot(postViewInstance)
                                     shareImageToInstagramStory(image: image)
+                                    
                                 } else {
                                     print("Image not loaded yet")
                                 }
@@ -257,7 +274,7 @@ struct PostView: View {
     
     func shareImageToInstagramStory(image: UIImage) {
         if let backgroundImage = UIImage(named: "frameInstagram") {
-            guard let song = song, let topColor = song.bgColor , let bottomColor = song.priColor else {
+            guard let song = song, let topColor = song.bgColor else {
                 return
             }
             let story = IGStory(contentSticker: image, background: .gradient(colorTop: UIColor(cgColor: topColor), colorBottom: UIColor(red: 0, green: 0, blue: 0, alpha: 1)))
@@ -278,10 +295,9 @@ struct PostView: View {
         controller.view.backgroundColor = .clear
         
         let viewSize = controller.view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize, withHorizontalFittingPriority: .defaultLow, verticalFittingPriority: .defaultHigh)
-        controller.view.bounds = CGRect(origin: .zero, size: CGSize(width: viewSize.width + 200, height: viewSize.height + 75))
+        controller.view.bounds = CGRect(origin: .zero, size: CGSize(width: viewSize.width + 250, height: viewSize.height + 400))
         return controller.view.asImage()
     }
-    
     
 }
 
