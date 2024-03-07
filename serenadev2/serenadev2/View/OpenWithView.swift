@@ -21,6 +21,7 @@ struct OpenWithView : View {
     @State var selectedAppleMusic = UserDefaults.standard.bool(forKey: "selectedAppleMusic")
     @State var selectedSpotify = UserDefaults.standard.bool(forKey: "selectedSpotify")
     @State var selectedYouTubeMusic = UserDefaults.standard.bool(forKey: "selectedYouTubeMusic")
+    @State var firstTimeEntering = UserDefaults.standard.bool(forKey: "firstTimeEntering")
     
     var body: some View {
        
@@ -58,7 +59,12 @@ struct OpenWithView : View {
                         // This is where the BrandsGrid view is placed, passing in the buttonTypes array.
                         // BrandsGrid is a custom view responsible for displaying the buttons.
                         Spacer()
-                        BrandsGrid(buttonTypes: filteredButtons, songTitle: songTitle, songArtist: songArtist, songId: songId)
+                        
+                        if !firstTimeEntering {
+                            BrandsGrid(buttonTypes: buttonTypes, songTitle: songTitle, songArtist: songArtist, songId: songId)
+                        } else {
+                            BrandsGrid(buttonTypes: filteredButtons, songTitle: songTitle, songArtist: songArtist, songId: songId)
+                        }
                         Spacer()
                     }
                     

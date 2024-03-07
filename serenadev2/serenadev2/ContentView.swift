@@ -47,13 +47,13 @@ struct ContentView: View {
                     return
                 }
                 self.user = user
-//                userViewModel.fetchUserFromAccountID(accountID: "000758.2f1d6dd1cd4e4563a99a6ad78f20cde3.0946") { returnedUser in
-//                    guard let user = returnedUser else {
-//                        print("No user returned")
-//                        return
-//                    }
-//                    self.user = returnedUser
-//                }
+                //                userViewModel.fetchUserFromAccountID(accountID: "000758.2f1d6dd1cd4e4563a99a6ad78f20cde3.0946") { returnedUser in
+                //                    guard let user = returnedUser else {
+                //                        print("No user returned")
+                //                        return
+                //                    }
+                //                    self.user = returnedUser
+                //                }
             }
         }
     }

@@ -15,6 +15,8 @@ struct ChecklistItem: View {
     var key: String
     var disableIfLastOne: Bool
     
+    @State var firstTimeEntering = UserDefaults.standard.bool(forKey: "firstTimeEntering")
+    
     var body: some View {
         GroupBox {
             HStack {
@@ -41,7 +43,7 @@ struct ChecklistItem: View {
         .backgroundStyle(.card)
         .padding(.vertical, 3)
         .onTapGesture {
-            if selected && disableIfLastOne && countSelectedItems() <= 1 {
+            if selected && disableIfLastOne && countSelectedItems() <= 1 && firstTimeEntering == true{
                 return // No deshabilitar si solo queda una opción activa
             }
             selected.toggle()

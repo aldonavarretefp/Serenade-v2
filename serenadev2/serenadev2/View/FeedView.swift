@@ -69,8 +69,10 @@ struct FeedView: View {
     ]
     
     
+    
     // MARK: - Body
     var body: some View {
+        
         NavigationStack{
             ZStack (alignment: .top) {
                 Color.viewBackground

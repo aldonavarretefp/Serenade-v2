@@ -14,6 +14,7 @@ struct StreamingAppPickerSheet: View {
     @State var selectedAppleMusic = UserDefaults.standard.bool(forKey: "selectedAppleMusic")
     @State var selectedSpotify = UserDefaults.standard.bool(forKey: "selectedSpotify")
     @State var selectedYouTubeMusic = UserDefaults.standard.bool(forKey: "selectedYouTubeMusic")
+    @State var firstTimeEntering = UserDefaults.standard.bool(forKey: "firstTimeEntering")
     
     var body: some View {
         NavigationStack {
@@ -58,8 +59,14 @@ struct StreamingAppPickerSheet: View {
             // Asegurarse de que al menos una opción esté activa
             if !selectedAppleMusic && !selectedSpotify && !selectedYouTubeMusic {
                 // Activa una opción por defecto (por ejemplo, Apple Music)
+                
                 selectedAppleMusic = true
                 UserDefaults.standard.set(true, forKey: "selectedAppleMusic")
+                
+                if !firstTimeEntering {
+                    firstTimeEntering = true
+                    UserDefaults.standard.set(firstTimeEntering, forKey: "firstTimeEntering")
+                }
             }
         }
     }
