@@ -29,6 +29,8 @@
 "SearchDescription" = "Cercare i brani, gli artisti o gli album preferiti";
 "NoMatchesFound" = "Nessuna corrispondenza trovata";
 "NoMatchesDescription" = "Non abbiamo trovato nulla per la tua ricerca. Provare con altre parole chiave o controllare gli errori di battitura";
+"SearchForPeople" = "Ricerca di persone";
+"SearchPeopleDescription" = "Ricerca di amici. (In questo momento è necessario digitare il nome esatto del nome utente).";
 
 // Profile View
 "Posts" = "Post";
