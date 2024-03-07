@@ -43,7 +43,9 @@ struct NotificationItem: View {
             
             HStack(spacing: 5){
                 NotificationActionButton(icon: "xmark"){
-                    friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {}
+                    friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {
+                        
+                    }
                 }
                 
                 NotificationActionButton(icon: "checkmark"){
