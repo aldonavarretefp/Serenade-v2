@@ -19,6 +19,7 @@ enum UserRecordKeys: String {
     case streak
     case profilePicture
     case isActive
+    case profilePictureAsset
 }
 
 struct User: Hashable, CloudKitableProtocol {
@@ -32,6 +33,7 @@ struct User: Hashable, CloudKitableProtocol {
     var profilePicture: String
     var isActive: Bool
     var record: CKRecord
+    var profilePictureAsset: CKAsset?
 }
 
 extension User {
@@ -71,10 +73,15 @@ extension User {
             print("Didn't find property isActive")
             return nil
         }
-        self.init(accountID: accountID, name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, record: record)
+        
+        guard let profilePictureAsset = record[UserRecordKeys.profilePictureAsset.rawValue] as? CKAsset? else {
+            print("Didn't find property Profile Picture Asset")
+            return nil
+        }
+        self.init(accountID: accountID, name: name, tagName: tagName, email: email, friends: friends, posts: posts, streak: streak, profilePicture: profilePicture, isActive: isActive, record: record, profilePictureAsset: profilePictureAsset)
     }
     
-    init?(accountID: String?, name: String, tagName: String, email: String, friends: [CKRecord.Reference] = [], posts: [CKRecord.Reference]?, streak: Int, profilePicture: String, isActive: Bool) {
+    init?(accountID: String?, name: String, tagName: String, email: String, friends: [CKRecord.Reference] = [], posts: [CKRecord.Reference]?, streak: Int, profilePicture: String, isActive: Bool, profilePictureAsset: CKAsset?) {
         let record = CKRecord(recordType: UserRecordKeys.type.rawValue)
         record[UserRecordKeys.accountID.rawValue] = accountID
         record[UserRecordKeys.name.rawValue] = name
@@ -85,6 +92,7 @@ extension User {
         record[UserRecordKeys.streak.rawValue] = streak
         record[UserRecordKeys.profilePicture.rawValue] = profilePicture
         record[UserRecordKeys.isActive.rawValue] = isActive
+        record[UserRecordKeys.profilePictureAsset.rawValue] = profilePictureAsset
         self.init(record: record)
     }
 }
@@ -101,6 +109,7 @@ extension User {
         self.streak = newUser.streak
         self.profilePicture = newUser.profilePicture
         self.isActive = newUser.isActive
+        self.profilePictureAsset = newUser.profilePictureAsset
         
         let record = self.record
         record[UserRecordKeys.accountID.rawValue] = newUser.accountID
@@ -112,6 +121,7 @@ extension User {
         record[UserRecordKeys.streak.rawValue] = newUser.streak
         record[UserRecordKeys.profilePicture.rawValue] = newUser.profilePicture
         record[UserRecordKeys.isActive.rawValue] = newUser.isActive
+        record[UserRecordKeys.profilePictureAsset.rawValue] = newUser.profilePictureAsset
         return User(record: record)
     }
     

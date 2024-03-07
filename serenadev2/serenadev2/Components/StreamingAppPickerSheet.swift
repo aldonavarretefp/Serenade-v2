@@ -11,25 +11,25 @@ struct StreamingAppPickerSheet: View {
     
     @Environment(\.dismiss) var dismiss
     
-    @State var selectedAppleMusic: Bool = true
-    @State var selectedSpotify: Bool = true
-    @State var selectedYouTubeMusic: Bool = true
-    @State var selectedAmazonMusic: Bool = true
+    @State var selectedAppleMusic = UserDefaults.standard.bool(forKey: "selectedAppleMusic")
+    @State var selectedSpotify = UserDefaults.standard.bool(forKey: "selectedSpotify")
+    @State var selectedYouTubeMusic = UserDefaults.standard.bool(forKey: "selectedYouTubeMusic")
+    @State var firstTimeEntering = UserDefaults.standard.bool(forKey: "firstTimeEntering")
     
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             ZStack(alignment: .top) {
                 Color.viewBackground
                     .ignoresSafeArea()
                 VStack(alignment: .leading) {
-                    HStack(alignment: .top){
+                    HStack(alignment: .top) {
                         Text(LocalizedStringKey("FavoriteStreamingApps"))
                             .font(.title2)
                             .fontWeight(.semibold)
                         
                         Spacer()
                         
-                        Button{
+                        Button {
                             // Dismiss the full screen
                             dismiss()
                         } label: {
@@ -47,17 +47,29 @@ struct StreamingAppPickerSheet: View {
                         .fontWeight(.light)
                         .foregroundStyle(.callout)
                         .padding(.bottom)
-                    ChecklistItem(selected: selectedAppleMusic, image: "AppleMusicAppIcon", label: "Apple Music")
-                    ChecklistItem(selected: selectedSpotify, image: "SpotifyAppIcon", label: "Spotify")
-                    ChecklistItem(selected: selectedYouTubeMusic, image: "YouTubeMusicAppIcon", label: "YouTube Music")
-                    ChecklistItem(selected: selectedAmazonMusic, image: "AmazonMusicAppIcon", label: "Amazon Music")
-                    //                Spacer()
+                    
+                    ChecklistItem(selected: $selectedAppleMusic, image: "AppleMusicAppIcon", label: "Apple Music", key: "selectedAppleMusic", disableIfLastOne: true)
+                    ChecklistItem(selected: $selectedSpotify, image: "SpotifyAppIcon", label: "Spotify", key: "selectedSpotify", disableIfLastOne: true)
+                    ChecklistItem(selected: $selectedYouTubeMusic, image: "YouTubeMusicAppIcon", label: "YouTube Music", key: "selectedYouTubeMusic", disableIfLastOne: true)
                 }
                 .padding(.horizontal)
             }
         }
+        .onAppear {
+            // Asegurarse de que al menos una opción esté activa
+            if !selectedAppleMusic && !selectedSpotify && !selectedYouTubeMusic {
+                // Activa una opción por defecto (por ejemplo, Apple Music)
+                
+                selectedAppleMusic = true
+                UserDefaults.standard.set(true, forKey: "selectedAppleMusic")
+                
+                if !firstTimeEntering {
+                    firstTimeEntering = true
+                    UserDefaults.standard.set(firstTimeEntering, forKey: "firstTimeEntering")
+                }
+            }
+        }
     }
-    
 }
 
 #Preview {

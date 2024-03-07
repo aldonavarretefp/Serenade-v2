@@ -11,7 +11,6 @@ import CloudKit
 var sebastian = User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@domain.com", friends: [], posts: [], streak: 15, profilePicture: "", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "B5E07FDA-EB68-4C72-B547-ACE39273D66")))
 
 struct ProfileBar: View {
-    
     @Environment(\.colorScheme) var colorScheme
     @State var isSettingsSheetDisplayed: Bool = false
     @State var isUnfriendSheetDisplayed: Bool = false
@@ -21,28 +20,41 @@ struct ProfileBar: View {
     @State var isFriendRequestRecieved: Bool = false
     
     @EnvironmentObject var userViewModel: UserViewModel
-    @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
+    @EnvironmentObject var friendRequestViewModel: FriendRequestsViewModel
     
-    var user: User
+    @State var user: User
     @State var friendRequest: FriendRequest? = nil
     
     var body: some View {
         NavigationStack {
             HStack(alignment: .top) {
                 ZStack(alignment: .top) {
-                    if user.profilePicture != "" {
-                        Image(user.profilePicture)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 80)
-                            .clipShape(Circle())
+                    if let asset = user.profilePictureAsset {
+                        AsyncImage(url: asset.fileURL) { phase in
+                            switch phase {
+                            case .success(let img):
+                                img
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 80, height: 80)
+                                    .clipShape(Circle())
+
+                            default:
+                                Image(systemName: "person.circle.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 80, height: 80)
+                                    .clipShape(Circle())
+                            }
+                        }
                     } else {
-                        Image(systemName: "person.crop.circle.fill")
+                        Image(systemName: "person.circle.fill")
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 80)
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 80, height: 80)
                             .clipShape(Circle())
                     }
+                    
                     VStack {
                         Spacer()
                         HStack {
@@ -99,7 +111,7 @@ struct ProfileBar: View {
                         }
                         .font(.caption)
                         VStack {
-                            Text(String(user.friends.count))
+                            Text(String(user.friends.count-1))
                             Text(LocalizedStringKey("Friends"))
                         }
                         .font(.caption)
@@ -139,7 +151,7 @@ struct ProfileBar: View {
                                             print("No user")
                                             return
                                         }
-                                        friendRequestViewModel.createFriendRequest(senderID: user.record.recordID, receiverID: myID)
+                                        friendRequestViewModel.createFriendRequest(senderID: myID, receiverID: user.record.recordID)
                                         isFriendRequestSent = true
                                     }, label: {
                                         ZStack {
@@ -215,6 +227,11 @@ struct ProfileBar: View {
                 if(!resultFriendRequest.isEmpty){
                     self.friendRequest = resultFriendRequest.first
                     isFriendRequestSent = true
+                }
+            }
+            if userViewModel.user != nil {
+                if user.accountID == userViewModel.user!.accountID {
+                    user = userViewModel.user!
                 }
             }
         }

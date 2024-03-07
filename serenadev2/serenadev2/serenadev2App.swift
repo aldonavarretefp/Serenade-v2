@@ -11,17 +11,12 @@ import SwiftData
 struct serenadev2App: App {
     @StateObject var userViewModel: UserViewModel = UserViewModel()
     @StateObject var postViewModel: PostViewModel = PostViewModel()
+    @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
     
     @State private var isShowingSplashScreen = true
-    
     @State var hasCompletedOnboarding: Bool = UserDefaults.standard.bool(forKey: UserDefaultsKeys.hasCompletedOnboarding)
     
-    @State var tagName: String = ""
-    
-    @StateObject var songViewModel = SongViewModelTest()
-    
     var body: some Scene {
-        
         WindowGroup {
             ZStack {
                 // The splash screen view is always at the top of the stack but will be hidden after determining the user's state.
@@ -51,7 +46,7 @@ struct serenadev2App: App {
             }
             .environmentObject(userViewModel)
             .environmentObject(postViewModel)
-            .environmentObject(songViewModel)
+            .environmentObject(friendRequestViewModel)
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // Adjust timing as needed for your splash screen
                     withAnimation {

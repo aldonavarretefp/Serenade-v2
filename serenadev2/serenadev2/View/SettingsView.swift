@@ -65,7 +65,6 @@ struct SettingsView: View {
                         .sheet(isPresented: $isLogOutSheetDisplayed, content: {
                             
                             ConfirmationSheet(titleStart: LocalizedStringKey("LogOut"), descriptionStart: LocalizedStringKey("LogOutMessage"), buttonLabel: LocalizedStringKey("LogOut")){
-//                                isFriend = false
                             
                                 userViewModel.logOut()
                             }
@@ -75,6 +74,7 @@ struct SettingsView: View {
                     .backgroundStyle(.card)
                     .foregroundStyle(.primary)
                     
+                    /*
                     GroupBox {
                         Button(role: .destructive, action: { isDeleteAccountSheetDisplayed = true }, label: {
                             Spacer()
@@ -89,7 +89,7 @@ struct SettingsView: View {
                             .presentationDetents([.fraction(0.3)])
                         })
                     }
-                    .backgroundStyle(.card)
+                    .backgroundStyle(.card) */
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {

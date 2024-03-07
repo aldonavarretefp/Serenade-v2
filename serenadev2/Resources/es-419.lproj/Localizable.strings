@@ -17,6 +17,9 @@
 "Yesterday" = "Ayer";
 "TypePostDaily" = " canción del día";
 "ShareDailyButton" = "Compartir canción del día";
+"LoadingSender" = "usuario";
+"LoadingSongTitle" = "Cargando canción";
+"LoadingSongArtist" = "...";
 
 // Notifications View
 "Notifications" = "Notificaciones";
@@ -29,6 +32,8 @@
 "SearchDescription" = "Busca tus canciones, artistas o álbumes favoritos";
 "NoMatchesFound" = "No se han encontrado resultados";
 "NoMatchesDescription" = "No hemos encontrado nada para su búsqueda. Pruebe con otras palabras clave o compruebe si hay errores tipográficos";
+"SearchForPeople" = "Busca personas";
+"SearchPeopleDescription" = "Busca a tus amigos. (Escribe su nombre de usuario exacto)";
 
 // Profile View
 "Posts" = "Posts";

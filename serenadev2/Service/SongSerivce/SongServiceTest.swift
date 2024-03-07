@@ -4,6 +4,7 @@
 //
 //  Created by Pablo Navarro Zepeda on 28/02/24.
 //
+/*
 import SwiftUI
 import Combine
 
@@ -29,7 +30,7 @@ class SongViewModelTest: ObservableObject {
 }
 
 struct SongServiceTest: View {
-    @StateObject private var viewModel = SongViewModelTest()
+    //@StateObject private var viewModel = SongViewModelTest()
     @State private var inputId: String = ""
     
     var body: some View {
@@ -81,3 +82,4 @@ struct SongServiceTest: View {
 #Preview {
     SongServiceTest()
 }
+*/

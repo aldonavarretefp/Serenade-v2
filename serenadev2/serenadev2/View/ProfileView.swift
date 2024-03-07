@@ -151,6 +151,7 @@ struct ProfileView: View {
                             }
                             if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
                                 postVM.posts = posts
+                                postVM.sortPostsByDate()
                                 for post in posts {
                                     print("Post: ", post.songId)
                                     guard let sender = post.sender else {
@@ -175,6 +176,7 @@ struct ProfileView: View {
                             let user = self.user
                             if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user!.record.recordID) {
                                 postVM.posts = posts
+                                postVM.sortPostsByDate()
                                 for post in posts {
                                     print("Post: ", post.songId)
                                     guard let sender = post.sender else {
@@ -214,6 +216,7 @@ struct ProfileView: View {
                     }
                     if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
                         postVM.posts = posts
+                        postVM.sortPostsByDate()
                         for post in posts {
                             print("Post: ", post.songId)
                             guard let sender = post.sender else {
@@ -238,6 +241,7 @@ struct ProfileView: View {
                     let user = self.user
                     if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user!.record.recordID) {
                         postVM.posts = posts
+                        postVM.sortPostsByDate()
                         for post in posts {
                             print("Post: ", post.songId)
                             guard let sender = post.sender else {

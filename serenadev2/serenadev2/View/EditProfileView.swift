@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct EditProfileView: View {
     // MARK: - Properties
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var userVM: UserViewModel
+    @StateObject var profilePicViewModel: ProfilePicViewModel = ProfilePicViewModel()
     var user: User
     
     // MARK: - Properties
@@ -20,6 +22,14 @@ struct EditProfileView: View {
     @State private var error: String = ""
     @State private var lastTagName: String = ""
     
+    // Initializer to inject ProfilePicViewModel with an existing profile picture URL if available
+        init(user: User) {
+            self.user = user
+            _profilePicViewModel = StateObject(wrappedValue: ProfilePicViewModel(profileImageUrl: ""))
+            _name = State(initialValue: user.name)
+            _tagName = State(initialValue: user.tagName)
+        }
+    
     // MARK: - Body
     var body: some View {
         NavigationStack{
@@ -27,24 +37,9 @@ struct EditProfileView: View {
                 Color.viewBackground
                     .ignoresSafeArea()
                 VStack {
-                    if user.profilePicture != "" {
-                        Image(user.profilePicture)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                    }
-                    else {
-                        Image(systemName: "person.crop.circle.fill")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                    }
-                    Button(LocalizedStringKey("ChangeProfilePhoto")) {
-//                        PhotosPicker()
-                    }
-                        .padding(.top)
+                    
+                    EditableCircularProfileImage(viewModel: profilePicViewModel)
+
                     VStack{
                         Divider()
                             .padding(.vertical, 4)
@@ -85,6 +80,22 @@ struct EditProfileView: View {
                         lastTagName = trimmedTagName
                         newUser.name = name
                         newUser.tagName = trimmedTagName
+                        switch profilePicViewModel.imageState {
+                        case .empty:
+                            break;
+                        case .loading(_):
+                            break;
+                        case .success(let uIImage):
+                            guard let imageAsset: CKAsset = profilePicViewModel.imageToCKAsset(image: uIImage), let profilePicUrlString = imageAsset.fileURL?.absoluteString else {
+                                print("Couldn't bring the profileImgURL")
+                                return
+                                
+                            }
+                            newUser.profilePictureAsset = imageAsset
+                        case .failure(_):
+                            break;
+                        }
+                        
                         userVM.searchUsers(tagname: trimmedTagName) { users in
                             if let users, users.count > 0 {
                                 let user = users[0]
@@ -95,6 +106,7 @@ struct EditProfileView: View {
                                 }
                                 return
                             }
+                            
                             userVM.updateUser(updatedUser: newUser)
                             self.dismiss()
                         }
@@ -105,8 +117,8 @@ struct EditProfileView: View {
             .navigationTitle(LocalizedStringKey("EditProfile"))
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
-                name = user.name 
-                tagName = user.tagName
+//                name = user.name 
+//                tagName = user.tagName
             }
         }
     }

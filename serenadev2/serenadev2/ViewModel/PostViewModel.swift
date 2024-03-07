@@ -27,10 +27,6 @@ class PostViewModel: ObservableObject {
             if let user = User(record: record) {
                 DispatchQueue.main.async {
                     self?.senderDetails[recordID] = user
-                    if let senderDetails = self?.senderDetails {
-                        print("Sender details", senderDetails)
-                    }
-                    
                 }
             }
         }
@@ -42,10 +38,12 @@ class PostViewModel: ObservableObject {
         do {
             let record = try await CKContainer.default().publicCloudDatabase.record(for: recordID)
             if let user = User(record: record) {
-                await MainActor.run {
+                
+                DispatchQueue.main.async {
                     self.senderDetails[recordID] = user
                     print("Sender details", self.senderDetails)
                 }
+                
             }
         } catch {
             print("Error fetching user details: \(error.localizedDescription)")
@@ -74,7 +72,9 @@ class PostViewModel: ObservableObject {
         if user.friends.count == 0 {
             // Now call an async version of `fetchAllPostsFromUserID`
             if let posts = await fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
-                self.posts = posts
+                DispatchQueue.main.async {
+                    self.posts = posts
+                }
                 sortPostsByDate()
                 for post in posts {
                     guard let sender = post.sender else {
@@ -106,7 +106,9 @@ class PostViewModel: ObservableObject {
             
             do {
                 let posts: [Post] = try await CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
-                self.posts = posts
+                DispatchQueue.main.async {
+                    self.posts = posts
+                }
                 sortPostsByDate()
                 for post in posts {
                     guard let sender = post.sender else {
@@ -144,7 +146,9 @@ class PostViewModel: ObservableObject {
                     print("No posts")
                     return
                 }
-                self.posts = posts
+                DispatchQueue.main.async {
+                    self.posts = posts
+                }
                 for post in posts {
                     print("Post: ", post.songId)
                     guard let sender = post.sender else {
@@ -172,7 +176,9 @@ class PostViewModel: ObservableObject {
                         print("No returned posts userfriends is NIL")
                         return
                     }
-                    self.posts = posts
+                    DispatchQueue.main.async {
+                        self.posts = posts
+                    }
                     self.sortPostsByDate()
                 }
                 .store(in: &cancellables)
@@ -235,7 +241,9 @@ class PostViewModel: ObservableObject {
     }
     
     func sortPostsByDate() {
-        self.posts.sort {$0.date > $1.date}
+        DispatchQueue.main.async {
+            self.posts.sort {$0.date > $1.date}
+        }
     }
 }
 

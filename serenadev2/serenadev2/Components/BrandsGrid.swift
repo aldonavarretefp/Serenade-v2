@@ -30,7 +30,7 @@ struct BrandsGrid: View {
         let chunks = buttonTypes.chunked(into: 3)
         
         // Main grid view to display the buttons
-        Grid(horizontalSpacing: 20, verticalSpacing: 20) {
+        Grid(horizontalSpacing: 12, verticalSpacing: 20) {
             // Iterate over each chunk of buttonTypes
             ForEach(Array(chunks.enumerated()), id: \.offset) { _, chunk in
                 // Grid row to contain the buttons in the current chunk
@@ -45,12 +45,12 @@ struct BrandsGrid: View {
                     }
                 }
                 // Set the maximum height for each row based on the screen height
-                .frame(minHeight: UIScreen.screenHeight / 8, maxHeight: UIScreen.screenHeight / 7)
+                .frame(maxWidth: (UIScreen.screenWidth - 32) / 3, minHeight: UIScreen.screenHeight / 8, maxHeight: UIScreen.screenHeight / 7)
             }
         }
     }
 }
 
 #Preview {
-    BrandsGrid(buttonTypes: [.appleMusic, .spotify, .youtubeMusic], songTitle: "Runaway", songArtist: "Ye", songId: "")
+    BrandsGrid(buttonTypes: [.appleMusic, .spotify], songTitle: "Runaway", songArtist: "Ye", songId: "")
 }

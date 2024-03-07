@@ -35,21 +35,30 @@ struct PostView: View {
     var song: SongModel?
     
     var body: some View {
-        
-        //let strokeGradient = LinearGradient(gradient: Gradient(colors: [(colorScheme == .light ? Color.black : Color.white).opacity(0.46), (colorScheme == .light ? Color.black : Color.white).opacity(0.23)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-        
         ZStack(alignment: .bottom) {
             RoundedRectangle(cornerRadius: 15)
                 .fill(.card)
                 .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0.0), radius: 18, y: 5)
             VStack(alignment: .leading) {
                 HStack {
-                    if let sender, sender.profilePicture != "" {
-                        Image(sender.profilePicture)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .clipShape(Circle())
-                            .frame(height: 28)
+                    if let sender, let asset = sender.profilePictureAsset {
+                        AsyncImage(url: asset.fileURL) { phase in
+                            switch phase {
+                            case .success(let img):
+                                img
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 30, height: 30)
+                                    .clipShape(Circle())
+                                
+                            default:
+                                Image(systemName: "person.circle.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                    .frame(height: 28)
+                            }
+                        }
                     } else {
                         Image(systemName: "person.circle.fill")
                             .resizable()
@@ -62,7 +71,7 @@ struct PostView: View {
                         Text(sender.tagName).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
                     }
                     else {
-                        Text("user").fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
+                        Text(LocalizedStringKey("LoadingSender")).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
                     }
                     Spacer()
                     formattedDate
@@ -80,12 +89,6 @@ struct PostView: View {
                             .padding(.bottom, 2)
                     }
                 }
-                //                Image()
-                //                    .resizable()
-                //                    .aspectRatio(contentMode: .fill)
-                //                    .frame(height: 95)
-                //                    .blur(radius: 20.0)
-                //                    .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
                 
                 // Back card song cover art
                 if let song {
@@ -109,7 +112,7 @@ struct PostView: View {
                                 .blur(radius: 20.0)
                                 .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
                                 .transition(.opacity.animation(.easeIn(duration: 0.5)))
-                                
+                            
                         case .failure(_):
                             Rectangle()
                                 .fill(Color((song.bgColor)!))
@@ -140,18 +143,6 @@ struct PostView: View {
                     .frame(height: 95)
                 
                 HStack {
-                    //                    Image(post.song!.coverArt)
-                    //                        .resizable()
-                    //                        .aspectRatio(contentMode: .fit)
-                    //                        .frame(width: 70, height: 70)
-                    //                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                    //                        .padding()
-                    //                    VStack(alignment: .leading) {
-                    //                        Text(post.song!.title)
-                    //                            .fontWeight(.bold)
-                    //                        Text(post.song!.artist)
-                    //                            .font(.footnote)
-                    //                            .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
                     if let song {
                         AsyncImage(url: song.artworkUrlMedium, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
                             switch phase {
@@ -202,9 +193,9 @@ struct PostView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10.0))
                             .padding()
                         VStack(alignment: .leading) {
-                            Text("Song Title")
+                            Text(LocalizedStringKey("LoadingSongTitle"))
                                 .fontWeight(.bold)
-                            Text("Artist")
+                            Text(LocalizedStringKey("LoadingSongArtist"))
                                 .font(.footnote)
                                 .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
                         }
@@ -261,26 +252,9 @@ struct PostView: View {
             }
         }
         .font(.subheadline)
-        .task {
-            print("POSTVIEW: ")
-            print(self.post)
-            print(self.sender ?? "NO SENDER")
-            //            let senderRecord = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: post.sender!.recordID)
-            //            userViewModel.fetchUserFromRecord(record: senderRecord) { (returnedUser: User?) in
-            //                print(returnedUser ?? "No user")
-            //                if returnedUser != nil {
-            //                    sender = returnedUser!
-            //                }
-            //            }
-            //            songViewModel.fetchSong(id: post.songId) { song in
-            //                self.song = songViewModel.song
-            //            }
-            //
-        }
     }
     
     func shareImageToInstagramStory(image: UIImage) {
-        // Ensure "frameInstagram" exists in your asset catalog
         if let backgroundImage = UIImage(named: "frameInstagram") {
             guard let song = song, let topColor = song.bgColor , let bottomColor = song.priColor else {
                 return
@@ -327,6 +301,9 @@ extension UIView {
 
 #Preview {
     ScrollView {
+        PostView(post: Post(postType: .daily, songId: "songId", date: Date(), isAnonymous: false, isActive: true))
+        PostView(post: Post(postType: .daily, songId: "songId", date: Date(), isAnonymous: false, isActive: true))
+        PostView(post: Post(postType: .daily, songId: "songId", date: Date(), isAnonymous: false, isActive: true))
         PostView(post: Post(postType: .daily, songId: "songId", date: Date(), isAnonymous: false, isActive: true))
     }
 }

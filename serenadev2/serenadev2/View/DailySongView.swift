@@ -15,7 +15,7 @@ struct DailySongView: View {
     
     @Environment(\.colorScheme) private var colorScheme
     @State private var caption: String = ""
-    @State var  characterLimit = 100
+    @State var  characterLimit = 150
     @State private var isPresentingSearchSong = false //for modal presentation of SearchSong
     
     @State var song: SongModel? // Optional to handle the case where no song is selected
