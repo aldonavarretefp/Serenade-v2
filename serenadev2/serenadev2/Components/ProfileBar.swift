@@ -23,7 +23,7 @@ struct ProfileBar: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
     
-    var user: User
+    @State var user: User
     @State var friendRequest: FriendRequest? = nil
     
     var body: some View {
@@ -216,6 +216,9 @@ struct ProfileBar: View {
                     self.friendRequest = resultFriendRequest.first
                     isFriendRequestSent = true
                 }
+            }
+            if userViewModel.user != nil {
+                user = userViewModel.user!
             }
         }
     }
