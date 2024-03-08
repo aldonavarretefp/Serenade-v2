@@ -51,7 +51,7 @@ struct PostInstagramView: View {
             
             VStack{
                 HStack{
-                    if let sender = sender, let caption = post?.caption {
+                    if let sender = sender {
                         
                         VStack(alignment: .leading){
                             HStack{
@@ -77,8 +77,12 @@ struct PostInstagramView: View {
                                     .foregroundStyle(.callout)
                             }
                             
-                            Text(caption)
-                                .padding(.top, 5)
+                            if let caption = post?.caption {
+                                if caption != "" && caption != nil {
+                                    Text(caption)
+                                }
+                            }
+                            
                         }
                         .font(.title2)
                     }
