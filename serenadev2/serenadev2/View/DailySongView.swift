@@ -17,11 +17,13 @@ struct DailySongView: View {
     @State private var caption: String = ""
     @State var  characterLimit = 150
     @State private var isPresentingSearchSong = false //for modal presentation of SearchSong
-    
+    @State private var isLoading: Bool = false
     @State var song: SongModel? // Optional to handle the case where no song is selected
     
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var postViewModel: PostViewModel
+    
+    
     
     var isSongFromDaily : Bool
     
@@ -123,7 +125,7 @@ struct DailySongView: View {
                     Spacer()
                     // Enable the 'Daily' button only if a song is selected
                     
-                    ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: song == nil) {
+                    ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: song == nil || isLoading, isLoading: isLoading) {
                         
                         guard let user = userViewModel.user, let song = song else {
                             print("ERROR: User does not exist")
@@ -132,8 +134,11 @@ struct DailySongView: View {
                         let reference = CKRecord.Reference(recordID: user.record.recordID, action: .none)
                         let post = Post(postType: .daily, sender: reference, caption: self.caption,  songId: song.id, date: Date.now, isAnonymous: false, isActive: true)
                         
+                        isLoading = true
+                        
                         postViewModel.createAPost(post: post) {
                             userViewModel.addPostToUser(sender: user, post: post)
+                            isLoading = false
                             self.dismiss()
                             print("Shared daily")
                         }

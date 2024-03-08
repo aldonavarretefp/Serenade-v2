@@ -23,12 +23,14 @@ struct EditProfileView: View {
     @State private var lastTagName: String = ""
     
     // Initializer to inject ProfilePicViewModel with an existing profile picture URL if available
-        init(user: User) {
-            self.user = user
-            _profilePicViewModel = StateObject(wrappedValue: ProfilePicViewModel(profileImageUrl: ""))
-            _name = State(initialValue: user.name)
-            _tagName = State(initialValue: user.tagName)
+    init(user: User) {
+        self.user = user
+        if let imageAssetUrlToShow = user.profilePictureAsset?.fileURL {
+            _profilePicViewModel = StateObject(wrappedValue: ProfilePicViewModel(profileImageUrl: imageAssetUrlToShow.absoluteString))
         }
+        _name = State(initialValue: user.name)
+        _tagName = State(initialValue: user.tagName)
+    }
     
     // MARK: - Body
     var body: some View {
@@ -39,7 +41,6 @@ struct EditProfileView: View {
                 VStack {
                     
                     EditableCircularProfileImage(viewModel: profilePicViewModel)
-
                     VStack{
                         Divider()
                             .padding(.vertical, 4)
@@ -63,9 +64,12 @@ struct EditProfileView: View {
                             Spacer()
                             TextField("New username",text: $tagName)
                                 .autocapitalization(.none)
+                                .onChange(of: tagName) { oldValue, newValue in
+                                    tagName = newValue.lowercased()
+                                }
                         }
                         Divider()
-                        if self.error != "" && tagName == self.lastTagName {
+                        if self.error != "" {
                             Text(error)
                                 .foregroundStyle(.red)
                         }
@@ -76,53 +80,82 @@ struct EditProfileView: View {
                         guard var newUser = userVM.user else {
                             return
                         }
-                        let trimmedTagName: String = tagName.trimmingCharacters(in: .whitespacesAndNewlines)
-                        lastTagName = trimmedTagName
-                        newUser.name = name
-                        newUser.tagName = trimmedTagName
+                        var imageAsset: CKAsset?
                         switch profilePicViewModel.imageState {
                         case .empty:
                             break;
                         case .loading(_):
                             break;
                         case .success(let uIImage):
-                            guard let imageAsset: CKAsset = profilePicViewModel.imageToCKAsset(image: uIImage), let profilePicUrlString = imageAsset.fileURL?.absoluteString else {
+                            imageAsset = profilePicViewModel.imageToCKAsset(image: uIImage)
+                            guard let imageAsset, let profilePicUrl = imageAsset.fileURL else {
                                 print("Couldn't bring the profileImgURL")
                                 return
                                 
                             }
-                            newUser.profilePictureAsset = imageAsset
+                            Task {
+                                //                                do {
+                                //                                    try FileManager.default.removeItem(at: profilePicUrl)
+                                //                                    print("SUCCESS deleting temp file")
+                                //                                }
+                                //                                catch let e {
+                                //                                    print("Error deleting temp file: \(e)")
+                                //                                }
+                            }
                         case .failure(_):
                             break;
                         }
                         
+                        let trimmedTagName: String = tagName.trimmingCharacters(in: .whitespacesAndNewlines)
+                        lastTagName = trimmedTagName
+                        
                         userVM.searchUsers(tagname: trimmedTagName) { users in
                             if let users, users.count > 0 {
-                                let user = users[0]
-                                if user == self.user {
+                                let userFromDB = users[0]
+                                if userFromDB.accountID == self.user.accountID {
                                     print("user is the same")
-                                } else {
-                                    self.error = "Sorry! \(trimmedTagName) is already in use."
+                                    newUser.name = name
+                                    newUser.tagName = trimmedTagName
+                                    newUser.profilePictureAsset = imageAsset
+                                    //                                        Task {
+                                    //                                            do { try FileManager.default.removeItem(at: url) }
+                                    //                                                catch let e { print("Error deleting temp file: \(e)") }
+                                    //                                        }
                                 }
-                                return
+                                userVM.updateUser(updatedUser: newUser)
+                                lastTagName = ""
+                                
+                                self.dismiss()
+                            } else {
+                                self.error = "Sorry! \(trimmedTagName) is already in use."
                             }
-                            
-                            userVM.updateUser(updatedUser: newUser)
-                            self.dismiss()
+                            return
                         }
+                        print("user is the same")
+                        newUser.name = name
+                        newUser.tagName = trimmedTagName
+                        
+                        newUser.profilePictureAsset = imageAsset
+                        //                                        Task {
+                        //                                            do { try FileManager.default.removeItem(at: url) }
+                        //                                                catch let e { print("Error deleting temp file: \(e)") }
+                        //                                        }
+                        
+                        userVM.updateUser(updatedUser: newUser)
+                        lastTagName = ""
+                        
+                        self.dismiss()
                     }
                 }
-                .padding()
             }
-            .navigationTitle(LocalizedStringKey("EditProfile"))
-            .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-//                name = user.name 
-//                tagName = user.tagName
-            }
+            .padding()
         }
+        .navigationTitle(LocalizedStringKey("EditProfile"))
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
+
+
 
 #Preview {
     EditProfileView(user: sebastian)

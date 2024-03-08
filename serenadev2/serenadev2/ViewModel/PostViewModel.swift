@@ -41,7 +41,6 @@ class PostViewModel: ObservableObject {
                 
                 DispatchQueue.main.async {
                     self.senderDetails[recordID] = user
-                    print("Sender details", self.senderDetails)
                 }
                 
             }
@@ -150,7 +149,6 @@ class PostViewModel: ObservableObject {
                     self.posts = posts
                 }
                 for post in posts {
-                    print("Post: ", post.songId)
                     guard let sender = post.sender else {
                         print("Post has no sender")
                         return
@@ -207,7 +205,7 @@ class PostViewModel: ObservableObject {
     func fetchAllPostsFromUserID(id: CKRecord.ID, completion: @escaping ([Post]?) -> Void){
         let recordToMatch = CKRecord.Reference(recordID: id, action: .none)
         let predicate = NSPredicate(format: "sender == %@ && isActive == 1", recordToMatch)
-        //        print("FETCH POSTS PREDICATE: \(predicate)\n")
+        
         let recordType = PostRecordKeys.type.rawValue
         
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)

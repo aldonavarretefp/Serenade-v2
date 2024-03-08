@@ -18,6 +18,7 @@ struct ActionButton: View {
     var backgroundColor: Color      // Background color of the button
     var isShareDaily : Bool          // Boolean indicating if it's a share daily button
     var isDisabled : Bool
+    var isLoading: Bool?
     
     var action: () -> Void           // Action to perform when the button is tapped
     var materialEffect : Material = .thinMaterial  // Material effect for the button
@@ -42,8 +43,8 @@ struct ActionButton: View {
                                                      (Color.black).opacity(0.52) : Color.white).opacity(0.12)]),
                                             startPoint: .topLeading, endPoint: .bottomTrailing)
         return Button(action: action) {
-            // Content of the button
             HStack {
+                
                 Image(systemName: symbolName)
                     .font(.title3)
                     .foregroundColor(colorScheme == .dark ? .white : .black)
@@ -51,6 +52,8 @@ struct ActionButton: View {
                 Text(label)
                     .foregroundColor(colorScheme == .dark ? .white : .black)
                     .fontWeight(.bold)
+                
+                
             }
         }
         .padding(.horizontal)
@@ -71,13 +74,21 @@ struct ActionButton: View {
             // Content of the button
             HStack {
                 Spacer()
-                Image(systemName: symbolName)
-                    .font(.title3)
-                    .foregroundColor(fontColor)
-                    .fontWeight(.medium)
-                Text(label)
-                    .foregroundColor(fontColor)
-                    .fontWeight(.bold)
+                if let isLoading, isLoading == true {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .foregroundColor(colorScheme == .dark ? .white : .black)
+                        .fontWeight(.medium)
+                        .font(.title3)
+                } else {
+                    Image(systemName: symbolName)
+                        .font(.title3)
+                        .foregroundColor(fontColor)
+                        .fontWeight(.medium)
+                    Text(label)
+                        .foregroundColor(fontColor)
+                        .fontWeight(.bold)
+                }
                 Spacer()
             }
         }
