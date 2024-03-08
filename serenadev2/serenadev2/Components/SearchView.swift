@@ -110,6 +110,7 @@ struct SearchView: View {
                                     }
                                 }
                             }
+                            .scrollDismissesKeyboard(.immediately)
                         } else {
                             ScrollView {
                                 VStack(spacing: 0) {
@@ -147,9 +148,10 @@ struct SearchView: View {
                                 VStack(spacing: 0) {
                                     ForEach(filteredResults) { value in
                                         NavigationLink(destination: ProfileViewFromSearch(user: value.user!), label: {
-                                            ItemSmall(item: ContentItem(isPerson: true, user: value.user), showArrow: true)                                            
+                                            ItemSmall(item: ContentItem(isPerson: true, user: value.user), showArrow: true)
                                             .padding([.leading, .top, .bottom])
                                         })
+                                        .buttonStyle(.plain)
                                     }
                                 }
                             }

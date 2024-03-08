@@ -99,6 +99,7 @@ struct ItemSmall: View {
             if showArrow {
                 Image(systemName: "chevron.right")
                     .foregroundColor(.gray)
+                    .padding()
             }
             
             if showXMark {
