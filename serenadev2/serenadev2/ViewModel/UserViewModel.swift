@@ -25,7 +25,7 @@ class UserViewModel: ObservableObject {
                     self.user = returnedUser
                     self.userID = userID
                     self.isLoggedIn = true
-                    self.tagNameExists = user.tagName != ""
+                    self.tagNameExists = user.tagName != userID.lowercased()
                 }
             }
         }
@@ -39,7 +39,6 @@ class UserViewModel: ObservableObject {
         fetchUserFromAccountID(accountID: userID) { returnedUser in
             guard let user = returnedUser else {
                 guard let user = User(accountID: userID, name: fullName, tagName: userID.lowercased(), email: email, posts: .init(), streak: 0, profilePicture: "", isActive: true, profilePictureAsset: nil) else {
-                    self.error = "Couldnt create structure user"
                     return
                 }
                 self.createUser(user: user)
@@ -116,7 +115,7 @@ class UserViewModel: ObservableObject {
     }
     
     func createUser(user: User){
-        if(user.tagName == "" || user.name == "") { return }
+        if(user.tagName == "") { return }
         guard let newUser = User(accountID: user.accountID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, profilePictureAsset: nil) else {
             self.error.append(" No se pudo crear un nuevo usuario en createUser")
             return
