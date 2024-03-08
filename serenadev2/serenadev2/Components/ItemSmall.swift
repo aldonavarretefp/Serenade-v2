@@ -54,9 +54,32 @@ struct ItemSmall: View {
                     }
                 }
             } else {
-                Image(systemName: "person.crop.circle.fill")
-                    .frame(width: 50, height: 50)
-                    .clipShape(Circle())
+                if let user = item.user {
+                    if let asset = user.profilePictureAsset {
+                        AsyncImage(url: asset.fileURL) { phase in
+                            switch phase {
+                            case .success(let img):
+                                img
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 50, height: 50)
+                                    .clipShape(Circle())
+
+                            default:
+                                Image(systemName: "person.circle.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 50, height: 50)
+                                    .clipShape(Circle())
+                            }
+                        }
+                    } else {
+                        Image(systemName: "person.crop.circle.fill")
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                    }
+                    
+                }
             }
             
             VStack(alignment: .leading, spacing: 4){
