@@ -15,6 +15,7 @@ struct UserDetailsView: View {
     
     @State private var name: String = ""
     @State var tagname: String = ""
+    @State var tagNameRepeated: Bool = false
     
     var body: some View {
         NavigationView {
@@ -67,6 +68,7 @@ struct UserDetailsView: View {
                     Spacer()
                     
                     ActionButton(label: "Complete account", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname != "" ? false : true){
+                        
                         saveUserDetails()
                     }
                 }
@@ -86,21 +88,30 @@ struct UserDetailsView: View {
                 }
             
             }
+            .alert(Text("Tagname already exists."), isPresented: $tagNameRepeated) {
+                
+            }
         }
         .foregroundStyle(.white)
     }
     
     private func saveUserDetails() {
-        
-        guard var user = userViewModel.user else {
-            print("No user in DB")
-            return
+        userViewModel.searchUsers(tagname: tagname) { users in
+            guard let users = users else { return }
+            if(!users.isEmpty){
+                self.tagNameRepeated = true
+                return
+            } else {
+                self.tagNameRepeated = false
+                guard var user = userViewModel.user else {
+                    print("No user in DB")
+                    return
+                }
+                user.tagName = tagname
+                user.name = name
+                userViewModel.tagNameExists = true
+            }
         }
-        
-        user.tagName = tagname
-        user.name = name
-        userViewModel.tagNameExists = true
-        userViewModel.updateUser(updatedUser: user)
     }
 }
 

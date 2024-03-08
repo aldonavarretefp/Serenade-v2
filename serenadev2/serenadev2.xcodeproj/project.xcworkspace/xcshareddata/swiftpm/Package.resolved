@@ -1,4 +1,5 @@
 {
+  "originHash" : "6c993e5b504be02f33e60168739274106295d1038ab012e82be47e8f55aea38e",
   "pins" : [
     {
       "identity" : "igstorykit",
@@ -10,5 +11,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

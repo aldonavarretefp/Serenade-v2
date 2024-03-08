@@ -76,11 +76,12 @@ struct EditProfileView: View {
                     }
                     .padding(.vertical)
                     Spacer()
-                    ActionButton(label: "Save changes", symbolName: "checkmark.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagName != "" && name != "" ? false : true) {
+                    ActionButton(label: "Save changes", symbolName: "checkmark.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagName == "" || name == "") {
                         guard var newUser = userVM.user else {
                             return
                         }
                         var imageAsset: CKAsset?
+                        // Imagen cargada
                         switch profilePicViewModel.imageState {
                         case .empty:
                             break;
@@ -93,15 +94,6 @@ struct EditProfileView: View {
                                 return
                                 
                             }
-                            Task {
-                                //                                do {
-                                //                                    try FileManager.default.removeItem(at: profilePicUrl)
-                                //                                    print("SUCCESS deleting temp file")
-                                //                                }
-                                //                                catch let e {
-                                //                                    print("Error deleting temp file: \(e)")
-                                //                                }
-                            }
                         case .failure(_):
                             break;
                         }
@@ -110,39 +102,22 @@ struct EditProfileView: View {
                         lastTagName = trimmedTagName
                         
                         userVM.searchUsers(tagname: trimmedTagName) { users in
-                            if let users, users.count > 0 {
+                            if let users, users.count > 0 && trimmedTagName != "" {
                                 let userFromDB = users[0]
                                 if userFromDB.accountID == self.user.accountID {
                                     print("user is the same")
                                     newUser.name = name
                                     newUser.tagName = trimmedTagName
                                     newUser.profilePictureAsset = imageAsset
-                                    //                                        Task {
-                                    //                                            do { try FileManager.default.removeItem(at: url) }
-                                    //                                                catch let e { print("Error deleting temp file: \(e)") }
-                                    //                                        }
                                 }
                                 userVM.updateUser(updatedUser: newUser)
                                 lastTagName = ""
-                                
                                 self.dismiss()
                             } else {
                                 self.error = "Sorry! \(trimmedTagName) is already in use."
                             }
                             return
                         }
-                        print("user is the same")
-                        newUser.name = name
-                        newUser.tagName = trimmedTagName
-                        
-                        newUser.profilePictureAsset = imageAsset
-                        //                                        Task {
-                        //                                            do { try FileManager.default.removeItem(at: url) }
-                        //                                                catch let e { print("Error deleting temp file: \(e)") }
-                        //                                        }
-                        
-                        userVM.updateUser(updatedUser: newUser)
-                        lastTagName = ""
                         
                         self.dismiss()
                     }

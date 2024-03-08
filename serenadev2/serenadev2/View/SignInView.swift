@@ -20,8 +20,7 @@ struct SignInView: View {
         NavigationStack {
             ZStack {
                 VStack {
-                    Image("AppLogo")
-                    
+                    Image("AppLogo")                    
                     Text("Sign in and start serenading")
                         .bold()
                         .font(.largeTitle)
@@ -42,12 +41,17 @@ struct SignInView: View {
                                 break;
                             }
                         case .failure(let error):
-                            print("ERROR: Sign In ", error.localizedDescription)
+                            userViewModel.error = error.localizedDescription
+                            break;
                         }
                     })
                     .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
                     .frame(height: 45)
                     .padding()
+                    
+//                    if userViewModel.error != "" {
+//                        Text(userViewModel.error)
+//                    }
                     
                 }
                 .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
