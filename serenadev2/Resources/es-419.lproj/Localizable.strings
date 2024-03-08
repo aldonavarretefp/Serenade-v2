@@ -83,6 +83,10 @@
 "TapToPausePreview" = "Toca para pausar la vista previa";
 "Daily" = "Canción del día";
 "OpenWith" = "Abrir con";
+"OpenWithAppleMusic" = "Abrir con Apple Music";
+"OpenWithSpotify" = "Abrir con Spotify";
+"OpenWithYouTubeMusic" = "Abrir con YouTube Music";
+"OpenWithAmazonMusic" = "Abrir con Amazon Music";
 
 // Song meta data
 "SongInfo" = "Información de la canción";

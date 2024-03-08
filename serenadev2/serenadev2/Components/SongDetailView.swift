@@ -127,13 +127,13 @@ struct SongDetailView: View {
                                 if selectedStreamingApps.count == 1 {
                                     switch selectedStreamingApps[0] {
                                     case .appleMusic:
-                                        return "Open with Apple Music"
+                                        return LocalizedStringKey("OpenWithAppleMusic")
                                     case .spotify:
-                                        return "Open with Spotify"
+                                        return LocalizedStringKey("OpenWithSpotify")
                                     case .youtubeMusic:
-                                        return "Open with YouTube Music"
+                                        return LocalizedStringKey("OpenWithYouTubeMusic")
                                     case .amazonMusic:
-                                        return "Open with Amazon Music"
+                                        return LocalizedStringKey("OpenWithAmazonMusic")
                                     }
                                 } else {
                                     return "Open With"
