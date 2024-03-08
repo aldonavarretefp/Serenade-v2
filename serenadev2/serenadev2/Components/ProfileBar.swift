@@ -229,9 +229,17 @@ struct ProfileBar: View {
                     isFriendRequestSent = true
                 }
             }
-            if userViewModel.user != nil {
-                if user.accountID == userViewModel.user!.accountID {
-                    user = userViewModel.user!
+            
+            if let userVM = userViewModel.user {
+                if(user.accountID == userVM.accountID){
+                    user = userVM
+                }
+            }
+        }
+        .onAppear {
+            if let userVM = userViewModel.user {
+                if(user.accountID == userVM.accountID){
+                    user = userVM
                 }
             }
         }

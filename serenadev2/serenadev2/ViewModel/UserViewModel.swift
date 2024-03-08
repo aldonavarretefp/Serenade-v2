@@ -38,10 +38,7 @@ class UserViewModel: ObservableObject {
         
         fetchUserFromAccountID(accountID: userID) { returnedUser in
             guard let user = returnedUser else {
-                self.error.append(" No existe apunto de crear")
-                // User does not exists
-                //                let user = User(name: fullName, tagName: "", email: email, streak: 0, profilePicture: "", isActive: true, record: .init(recordType: UserRecordKeys.type.rawValue))
-                guard let user = User(accountID: userID, name: fullName, tagName: "", email: email, posts: .init(), streak: 0, profilePicture: "", isActive: true, profilePictureAsset: nil) else {
+                guard let user = User(accountID: userID, name: fullName, tagName: userID.lowercased(), email: email, posts: .init(), streak: 0, profilePicture: "", isActive: true, profilePictureAsset: nil) else {
                     self.error = "Couldnt create structure user"
                     return
                 }
@@ -55,7 +52,7 @@ class UserViewModel: ObservableObject {
                 self.user = returnedUser
                 self.userID = userID
                 self.isLoggedIn = true
-                self.tagNameExists = user.tagName != ""
+                self.tagNameExists = user.tagName != userID.lowercased()
             }
             
         }
@@ -119,6 +116,7 @@ class UserViewModel: ObservableObject {
     }
     
     func createUser(user: User){
+        if(user.tagName == "" || user.name == "") { return }
         guard let newUser = User(accountID: user.accountID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, profilePictureAsset: nil) else {
             self.error.append(" No se pudo crear un nuevo usuario en createUser")
             return
@@ -145,7 +143,8 @@ class UserViewModel: ObservableObject {
         
     }
     
-    func updateUser(updatedUser: User) {        
+    func updateUser(updatedUser: User) {   
+        if(updatedUser.tagName == "" || updatedUser.name == "") { return }
         var copyUser = updatedUser
         guard let newUser = copyUser.update(newUser: updatedUser) else { return }
         

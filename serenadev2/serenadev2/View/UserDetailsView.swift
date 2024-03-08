@@ -110,6 +110,7 @@ struct UserDetailsView: View {
                 user.tagName = tagname
                 user.name = name
                 userViewModel.tagNameExists = true
+                userViewModel.updateUser(updatedUser: user)
             }
         }
     }
