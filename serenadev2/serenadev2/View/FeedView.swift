@@ -38,7 +38,7 @@ struct FeedView: View {
     @State var userEmail: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? "")
     
     @EnvironmentObject var userViewModel: UserViewModel
-    @EnvironmentObject var postViewModel: PostViewModel
+    @StateObject var postViewModel: PostViewModel = PostViewModel()
     @StateObject var pushNotificationsVM: PushNotificationViewModel = PushNotificationViewModel()
     
     // MARK: - Environment properties
@@ -60,7 +60,7 @@ struct FeedView: View {
     @State var headerOpacity: Double = 1.0
     @State var dailyButtonOpacity: Double = 1.0
     @State var isDailySheetOpened: Bool = false
-
+    
     // MARK: - Body
     var body: some View {
         
@@ -69,9 +69,11 @@ struct FeedView: View {
                 Color.viewBackground
                     .ignoresSafeArea()
                 ZStack (alignment: .bottom) {
-                    ScrollView (.vertical, showsIndicators: false){
+                    ScrollView (.vertical, showsIndicators: false) {
                         VStack (spacing: 15) {
-                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                                .offset(y: -50)
                             if postViewModel.posts.isEmpty {
                                 ContentUnavailableView(label: {
                                     Label(LocalizedStringKey("No posts"), systemImage: "music.note")
@@ -92,7 +94,8 @@ struct FeedView: View {
                             
                         }
                         .padding(.top, headerHeight)
-                        .padding(.bottom)
+                        .padding([.bottom, .horizontal])
+                        .offset(y: -20)
                         .offsetY{ previous, current in
                             // Moving header based on direction scroll
                             if previous > current{
@@ -134,18 +137,17 @@ struct FeedView: View {
                                 withAnimation{
                                     dailyButtonOpacity = 1.0
                                 }
-                                
                             }
                         }
-                        .padding(.horizontal)
+                        
                         Spacer()
                             .frame(height: isDailyPosted ? 0 : 80)
                         
+                        
                     }
-                    .coordinateSpace(name: "SCROLL")
                     .refreshable {
+                        print("Fetching post again...")
                         let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? ""
-                        print("UserID: ", userID)
                         Task {
                             if let user = userViewModel.user {
                                 print("Fetching posts...")
@@ -153,11 +155,11 @@ struct FeedView: View {
                             }
                         }
                     }
+                    .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top){
                         VStack(spacing: 12){
-                            
                             // Header
-                            VStack(spacing: 0){
+                            VStack(spacing: 0) {
                                 HStack{
                                     
                                     // Navigation title
@@ -246,6 +248,7 @@ struct FeedView: View {
                         .ignoresSafeArea(edges: .top)
                         .frame(height: 0)
                 }
+                
             }
         }
         .task {

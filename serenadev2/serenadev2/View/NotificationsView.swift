@@ -5,34 +5,6 @@
 //  Created by Alejandro Oliva Ochoa on 01/03/24.
 //
 
-/*
- Button {
- print(friendRequestViewModel.friendRequests)
- } label: {
- Text("Print model")
- }
- 
- Button {
- let ale = CKRecord.init(recordType: UserRecordKeys.type.rawValue, recordID: .init(recordName: "87BF288A-BB93-467E-B342-838DE0292B87"))
- guard let miID = userViewModel.user?.record.recordID else {
- print("No user")
- return
- }
- friendRequestViewModel.createFriendRequest(senderID: ale.recordID, receiverID: miID)
- } label: {
- Text("Create Friend Request")
- }
- 
- Button {
- let friendRequest = friendRequestViewModel.friendRequests[0]
- 
- friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
- userViewModel.makeFriend(withID: friendRequest.sender.recordID)
- }
- } label: {
- Text("Accept Friend Request")
- }
- */
 
 import SwiftUI
 import CloudKit
@@ -43,6 +15,7 @@ struct NotificationsView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var friendRequestViewModel: FriendRequestsViewModel
     @State var notifications: [NotificationItem] = []
+    @State private var isLoading: Bool = false
     
     var body: some View {
         NavigationStack{
@@ -50,11 +23,25 @@ struct NotificationsView: View {
                 Color.viewBackground
                     .ignoresSafeArea()
                 VStack{
-                    ScrollView{
-                        VStack(spacing: 35){
-                            ForEach(notifications){ notification in
-                                notification
+                    ScrollView {
+                        VStack(spacing: 35) {
+                            
+                            if isLoading {
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                                    .font(.title2)
+                            } else {
+                                if notifications.count == 0 {
+                                    Text("Ups, there are no notifications for you yet!")
+                                } else {
+                                    ForEach(notifications){ notification in
+                                        notification
+                                    }
+                                }
+                                
                             }
+                            
+                            
                         }
                         .padding()
                     }
@@ -65,10 +52,13 @@ struct NotificationsView: View {
             .toolbarBackground(colorScheme == .light ? .white : .black,for: .navigationBar)
             .navigationTitle(LocalizedStringKey("Notifications"))
             .toolbarTitleDisplayMode(.inline)
-            .onAppear {
+            .task {
+                isLoading = true
                 if let currentUser = userViewModel.user {
                     self.friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser) {
+                        isLoading = false
                         for friendRequest in self.friendRequestViewModel.friendRequests {
+                            
                             userViewModel.fetchUserFromRecordID(recordID: friendRequest.sender.recordID) { user in
                                 guard let user = user else { return }
                                 notifications.append(NotificationItem(user: user, friendRequest: friendRequest, completionHandlerAccept: {accept(friendRequest: friendRequest)}, completionHandlerReject: {decline(friendRequest: friendRequest)}))

@@ -20,21 +20,24 @@ struct ProfileView: View {
     // Opacity variables for the button and the header
     @State var headerOpacity: Double = 1.0
     
-    @EnvironmentObject var postVM: PostViewModel
+    @StateObject var postVM: PostViewModel = PostViewModel()
     @EnvironmentObject var userVM: UserViewModel
     
     @State var posts: [Post] = []
     @State var user: User?
+    
+    @State private var isLoading: Bool = true
+    
     
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
                 Color.viewBackground
                     .ignoresSafeArea()
-                
-                VStack(spacing: 0){
+                VStack(spacing: 0) {
                     ScrollView (.vertical, showsIndicators: false) {
                         VStack(spacing: 15) {
+                            
                             if postVM.posts.isEmpty {
                                 ContentUnavailableView(label: {
                                     Label(LocalizedStringKey("No posts"), systemImage: "music.note")
@@ -42,6 +45,9 @@ struct ProfileView: View {
                                     Text(LocalizedStringKey("Try posting your first one!"))
                                 })
                             } else {
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                                    .offset(y: -50)
                                 ForEach(postVM.posts, id: \.self) { post in
                                     // Ensure PostView can handle nil or incomplete data gracefully
                                     if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID], let song = postVM.songsDetails[post.songId] {
@@ -54,8 +60,8 @@ struct ProfileView: View {
                             }
                         }
                         .padding(.top, headerHeight)
-                        .padding(.bottom)
-                        .padding(.horizontal)
+                        .padding([.bottom,.horizontal])
+                        .offset(y: -20)
                         .offsetY{ previous, current in
                             // Moving header based on direction scroll
                             if previous > current{
@@ -125,7 +131,7 @@ struct ProfileView: View {
                             
                                 .padding(.bottom)
                                 .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
-                                                        
+                            
                             // Get the header height
                                 .overlayPreferenceValue(HeaderBoundsKey.self){ value in
                                     GeometryReader{ proxy in

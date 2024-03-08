@@ -46,7 +46,6 @@ class FriendRequestsViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { _ in
             } receiveValue: { [weak self] (returnedFriendRequests: [FriendRequest]) in
-                print(returnedFriendRequests)
                 DispatchQueue.main.async {
                     self?.friendRequests = returnedFriendRequests
                 }
