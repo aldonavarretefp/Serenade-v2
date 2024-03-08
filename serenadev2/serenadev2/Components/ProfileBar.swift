@@ -111,7 +111,7 @@ struct ProfileBar: View {
                         }
                         .font(.caption)
                         VStack {
-                            Text(String(user.friends.count-1))
+                            Text(String(user.friends.count == 0 ? 0 : user.friends.count-1))
                             Text(LocalizedStringKey("Friends"))
                         }
                         .font(.caption)
