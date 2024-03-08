@@ -7,6 +7,7 @@ class UserViewModel: ObservableObject {
     @Published var userID: String? = nil
     @Published var isLoggedIn: Bool = false
     @Published var tagNameExists: Bool = false
+    @Published var error: String = ""
     var cancellables = Set<AnyCancellable>()
     
     init(){
@@ -16,6 +17,7 @@ class UserViewModel: ObservableObject {
             fetchUserFromAccountID(accountID: userID) { returnedUser in
                 guard let user = returnedUser else {
                     print("NO USER FROM DB")
+                    self.error = "No user fetch"
                     return
                 }
                 print("Fetched User from DB: \(user)")
@@ -31,12 +33,16 @@ class UserViewModel: ObservableObject {
     }
     
     func handleAuthorization(userID: String, fullName: String, email: String) {
+        
         UserDefaults.standard.setValue(userID, forKey: UserDefaultsKeys.userID)
+        
         fetchUserFromAccountID(accountID: userID) { returnedUser in
             guard let user = returnedUser else {
+                self.error.append(" No existe apunto de crear")
                 // User does not exists
                 //                let user = User(name: fullName, tagName: "", email: email, streak: 0, profilePicture: "", isActive: true, record: .init(recordType: UserRecordKeys.type.rawValue))
                 guard let user = User(accountID: userID, name: fullName, tagName: "", email: email, posts: .init(), streak: 0, profilePicture: "", isActive: true, profilePictureAsset: nil) else {
+                    self.error = "Couldnt create structure user"
                     return
                 }
                 self.createUser(user: user)
@@ -113,31 +119,33 @@ class UserViewModel: ObservableObject {
     }
     
     func createUser(user: User){
-        self.searchUsers(tagname: user.tagName) { returnedUsers in
-            guard let returnedUsers = returnedUsers else { return }
-            if(!returnedUsers.isEmpty){
-                return
-            } else {
-                guard let newUser = User(accountID: user.accountID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, profilePictureAsset: nil) else { return }
-                
-                CloudKitUtility.add(item: newUser) { result in
-                    switch result {
-                    case .success(_):
-                        DispatchQueue.main.async {
-                            self.user = newUser
-                            self.userID = newUser.accountID
-                            self.isLoggedIn = true
-                        }
-                        break
-                    case .failure(_):
-                        break
-                    }
+        guard let newUser = User(accountID: user.accountID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, profilePictureAsset: nil) else {
+            self.error.append(" No se pudo crear un nuevo usuario en createUser")
+            return
+        }
+        
+        CloudKitUtility.add(item: newUser) { result in
+            switch result {
+            case .success(_):
+                //self.error.append(" Se pudo agregar al usuario")
+                DispatchQueue.main.async {
+                    self.user = newUser
+                    self.userID = newUser.accountID
+                    self.isLoggedIn = true
+                    self.makeFriend(withID: CKRecord.ID.init(recordName: "AB32E1CA-F299-4124-8D11-807EE922974E"))
                 }
+                break
+            case .failure(_):
+                DispatchQueue.main.async {
+                    self.error = "Couldnt be created"
+                }
+                break
             }
         }
+        
     }
     
-    func updateUser(updatedUser: User) {
+    func updateUser(updatedUser: User) {        
         var copyUser = updatedUser
         guard let newUser = copyUser.update(newUser: updatedUser) else { return }
         
