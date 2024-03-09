@@ -33,7 +33,6 @@ struct ProfileViewFromSearch: View {
                 let isFriend = userVM.isFriend(of: user)
                 //  PENDING: Check friend requests sent for isFriendRequestSent
                 ProfileBar(isFriendRequestSent: false, isCurrentUser: false, isFriend: isFriend, user: user)
-                
                 ScrollView (.vertical, showsIndicators: false) {
                     VStack(spacing: 15) {
                         if postVM.posts.isEmpty {
@@ -84,19 +83,13 @@ struct ProfileViewFromSearch: View {
                 }
             }
         }
-        // This overlay is to show a bar behind the status bar
-        //            .overlay(alignment: .top) {
-        //                Color.clear
-        //                    .background()
-        //                    .ignoresSafeArea(edges: .top)
-        //                    .frame(height: 0)
-        //            }
         .navigationBarTitleDisplayMode(.inline)
         .task {
             let user = self.user
             if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
-                postVM.posts = posts
-                postVM.sortPostsByDate()
+                
+                    postVM.posts = posts
+                
                 for post in posts {
                     print("Post: ", post.songId)
                     guard let sender = post.sender else {

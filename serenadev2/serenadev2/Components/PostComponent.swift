@@ -225,12 +225,22 @@ struct PostComponent: View {
                                                 let postViewInstance = PostInstagramView(sender: self.sender, post: post, song: self.song, artwork: artworkToShare!, userImage: userImageToShare)
                                                 
                                                 let image = snapshot(postViewInstance)
+                                                guard let topColor = song.bgColor else {
+                                                    return
+                                                }
+                                                let appID: String = "767731998299191"
                                                 shareImageToInstagramStory(image: image)
+//                                                shareToInstagramStories(stickerImage: image, stickerLink: "https://www.google.com", backgroundTopColor: .init(cgColor: topColor), backgroundBottomColor: .black, appID: appID)
                                             } else {
                                                 let postViewInstance = PostInstagramView(sender: self.sender, post: post, song: self.song, artwork: artworkToShare!)
                                                 
                                                 let image = snapshot(postViewInstance)
+
+                                                guard let topColor = song.bgColor else {
+                                                    return
+                                                }
                                                 shareImageToInstagramStory(image: image)
+//                                                shareToInstagramStories(stickerImage: image, stickerLink: "https://www.google.com", backgroundTopColor: .init(cgColor: topColor), backgroundBottomColor: .black , appID: )
                                             }
                                         }
                                         
@@ -302,6 +312,54 @@ struct PostComponent: View {
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0.0), radius: 18, y: 5)
     }
+    func shareToInstagramStories(
+            stickerImage: UIImage,
+            stickerLink: String,
+            backgroundTopColor: Color = .black,
+            backgroundBottomColor: Color = .gray,
+            appID: String
+        ) {
+            // 1. Get a data object of our UIImage...
+            let stickerImageData = stickerImage.pngData()
+            
+            // 2. Verify if we are able to open instagram-stories URL schema.
+            // If we are able to, let's add our Sticker image to UIPasteboard.
+            
+            let urlScheme = URL(string: "instagram-stories://share?source_application=\(appID)")
+            
+            if let urlScheme = urlScheme {
+                if UIApplication.shared.canOpenURL(urlScheme) {
+                    
+                    var pasteboardItems: [[String : Any]]? = nil
+                    if let stickerImageData = stickerImageData {
+                        pasteboardItems = [
+                            [
+                                "com.instagram.sharedSticker.stickerImage": stickerImageData,
+                                "com.instagram.sharedSticker.backgroundTopColor": backgroundTopColor.toHex() ?? "#7F0909",
+                                "com.instagram.sharedSticker.backgroundBottomColor": backgroundBottomColor.toHex() ?? "#303030",
+                                "com.instagram.sharedSticker.link": stickerLink,
+                                "com.instagram.sharedSticker.contentURL": stickerLink
+                            ]
+                        ]
+                    }
+                    
+                    // We'll expire these pasteboard items in 5 minutes...
+                    let pasteboardOptions = [
+                        UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(60 * 5)
+                    ]
+                    
+                    if let pasteboardItems = pasteboardItems {
+                        UIPasteboard.general.setItems(pasteboardItems, options: pasteboardOptions)
+                    }
+                    
+                    // 3. Try opening the URL...
+                    UIApplication.shared.open(urlScheme, options: [:], completionHandler: nil)
+                } else {
+                    // App may not be installed. Handle those errors here...
+                    print("Something went wrong. Maybe Instagram is not installed on this device?")
+                }
+            }
+        }
     
     func shareImageToInstagramStory(image: UIImage) {
         if UIImage(named: "frameInstagram") != nil {

@@ -84,9 +84,7 @@ struct FeedView: View {
                                 ForEach(postViewModel.posts, id: \.self) { post in
                                     // Ensure PostView can handle nil or incomplete data gracefully
                                     if let sender = post.sender, let senderUser = postViewModel.senderDetails[sender.recordID], let song = postViewModel.songsDetails[post.songId] {
-                                        
                                         PostComponent(post: post, sender: senderUser, song: song)
-                                            .transition(.opacity)
                                     }
                                     else {
                                         PostComponent(post: post)
@@ -136,12 +134,11 @@ struct FeedView: View {
                                 
                                 // Calculate the opaciti for the header and the button
                                 headerOpacity = max(0.0, 1.0 + Double(normalizedOffset))
-                                withAnimation{
+                                withAnimation {
                                     dailyButtonOpacity = 1.0
                                 }
                             }
                         }
-                        
                         Spacer()
                             .frame(height: isDailyPosted ? 0 : 80)
                         
@@ -150,6 +147,7 @@ struct FeedView: View {
                     .refreshable {
                         print("Fetching post again...")
                         let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? ""
+
                         Task {
                             if let user = userViewModel.user {
                                 print("Fetching posts...")
@@ -215,10 +213,7 @@ struct FeedView: View {
                         .padding(.top, safeArea().top)
                         .background(colorScheme == .dark ? .black : .white)
                         .padding(.bottom)
-                        
                         .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
-                        
-                        // Get the header height
                         .overlayPreferenceValue(HeaderBoundsKey.self){ value in
                             GeometryReader{ proxy in
                                 if let anchor = value {

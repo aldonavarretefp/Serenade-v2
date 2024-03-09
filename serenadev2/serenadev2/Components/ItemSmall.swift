@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ContentItem: Identifiable {
     let id = UUID()
@@ -31,28 +32,19 @@ struct ItemSmall: View {
     
     var body: some View {
         HStack {
-            if(!item.isPerson){
-                AsyncImage(url: item.song?.artworkUrlSmall) { phase in
-                    switch phase {
-                    case .empty:
-                        // Displays a loading animation while the image is being fetched
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .scaleEffect(1.5) // Adjust the size of the ProgressView as needed
-                            .frame(width: 50, height: 50)
-                    case .success(let image):
-                        image.resizable()
+            if(!item.isPerson) {
+                KFImage(item.song?.artworkUrlSmall)
+                    .placeholder { progress in
+                        Image("no-artwork")
+                            .resizable()
                             .aspectRatio(contentMode: .fit)
                             .clipShape(RoundedRectangle(cornerRadius: 5))
                             .frame(width: 50, height: 50)
-                    case .failure(_):
-                        // Displays a placeholder in case of failure to load the image
-                        Color.gray
-                    @unknown default:
-                        // Fallback for future cases
-                        EmptyView()
                     }
-                }
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                    .frame(width: 50, height: 50)
             } else {
                 if let user = item.user {
                     if let asset = user.profilePictureAsset {

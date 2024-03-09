@@ -93,9 +93,9 @@ struct SearchView: View {
                     .background()
                     
                     if selectedTab == .music {
-                        if self.historySong.count != 0 && viewModel.searchText.isEmpty{
-                            ScrollView{
-                                VStack(spacing: 0){
+                        if self.historySong.count != 0 && viewModel.searchText.isEmpty {
+                            ScrollView {
+                                VStack(spacing: 0) {
                                     ForEach(self.historySong, id:\.self) { song in
                                         ItemSmall(item: ContentItem(isPerson: false, song: song), showXMark: true){
                                             historySongManager.removeSong(songId: song.id)
@@ -162,11 +162,7 @@ struct SearchView: View {
             }
             .overlay {
                 if selectedTab == .music {
-                    if viewModel.isLoading {
-                        // Display a loading indicator or view when music is being fetched
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                    } else if viewModel.searchText.isEmpty {
+                    if viewModel.searchText.isEmpty {
                         if self.historySong.count == 0 {
                             // Display this when no search has been made yet (for Music tab only)
                             ContentUnavailableView(label: {
@@ -186,11 +182,7 @@ struct SearchView: View {
                         
                     }
                 } else if selectedTab == .people {
-                    if viewModel.isLoading {
-                        // Display a loading indicator or view when music is being fetched
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                    } else if viewModel.searchText.isEmpty {
+                    if viewModel.searchText.isEmpty {
                         if self.historyPeople.count == 0 {
                             // Display this when no search has been made yet (for Music tab only)
                             ContentUnavailableView(label: {

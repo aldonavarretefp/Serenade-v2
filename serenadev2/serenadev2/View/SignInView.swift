@@ -75,8 +75,7 @@ struct SignInView: View {
             .navigationBarTitleDisplayMode(.inline)
             
             
-        }//: Navigation
-        //        .preferredColorScheme(colorScheme == .dark ? .dark : .light)
+        }
         .transition(.asymmetric(insertion: .slide, removal: .push(from: .trailing)))
     }
 }

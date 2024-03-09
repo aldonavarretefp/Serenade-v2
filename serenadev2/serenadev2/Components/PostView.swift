@@ -233,7 +233,10 @@ struct PostView: View {
                                     
                                     let postViewInstance = PostInstagramView(sender: self.sender, post: post, song: self.song, artwork: artworkToShare!, userImage: userImageToShare)
                                     let image = snapshot(postViewInstance)
-                                    shareImageToInstagramStory(image: image)
+                                    guard let song = song, let topColor = song.bgColor else {
+                                        return
+                                    }
+//                                    shareToInstagramStories(stickerImage: image, stickerLink: "https://www.google.com", backgroundTopColor: .init(cgColor: topColor), backgroundBottomColor: .white)
                                     
                                 } else {
                                     print("Image not loaded yet")
@@ -266,7 +269,6 @@ struct PostView: View {
                 }
             }
             .fullScreenCover(isPresented: $isSongInfoDisplayed){
-                //                SongDetailView(audioURL: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/38/be/54/38be54d8-7411-fe31-e15f-c85e7d8515e8/mzaf_15200620892322734212.plus.aac.p.m4a")!, song: post.song!)
                 if let song {
                     SongDetailView(song: song)
                 }
@@ -274,6 +276,8 @@ struct PostView: View {
         }
         .font(.subheadline)
     }
+    
+    
     
     func shareImageToInstagramStory(image: UIImage) {
         if let backgroundImage = UIImage(named: "frameInstagram") {
