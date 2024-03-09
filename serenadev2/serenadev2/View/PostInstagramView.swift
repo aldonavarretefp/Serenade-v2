@@ -83,6 +83,7 @@ struct PostInstagramView: View {
                                 }
                                 
                                 Text("\(sender.tagName)")
+                                    .bold()
                                 + Text("'s daily song")
                                     .foregroundStyle(.callout)
                             }
