@@ -14,7 +14,11 @@ struct NotificationActionButton: View {
     
     // MARK: - Properties
     var icon: String
+    var isDisabled: Bool
+    var isLoading: Bool?
     var receivedAction: () -> Void
+    
+    
     
     // MARK: - Body
     var body: some View {
@@ -29,6 +33,7 @@ struct NotificationActionButton: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .buttonStyle(.plain)
         .foregroundStyle(icon == "xmark" ? (colorScheme == .light ? .black : .white) : .white)
+        .opacity(isDisabled == true ? 0.5:1)
     }
 }
 
@@ -36,11 +41,11 @@ struct NotificationActionButton: View {
     
     Group{
         HStack{
-            NotificationActionButton(icon: "checkmark"){
+            NotificationActionButton(icon: "checkmark", isDisabled: false){
                 print("Hello")
             }
             
-            NotificationActionButton(icon: "xmark"){
+            NotificationActionButton(icon: "xmark", isDisabled: false){
                 print("Hello")
             }
         }

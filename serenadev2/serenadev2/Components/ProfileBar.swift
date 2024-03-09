@@ -20,7 +20,7 @@ struct ProfileBar: View {
     @State var isFriendRequestRecieved: Bool = false
     
     @EnvironmentObject var userViewModel: UserViewModel
-    @EnvironmentObject var friendRequestViewModel: FriendRequestsViewModel
+    @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
     
     @State var user: User
     @State var friendRequest: FriendRequest? = nil
@@ -120,7 +120,7 @@ struct ProfileBar: View {
                         
                         if !isCurrentUser && isFriendRequestRecieved {
                             HStack(spacing: 5){
-                                NotificationActionButton(icon: "xmark"){
+                                NotificationActionButton(icon: "xmark", isDisabled: false){
                                     guard let friendRequest = friendRequest else {return}
                                     friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {
                                         
@@ -130,7 +130,7 @@ struct ProfileBar: View {
                                     isFriendRequestSent = false
                                 }
                                 
-                                NotificationActionButton(icon: "checkmark"){
+                                NotificationActionButton(icon: "checkmark", isDisabled: false){
                                     guard let friendRequest = friendRequest else {return}
                                     
                                     friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {

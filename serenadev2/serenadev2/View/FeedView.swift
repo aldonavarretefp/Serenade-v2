@@ -171,7 +171,8 @@ struct FeedView: View {
                                     Spacer()
                                     
                                     // Navigation link to open notifications view
-                                    NavigationLink(destination: NotificationsView().toolbarRole(.editor)){
+                                    NavigationLink(destination: NotificationsView()
+                                        .toolbarRole(.editor)){
                                         Image(systemName: "bell")
                                             .fontWeight(.semibold)
                                             .font(.title2)

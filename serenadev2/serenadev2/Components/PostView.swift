@@ -87,7 +87,7 @@ struct PostView: View {
                 .foregroundStyle(.callout)
                 .padding([.top, .leading, .trailing])
                 .padding(.bottom, post.caption == "" ? 5 : 0)
-                //                Spacer()
+
                 if let postCaption = post.caption {
                     if postCaption != "" {
                         Text(postCaption)
@@ -146,7 +146,6 @@ struct PostView: View {
             }
             ZStack(alignment: .leading) {
                 UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0))
-                //                    .fill(Color((post.song?.bgColor)!).opacity(0.5))
                     .fill(.card.opacity(0.7))
                     .frame(height: 95)
                 
@@ -225,7 +224,8 @@ struct PostView: View {
                         VStack{
                             Spacer()
                             
-                            Button{
+                            Button {
+                                print("Shared pressed")
                                 if imageLoaded {
                                     
                                     let postViewInstance = PostInstagramView(sender: self.sender, post: post, song: self.song, artwork: artworkToShare!, userImage: userImageToShare)
@@ -236,17 +236,17 @@ struct PostView: View {
                                     print("Image not loaded yet")
                                 }
                             } label : {
-                                
                                 Image(systemName: "square.and.arrow.up.circle.fill")
                                     .bold()
                                     .font(.title)
                                     .symbolRenderingMode(.palette)
                                     .foregroundStyle(Color(colorPri), Color(colorBg))
-                                
                                     .padding([.horizontal, .top])
                                     .padding(.bottom, 12)
                             }
                             .buttonStyle(.plain)
+                            .zIndex(1)
+                            
                         }
                     } else {
                         
@@ -307,14 +307,6 @@ extension UIView {
         return renderer.image { _ in drawHierarchy(in: bounds, afterScreenUpdates: true) }
     }
 }
-//#Preview {
-//    ScrollView {
-//        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!! Give it a listen right now, you won't regret it!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears Save Your Tears", artist: "The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-//        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-//        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-//        PostView(post: Post(id: "id", type: .daily, sender: "sebatoo", receiver: "receiver", caption: "This is the best song I've ever heard!!!", songId: "songId", date: Date(), isAnonymous: false, isDeleted: false, song: Song(id: "id", title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", coverArt: "AfterHoursCoverArt", color: Color(hex: 0x202020), fontColor: Color(hex: 0xffffff))), profileImg: "AfterHoursCoverArt")
-//    }
-//}
 
 #Preview {
     ScrollView {

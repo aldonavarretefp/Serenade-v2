@@ -70,7 +70,7 @@ struct PostInstagramView: View {
                                     userImage
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(width: 30)
+                                        .frame(width: 40, height: 40)
                                         .clipShape(Circle())
                                         .padding(.trailing, 5)
                                 } else {

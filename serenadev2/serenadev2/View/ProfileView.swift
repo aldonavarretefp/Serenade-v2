@@ -125,6 +125,7 @@ struct ProfileView: View {
                                 }
                                 .offset(y: -headerOffset < headerHeight ? headerOffset : (headerOffset < 0 ? headerOffset : 0))
                         } else {
+                            
                             ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: User(name: "", tagName: "", email: "", streak: 0, profilePicture: "", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: CKRecord.ID(recordName: "placeholder"))))
                                 .opacity(headerOpacity)
                                 .padding(.top, safeArea().top)
@@ -214,6 +215,8 @@ struct ProfileView: View {
                     .frame(height: 0)
             }
             .task {
+                
+                
                 if self.user == nil {
                     print("USER IS NIL")
                     guard let user = userVM.user else {
