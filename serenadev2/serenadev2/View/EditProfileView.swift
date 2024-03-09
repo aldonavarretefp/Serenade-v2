@@ -125,8 +125,8 @@ struct EditProfileView: View {
                         
                     }
                 }
+                .padding()
             }
-            .padding()
         }
         .navigationTitle(LocalizedStringKey("EditProfile"))
         .navigationBarTitleDisplayMode(.inline)
