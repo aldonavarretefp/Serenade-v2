@@ -166,9 +166,23 @@ struct PostComponent: View {
                             if let colorPri = song.priColor, let colorBg = song.bgColor {
                                 Button{
                                     if imageLoaded {
-                                        let postViewInstance = PostInstagramView(sender: self.sender, post: post, song: self.song, artwork: artworkToShare!, userImage: userImageToShare)
-                                        let image = snapshot(postViewInstance)
-                                        shareImageToInstagramStory(image: image)
+                                        
+                                        if let sender {
+                                            if sender.profilePictureAsset != nil {
+                                                let postViewInstance = PostInstagramView(sender: self.sender, post: post, song: self.song, artwork: artworkToShare!, userImage: userImageToShare)
+                                                
+                                                let image = snapshot(postViewInstance)
+                                                shareImageToInstagramStory(image: image)
+                                            } else {
+                                                let postViewInstance = PostInstagramView(sender: self.sender, post: post, song: self.song, artwork: artworkToShare!)
+                                                
+                                                let image = snapshot(postViewInstance)
+                                                shareImageToInstagramStory(image: image)
+                                            }
+                                        }
+                                        
+                                        
+                                        
                                         
                                     } else {
                                         print("Image not loaded yet")

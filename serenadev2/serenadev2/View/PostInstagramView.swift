@@ -69,7 +69,7 @@ struct PostInstagramView: View {
                                 if let userImage = userImage {
                                     userImage
                                         .resizable()
-                                        .scaledToFit()
+                                        .scaledToFill()
                                         .frame(width: 40, height: 40)
                                         .clipShape(Circle())
                                         .padding(.trailing, 5)
@@ -81,7 +81,6 @@ struct PostInstagramView: View {
                                         .clipShape(Circle())
                                         .frame(height: 28)
                                 }
-                                
                                 
                                 Text("\(sender.tagName)")
                                 + Text("'s daily song")
@@ -106,8 +105,8 @@ struct PostInstagramView: View {
                     artwork
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(height: 115)
-                        .blur(radius: 20.0)
+                        .frame(height: 130)
+                        .blur(radius: 10.0)
                         .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
                     
                     HStack{
@@ -134,20 +133,11 @@ struct PostInstagramView: View {
                     }
                     .padding()
                     .background {
-                        ZStack {
-                            if let bgColor = song?.bgColor {
-                                Rectangle()
-                                    .fill(Color(bgColor))
-                                
-                                Rectangle()
-                                    .fill(Color.card.opacity(0.7))
-                            } else {
-                                Rectangle()
-                                    .fill(Color.card.opacity(0.5))
-                            }
-                        }
+                        Rectangle()
+                            .fill(Color.card.opacity(0.7))
                     }
                 }
+                .frame(height: 130)
             }
             .background(.card)
             .clipShape(RoundedRectangle(cornerRadius: 15))
@@ -161,5 +151,5 @@ struct PostInstagramView: View {
 }
 
 #Preview {
-    PostInstagramView(artwork: Image(systemName: "xmark"))
+    PostInstagramView(artwork: Image("AfterHoursCoverArt"))
 }
