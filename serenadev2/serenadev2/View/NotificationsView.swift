@@ -22,24 +22,22 @@ struct NotificationsView: View {
             ZStack{
                 Color.viewBackground
                     .ignoresSafeArea()
-                VStack{
-                    ScrollView {
-                        VStack(spacing: 35) {
+                ScrollView {
+                    VStack(spacing: 35) {
 
-                            if isLoadingNotifications {
-                                ProgressView()
-                                    .progressViewStyle(.circular)
-                                    .font(.title2)
-                            } else {
-                                ForEach(friendRequestViewModel.friendRequests, id: \.id ){ request  in
-                                    if let user = friendRequestViewModel.userDetails[request.sender.recordID] {
-                                        NotificationItem(user: user, friendRequest: request, isDisabled: $isLoadingHandleFriendship)
-                                            .transition(.asymmetric(insertion: .opacity, removal: .opacity))
-                                    }
+                        if isLoadingNotifications {
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                                .font(.title2)
+                        } else {
+                            ForEach(friendRequestViewModel.friendRequests, id: \.id ){ request  in
+                                if let user = friendRequestViewModel.userDetails[request.sender.recordID] {
+                                    NotificationItem(user: user, friendRequest: request, isDisabled: $isLoadingHandleFriendship)
+                                        .transition(.asymmetric(insertion: .opacity, removal: .opacity))
                                 }
                             }
+                            
                         }
-                        .padding()
                     }
                     .padding()
                 }
