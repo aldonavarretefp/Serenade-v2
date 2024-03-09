@@ -62,31 +62,25 @@ struct UserDetailsView: View {
                                 .padding()
                                 .background(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .autocapitalization(.none)
+                                .onChange(of: tagname) { oldValue, newValue in
+                                    tagname = newValue.lowercased()
+                                }
                         }
                     }
                     
                     Spacer()
                     
-                    ActionButton(label: LocalizedStringKey("CompleteAccount"), symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname != "" && name != "" ? false : true){
-                        
+                    ActionButton(label: LocalizedStringKey("CompleteAccount"), symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname == "" || name == "" || tagname.containsEmoji) {
                         saveUserDetails()
                     }
                 }
                 .padding()
             }
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                // Clear UserDefaults here if leaving UserDetailsView
-//                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userID)
-//                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userName)
-//                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userEmail)
-                // Remove other details as necessary
-            }
             .onAppear {
-                // Pre-fill the user details if available
                 if let userName = userViewModel.user?.name {
                     name = userName
                 }
-            
             }
             .alert(Text("Tagname already exists."), isPresented: $tagNameRepeated) {
                 
@@ -96,9 +90,12 @@ struct UserDetailsView: View {
     }
     
     private func saveUserDetails() {
+        tagname = tagname.formattedForTagName
         userViewModel.searchUsers(tagname: tagname) { users in
+            
             guard let users = users else { return }
-            if(!users.isEmpty){
+            
+            if(!users.isEmpty) {
                 self.tagNameRepeated = true
                 return
             } else {

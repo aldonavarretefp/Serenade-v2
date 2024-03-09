@@ -74,8 +74,8 @@ extension UIColor {
     }
 }
 
-// MARK: - Custom View estensions
-extension View{
+// MARK: - Custom View extensions
+extension View {
     
     // MARK: - Preview, current offset to find the direction of swipe
     @ViewBuilder
@@ -92,8 +92,33 @@ extension View{
     }
 }
 
+// MARK: - Custom String extensions
+
+extension String {
+    var formattedForTagName: String {
+        self.lowercased().replacingOccurrences(of: " ", with: "")
+    }
+}
+extension Character {
+    /// A simple emoji is one scalar and presented to the user as an Emoji
+    var isSimpleEmoji: Bool {
+        guard let firstScalar = unicodeScalars.first else { return false }
+        return firstScalar.properties.isEmoji && firstScalar.value > 0x238C
+    }
+
+    /// Checks if the scalars will be merged into an emoji
+    var isCombinedIntoEmoji: Bool { unicodeScalars.count > 1 && unicodeScalars.first?.properties.isEmoji ?? false }
+
+    var isEmoji: Bool { isSimpleEmoji || isCombinedIntoEmoji }
+}
+
+extension String {
+    var containsEmoji: Bool { contains { $0.isEmoji } }
+
+}
+
 // MARK: - Offset helper
-struct OffsetHelper: ViewModifier{
+struct OffsetHelper: ViewModifier {
     var onChange: (CGFloat, CGFloat) -> ()
     
     @State var currentOffset: CGFloat = 0
@@ -117,7 +142,7 @@ struct OffsetHelper: ViewModifier{
 }
 
 // MARK: - Offset key
-struct OffsetKey: PreferenceKey{
+struct OffsetKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
     
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
@@ -127,10 +152,12 @@ struct OffsetKey: PreferenceKey{
 }
 
 // MARK: - Bounds preference key for identifying heigth of the header view
-struct HeaderBoundsKey: PreferenceKey{
+struct HeaderBoundsKey: PreferenceKey {
     static var devaultValue: Anchor<CGRect>?
     
     static func reduce(value: inout Anchor<CGRect>?, nextValue: () -> Anchor<CGRect>?) {
         value = nextValue()
     }
 }
+
+

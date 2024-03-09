@@ -77,7 +77,7 @@ struct EditProfileView: View {
                     .padding(.vertical)
                     Spacer()
                     ActionButton(label: "Save changes", symbolName: "checkmark.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagName == "" || name == "") {
-                        guard var newUser = userVM.user else {
+                        guard var user = userVM.user else {
                             return
                         }
                         var imageAsset: CKAsset?
@@ -97,29 +97,32 @@ struct EditProfileView: View {
                         case .failure(_):
                             break;
                         }
-                        
-                        let trimmedTagName: String = tagName.trimmingCharacters(in: .whitespacesAndNewlines)
-                        lastTagName = trimmedTagName
+                        let trimmedTagName: String = tagName.formattedForTagName
                         
                         userVM.searchUsers(tagname: trimmedTagName) { users in
                             if let users, users.count > 0 && trimmedTagName != "" {
                                 let userFromDB = users[0]
-                                if userFromDB.accountID == self.user.accountID {
-                                    print("user is the same")
-                                    newUser.name = name
-                                    newUser.tagName = trimmedTagName
-                                    newUser.profilePictureAsset = imageAsset
+                                if isSameUserInSession(fromUser: user, toCompareWith: userFromDB) {
+                                    if trimmedTagName.containsEmoji {
+                                        self.error = "The username can't include emojis. Try again."
+                                        return
+                                    }
+                                    saveUserDetails(user: user, imageAsset: imageAsset, trimmedTagName: trimmedTagName)
+                                } else {
+                                    self.error = "Sorry! \(trimmedTagName) is already in use."
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                        lastTagName = ""
+                                    }
                                 }
-                                userVM.updateUser(updatedUser: newUser)
-                                lastTagName = ""
-                                self.dismiss()
                             } else {
-                                self.error = "Sorry! \(trimmedTagName) is already in use."
+                                if trimmedTagName.containsEmoji {
+                                    self.error = "The username can't include emojis. Try again."
+                                    return
+                                }
+                                saveUserDetails(user: user, imageAsset: imageAsset, trimmedTagName: trimmedTagName)
                             }
-                            return
                         }
                         
-                        self.dismiss()
                     }
                 }
             }
@@ -127,6 +130,20 @@ struct EditProfileView: View {
         }
         .navigationTitle(LocalizedStringKey("EditProfile"))
         .navigationBarTitleDisplayMode(.inline)
+    }
+    func isSameUserInSession(fromUser user1: User, toCompareWith user2: User) -> Bool {
+        return user1.accountID == user2.accountID
+    }
+    
+    func saveUserDetails(user: User, imageAsset: CKAsset?, trimmedTagName: String) {
+        guard var user = userVM.user else {
+            return
+        }
+        user.profilePictureAsset = imageAsset
+        user.tagName = trimmedTagName
+        user.name = name
+        userVM.updateUser(updatedUser: user)
+        self.dismiss()
     }
 }
 
