@@ -14,8 +14,8 @@ struct NotificationsView: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var friendRequestViewModel: FriendRequestsViewModel
-    @State var notifications: [NotificationItem] = []
-    @State private var isLoading: Bool = false
+    @State private var isLoadingNotifications: Bool = false
+    @State var isLoadingHandleFriendship: Bool = false
     
     var body: some View {
         NavigationStack{
@@ -25,23 +25,24 @@ struct NotificationsView: View {
                 VStack{
                     ScrollView {
                         VStack(spacing: 35) {
-                            
-                            if isLoading {
+                            Button {
+                                friendRequestViewModel.createFriendRequest(senderID: .init(recordName: DevelopmentUsersIDs.pablosID), receiverID: .init(recordName: DevelopmentUsersIDs.aldosID))
+                            } label: {
+                                Text("Create")
+                            }
+
+                            if isLoadingNotifications {
                                 ProgressView()
                                     .progressViewStyle(.circular)
                                     .font(.title2)
                             } else {
-                                if notifications.count == 0 {
-                                    Text("Ups, there are no notifications for you yet!")
-                                } else {
-                                    ForEach(notifications){ notification in
-                                        notification
+                                ForEach(friendRequestViewModel.friendRequests, id: \.id ){ request  in
+                                    if let user = friendRequestViewModel.userDetails[request.sender.recordID] {
+                                        NotificationItem(user: user, friendRequest: request, isDisabled: $isLoadingHandleFriendship)
+                                            .transition(.asymmetric(insertion: .opacity, removal: .opacity))
                                     }
                                 }
-                                
                             }
-                            
-                            
                         }
                         .padding()
                     }
@@ -52,52 +53,24 @@ struct NotificationsView: View {
             .toolbarBackground(colorScheme == .light ? .white : .black,for: .navigationBar)
             .navigationTitle(LocalizedStringKey("Notifications"))
             .toolbarTitleDisplayMode(.inline)
-            .task {
-                isLoading = true
-                if let currentUser = userViewModel.user {
-                    self.friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser) {
-                        isLoading = false
-                        for friendRequest in self.friendRequestViewModel.friendRequests {
-                            
-                            userViewModel.fetchUserFromRecordID(recordID: friendRequest.sender.recordID) { user in
-                                guard let user = user else { return }
-                                notifications.append(NotificationItem(user: user, friendRequest: friendRequest, completionHandlerAccept: {accept(friendRequest: friendRequest)}, completionHandlerReject: {decline(friendRequest: friendRequest)}))
-                            }
-                        }
-                    }
-                }
+            .onAppear {
+                self.updateNotifications()
             }
         }
     }
-    
-    func accept(friendRequest: FriendRequest){
-        notifications.removeAll()
-        friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
-            userViewModel.makeFriend(withID: friendRequest.sender.recordID)
+
+    func updateNotifications() {
+        isLoadingNotifications = true
+        withAnimation(.easeInOut(duration: 1.0).delay(1.0) ) {
+            if let currentUser = userViewModel.user {
+                print(friendRequestViewModel.friendRequests.count)
+                self.friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser) {
+                    print(friendRequestViewModel.friendRequests.count)
+                    isLoadingNotifications = false
+                }
+            }
         }
-        updateNotifications()
-    }
-    
-    func decline(friendRequest: FriendRequest){
-        notifications.removeAll()
-        friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {
-        }
-        updateNotifications()
         
-    }
-    
-    func updateNotifications(){
-        notifications.removeAll()
-        if let currentUser = userViewModel.user {
-            friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser) {
-                for friendRequest in self.friendRequestViewModel.friendRequests {
-                    userViewModel.fetchUserFromRecordID(recordID: friendRequest.sender.recordID) { user in
-                        guard let user = user else { return }
-                        notifications.append(NotificationItem(user: user, friendRequest: friendRequest, completionHandlerAccept: {accept(friendRequest: friendRequest)}, completionHandlerReject: {decline(friendRequest: friendRequest)}))
-                    }
-                }
-            }
-        }
     }
 }
 

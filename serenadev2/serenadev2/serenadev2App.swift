@@ -48,9 +48,9 @@ struct serenadev2App: App {
             .environmentObject(postViewModel)
             .environmentObject(friendRequestViewModel)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // Adjust timing as needed for your splash screen
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     withAnimation {
-                        self.isShowingSplashScreen = false // Hide splash screen after delay
+                        self.isShowingSplashScreen = false
                     }
                 }
             }

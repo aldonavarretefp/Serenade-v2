@@ -143,19 +143,26 @@ class UserViewModel: ObservableObject {
     }
     
     func updateUser(updatedUser: User) {   
-        if(updatedUser.tagName == "" || updatedUser.name == "") { return }
+        
+        if(updatedUser.tagName == "" || updatedUser.name == "") {
+            return
+        }
+        
         var copyUser = updatedUser
         guard let newUser = copyUser.update(newUser: updatedUser) else { return }
         
         CloudKitUtility.update(item: newUser) { result in
             switch result {
             case .success(_):
-                if(updatedUser.accountID == self.user?.accountID){
+                
+                if let user = self.user, updatedUser.accountID == user.accountID {
                     DispatchQueue.main.async {
                         self.user = newUser
                     }
                 }
-                print("User updated")
+                
+                print("\(newUser.name) updated")
+                
                 break;
             case .failure(let error):
                 print("Error while updating the user ", error.localizedDescription)
@@ -169,7 +176,7 @@ class UserViewModel: ObservableObject {
         updateUser(updatedUser: user!)
     }
     
-    func makeFriend(withID friendId: CKRecord.ID){
+    func makeFriend(withID friendId: CKRecord.ID) {
         guard var updatedUser = user else { return }
         
         let referenceToFriend = CKRecord.Reference(recordID: friendId, action: .none)
