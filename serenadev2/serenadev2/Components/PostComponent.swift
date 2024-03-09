@@ -23,7 +23,9 @@ struct PostComponent: View {
         let calendar = Calendar.current
         
         if calendar.isDateInToday(post.date) {
-            return Text(LocalizedStringKey("Today"))
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "HH:mm"
+            return Text(dateFormatter.string(from: post.date))
         } else if calendar.isDateInYesterday(post.date) {
             return Text(LocalizedStringKey("Yesterday"))
         } else {
@@ -89,6 +91,7 @@ struct PostComponent: View {
                 
                 if let sender , sender.tagName != "" {
                     Text(sender.tagName).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
+                        .foregroundStyle(.callout)
                 }
                 else {
                     GeometryReader{ geo in
@@ -104,6 +107,7 @@ struct PostComponent: View {
                 
                 if let sender, sender.tagName != "" {
                     formattedDate
+                        .foregroundStyle(.callout)
                 } else {
                     GeometryReader{ geo in
                         Rectangle()
