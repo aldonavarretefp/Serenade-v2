@@ -35,15 +35,27 @@ struct PostInstagramView: View {
             Spacer()
             
             HStack(){
-                HStack{
-                    Image(systemName: "waveform.circle.fill")
-                    
-                    Text("Serenade")
-                        .bold()
+                if let priColor = song?.priColor{
+                    HStack{
+                        Image(systemName: "waveform.circle.fill")
+                        
+                        Text("Serenade")
+                            .bold()
+                    }
+                    .font(.title2)
+                    .foregroundStyle(Color(priColor))
+                    .padding(.horizontal)
+                } else {
+                    HStack{
+                        Image(systemName: "waveform.circle.fill")
+                        
+                        Text("Serenade")
+                            .bold()
+                    }
+                    .font(.title2)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal)
                 }
-                .font(.title2)
-                .foregroundStyle(.white)
-                .padding(.horizontal)
                 Spacer()
             }
             .opacity(0.9)
@@ -52,7 +64,6 @@ struct PostInstagramView: View {
             VStack{
                 HStack{
                     if let sender = sender {
-                        
                         VStack(alignment: .leading){
                             HStack{
                                 if let userImage = userImage {
@@ -78,7 +89,7 @@ struct PostInstagramView: View {
                             }
                             
                             if let caption = post?.caption {
-                                if caption != "" && caption != nil {
+                                if caption != "" {
                                     Text(caption)
                                 }
                             }
@@ -90,40 +101,50 @@ struct PostInstagramView: View {
                 }
                 .padding()
                 
-                HStack{
+                ZStack{
+                    
                     artwork
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 100, height: 100)
-                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 115)
+                        .blur(radius: 20.0)
+                        .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
                     
-                    VStack(alignment: .leading){
-                        if let song = song {
-                            Text(song.title)
-                                .font(.title2)
-                                .bold()
-                            
-                            Text(song.artists)
-                                .font(.title3)
-                                .foregroundStyle(.callout)
+                    HStack{
+                        artwork
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                        
+                        VStack(alignment: .leading){
+                            if let song = song {
+                                Text(song.title)
+                                    .font(.title2)
+                                    .bold()
+                                
+                                Text(song.artists)
+                                    .font(.title3)
+                                    .foregroundStyle(.callout)
+                            }
                         }
+                        .padding(.leading)
+                        
+                        Spacer()
                     }
-                    .padding(.leading)
-                    
-                    Spacer()
-                }
-                .padding()
-                .background {
-                    ZStack {
-                        if let bgColor = song?.bgColor {
-                            Rectangle()
-                                .fill(Color(bgColor))
-                            
-                            Rectangle()
-                                .fill(Color.card.opacity(0.7))
-                        } else {
-                            Rectangle()
-                                .fill(Color.card.opacity(0.5))
+                    .padding()
+                    .background {
+                        ZStack {
+                            if let bgColor = song?.bgColor {
+                                Rectangle()
+                                    .fill(Color(bgColor))
+                                
+                                Rectangle()
+                                    .fill(Color.card.opacity(0.7))
+                            } else {
+                                Rectangle()
+                                    .fill(Color.card.opacity(0.5))
+                            }
                         }
                     }
                 }
