@@ -8,6 +8,7 @@
 import Foundation
 import CloudKit
 import Combine
+import SwiftUI
 
 class PostViewModel: ObservableObject {
     @Published var senderDetails: [CKRecord.ID: User] = [:]
@@ -72,7 +73,9 @@ class PostViewModel: ObservableObject {
             // Now call an async version of `fetchAllPostsFromUserID`
             if let posts = await fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
                 DispatchQueue.main.async {
-                    self.posts = posts
+                    withAnimation(.easeIn(duration: 2.0).delay(3.0)) {
+                        self.posts = posts
+                    }
                 }
                 sortPostsByDate()
                 for post in posts {

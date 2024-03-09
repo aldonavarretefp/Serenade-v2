@@ -25,11 +25,6 @@ struct NotificationsView: View {
                 VStack{
                     ScrollView {
                         VStack(spacing: 35) {
-                            Button {
-                                friendRequestViewModel.createFriendRequest(senderID: .init(recordName: DevelopmentUsersIDs.pablosID), receiverID: .init(recordName: DevelopmentUsersIDs.aldosID))
-                            } label: {
-                                Text("Create")
-                            }
 
                             if isLoadingNotifications {
                                 ProgressView()
