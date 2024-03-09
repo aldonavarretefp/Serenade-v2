@@ -207,6 +207,9 @@ struct PostView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10.0))
                             .padding()
                         VStack(alignment: .leading) {
+                            
+                            Rectangle()
+                            
                             Text(LocalizedStringKey("LoadingSongTitle"))
                                 .fontWeight(.bold)
                             Text(LocalizedStringKey("LoadingSongArtist"))

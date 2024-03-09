@@ -153,6 +153,7 @@ struct FeedView: View {
                         Task {
                             if let user = userViewModel.user {
                                 print("Fetching posts...")
+                                
                                 await postViewModel.fetchAllPostsAsync(user: user)
                             }
                         }

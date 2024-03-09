@@ -40,6 +40,18 @@ struct PostComponent: View {
     
     var body: some View {
         
+        var shimmerConfig = ShimmerConfiguration(
+            gradient: Gradient(stops: [
+                .init(color: .black.opacity(colorScheme == .light ? 1 : 0.2), location: 0),
+                .init(color: .white.opacity(colorScheme == .light ? 1 : 0.2), location: 0.3),
+                .init(color: .white.opacity(colorScheme == .light ? 1 : 0.2), location: 0.7),
+                .init(color: .black.opacity(colorScheme == .light ? 1 : 0.2), location: 1),
+            ]),
+            initialLocation: (start: UnitPoint(x: -1, y: 0.5), end: .leading),
+            finalLocation: (start: .trailing, end: UnitPoint(x: 2, y: 0.5)),
+            duration: 2,
+            opacity: 0.6)
+        
         VStack(alignment: .leading, spacing: 0){
             // User info
             HStack{
@@ -67,29 +79,66 @@ struct PostComponent: View {
                         }
                     }
                 } else {
-                    Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
+                    
+                    Rectangle()
+                        .fill(.callout.opacity(0.1))
+                        .shimmer(configuration: shimmerConfig)
+                        .frame(width: 28, height: 28)
                         .clipShape(Circle())
-                        .frame(height: 28)
                 }
                 
                 if let sender , sender.tagName != "" {
                     Text(sender.tagName).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
                 }
                 else {
-                    Text(LocalizedStringKey("LoadingSender")).fontWeight(.bold).foregroundStyle(colorScheme == .light ? .black : .white) + Text(LocalizedStringKey("TypePostDaily"))
+                    GeometryReader{ geo in
+                        Rectangle()
+                            .fill(.callout.opacity(0.1))
+                            .shimmer(configuration: shimmerConfig)
+                            .frame(width: geo.size.width, height: 10)
+                            .clipShape(RoundedRectangle(cornerRadius: 3))
+                            .padding(.top, (geo.size.height / 2) - 5)
+                    }
                 }
                 Spacer()
-                formattedDate
+                
+                if let sender, sender.tagName != "" {
+                    formattedDate
+                } else {
+                    GeometryReader{ geo in
+                        Rectangle()
+                            .fill(.callout.opacity(0.1))
+                            .shimmer(configuration: shimmerConfig)
+                            .frame(width: (geo.size.width / 2) - 16, height: 10)
+                            .clipShape(RoundedRectangle(cornerRadius: 3))
+                            .padding(.leading, (geo.size.width / 2) + 16)
+                            .padding(.top, (geo.size.height / 2) - 5)
+                    }
+                }
             }
             .padding()
             
             // Caption
             if let postCaption = post.caption {
+                
                 if postCaption != "" {
-                    Text(postCaption)
-                        .padding([.horizontal, .bottom])
+                    if song != nil {
+                        VStack{
+                            Text(postCaption)
+                                .padding([.horizontal, .bottom])
+                        }
+                    } else {
+                        GeometryReader{ geo in
+                            Rectangle()
+                                .fill(.callout.opacity(0.1))
+                                .shimmer(configuration: shimmerConfig)
+                                .frame(width: geo.size.width / 2, height: 10)
+                                .clipShape(RoundedRectangle(cornerRadius: 3))
+                                .padding(.top, (geo.size.height / 2) - 5)
+                                .padding(.horizontal)
+                        }
+                        .padding(.bottom)
+                    }
                 }
             }
             
@@ -181,9 +230,6 @@ struct PostComponent: View {
                                             }
                                         }
                                         
-                                        
-                                        
-                                        
                                     } else {
                                         print("Image not loaded yet")
                                     }
@@ -199,15 +245,29 @@ struct PostComponent: View {
                             }
                         } else {
                             Rectangle()
-                                .fill(Color(.callout))
+                                .fill(.card.opacity(0.3))
+                                .shimmer(configuration: shimmerConfig)
                                 .frame(width: 80, height: 80)
                                 .clipShape(RoundedRectangle(cornerRadius: 10.0))
                             VStack(alignment: .leading) {
-                                Text(LocalizedStringKey("LoadingSongTitle"))
-                                    .fontWeight(.bold)
-                                Text(LocalizedStringKey("LoadingSongArtist"))
-                                    .font(.footnote)
-                                    .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
+                                
+                                GeometryReader{ geo in
+                                    Rectangle()
+                                        .fill(.card.opacity(0.3))
+                                        .shimmer(configuration: shimmerConfig)
+                                        .frame(width: geo.size.width / 2, height: 15)
+                                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                                        .padding(.top, (geo.size.height / 2) + 5)
+                                }
+                                
+                                GeometryReader{ geo in
+                                    Rectangle()
+                                        .fill(.card.opacity(0.2))
+                                        .shimmer(configuration: shimmerConfig)
+                                        .frame(width: geo.size.width / 3, height: 12)
+                                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                                        .padding(.top, (geo.size.height / 2) - 10)
+                                }
                             }
                             .padding(.leading, 5)
                             .lineLimit(2)
