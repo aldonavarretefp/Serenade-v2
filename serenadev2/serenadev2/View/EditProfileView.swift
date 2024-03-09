@@ -127,9 +127,12 @@ struct EditProfileView: View {
                 }
                 .padding()
             }
+            .navigationTitle(LocalizedStringKey("EditProfile"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(colorScheme == .light ? .white : .black,for: .navigationBar)
         }
-        .navigationTitle(LocalizedStringKey("EditProfile"))
-        .navigationBarTitleDisplayMode(.inline)
+        
     }
     func isSameUserInSession(fromUser user1: User, toCompareWith user2: User) -> Bool {
         return user1.accountID == user2.accountID
