@@ -51,10 +51,10 @@ struct ProfileView: View {
                                 ForEach(postVM.posts, id: \.self) { post in
                                     // Ensure PostView can handle nil or incomplete data gracefully
                                     if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID], let song = postVM.songsDetails[post.songId] {
-                                        PostView(post: post, sender: senderUser, song: song)
+                                        PostComponent(post: post, sender: senderUser, song: song)
                                     }
                                     else {
-                                        PostView(post: post)
+                                        PostComponent(post: post)
                                     }
                                 }
                             }
