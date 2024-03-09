@@ -164,7 +164,7 @@ struct FeedView: View {
                                 HStack{
                                     
                                     // Navigation title
-                                    Text("Feed")
+                                    Text(LocalizedStringKey("Feed"))
                                         .font(.title)
                                         .bold()
                                     

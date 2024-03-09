@@ -29,14 +29,14 @@ struct UserDetailsView: View {
                     .ignoresSafeArea()
                 
                 VStack (){
-                    Text("Complete your profile to get started")
+                    Text(LocalizedStringKey("CompleteYourProfile"))
                         .font(.largeTitle)
                         .bold()
                         .multilineTextAlignment(.center)
                         .padding()
                         .padding(.bottom, 20)
                     
-                    Text("Please fill in your details to personalize your experience")
+                    Text(LocalizedStringKey("FillInYourDetails"))
                         .multilineTextAlignment(.center)
                         .padding(.bottom, 40)
                     
@@ -44,7 +44,7 @@ struct UserDetailsView: View {
                         VStack(spacing: 20){
                             TextField("", text: $name)
                                 .placeholder(when: name.isEmpty) {
-                                    Text("Full name")
+                                    Text(LocalizedStringKey("Name"))
                                         .foregroundColor(.gray)
                                 }
                                 .foregroundStyle(.black)
@@ -55,7 +55,7 @@ struct UserDetailsView: View {
                             
                             TextField("", text: $tagname)
                                 .placeholder(when: tagname.isEmpty) {
-                                    Text("Username")
+                                    Text(LocalizedStringKey("Username"))
                                         .foregroundColor(.gray)
                                 }
                                 .foregroundStyle(.black)
@@ -67,7 +67,7 @@ struct UserDetailsView: View {
                     
                     Spacer()
                     
-                    ActionButton(label: "Complete account", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname != "" && name != "" ? false : true){
+                    ActionButton(label: LocalizedStringKey("CompleteAccount"), symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname != "" && name != "" ? false : true){
                         
                         saveUserDetails()
                     }

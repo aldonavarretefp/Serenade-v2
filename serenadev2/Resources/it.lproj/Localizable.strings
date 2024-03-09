@@ -6,6 +6,26 @@
   
 */
 
+// Sign in
+"StartSerenading" = "Accedi e inizia a condividere le tue canzoni preferite";
+
+// Onboarding screen
+"WelcomeToSerenade" = "Benvenuti a Serenade";
+"AddFriends" = "Aggiungi amici";
+"AddFriendsDescription" = "Connettetevi senza problemi con gli amici per condividere ed esplorare insieme i gusti musicali.";
+"DailySongSharing" = "Condividere canzoni ogni giorno";
+"DailySharingDescription" = "Condividi la tua canzone quotidiana una volta ogni 24 ore con la comunità, arricchendo il viaggio musicale di tutti.";
+"ListenPreviews" = "Ascolta le anteprime";
+"ListenPreviewsDescription" = "Ascoltate le anteprime di 15 secondi dei brani prima di immergervi nell'esperienza completa.";
+"OpenWithFavorite" = "Aprire con le applicazioni di streaming preferite";
+"OpenWithFavoriteDescription" = "Godetevi un ascolto ininterrotto aprendo i brani direttamente nella vostra applicazione di streaming preferita.";
+"Start" = "Inizio";
+
+// User Details View
+"CompleteYourProfile" = "Completate il vostro profilo per iniziare";
+"FillInYourDetails" = "Inserite i vostri dati per personalizzare la vostra esperienza";
+"CompleteAccount" = "Completa la tua cuenta";
+
 // Tab bar
 "Feed" = "Home";
 "Search" = "Cerca";
