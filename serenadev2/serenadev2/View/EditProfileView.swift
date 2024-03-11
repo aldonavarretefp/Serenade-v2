@@ -99,7 +99,7 @@ struct EditProfileView: View {
                         }
                         let trimmedTagName: String = tagName.formattedForTagName
                         
-                        userVM.searchUsers(tagname: trimmedTagName) { users in
+                        userVM.searchUsers(searchText: trimmedTagName) { users in
                             if let users, users.count > 0 && trimmedTagName != "" {
                                 let userFromDB = users[0]
                                 if isSameUserInSession(fromUser: user, toCompareWith: userFromDB) {

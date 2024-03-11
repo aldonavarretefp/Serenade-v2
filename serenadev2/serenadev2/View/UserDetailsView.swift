@@ -91,7 +91,7 @@ struct UserDetailsView: View {
     
     private func saveUserDetails() {
         tagname = tagname.formattedForTagName
-        userViewModel.searchUsers(tagname: tagname) { users in
+        userViewModel.searchUsers(searchText: tagname) { users in
             
             guard let users = users else { return }
             
