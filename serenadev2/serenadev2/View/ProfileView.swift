@@ -20,21 +20,24 @@ struct ProfileView: View {
     // Opacity variables for the button and the header
     @State var headerOpacity: Double = 1.0
     
-    @EnvironmentObject var postVM: PostViewModel
+    @StateObject var postVM: PostViewModel = PostViewModel()
     @EnvironmentObject var userVM: UserViewModel
     
     @State var posts: [Post] = []
     @State var user: User?
+    
+    @State private var isLoading: Bool = true
+    
     
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
                 Color.viewBackground
                     .ignoresSafeArea()
-                
-                VStack(spacing: 0){
+                VStack(spacing: 0) {
                     ScrollView (.vertical, showsIndicators: false) {
                         VStack(spacing: 15) {
+                            
                             if postVM.posts.isEmpty {
                                 ContentUnavailableView(label: {
                                     Label(LocalizedStringKey("No posts"), systemImage: "music.note")
@@ -42,20 +45,23 @@ struct ProfileView: View {
                                     Text(LocalizedStringKey("Try posting your first one!"))
                                 })
                             } else {
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                                    .offset(y: -50)
                                 ForEach(postVM.posts, id: \.self) { post in
                                     // Ensure PostView can handle nil or incomplete data gracefully
                                     if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID], let song = postVM.songsDetails[post.songId] {
-                                        PostView(post: post, sender: senderUser, song: song)
+                                        PostComponent(post: post, sender: senderUser, song: song)
                                     }
                                     else {
-                                        PostView(post: post)
+                                        PostComponent(post: post)
                                     }
                                 }
                             }
                         }
                         .padding(.top, headerHeight)
-                        .padding(.bottom)
-                        .padding(.horizontal)
+                        .padding([.bottom,.horizontal])
+                        .offset(y: -20)
                         .offsetY{ previous, current in
                             // Moving header based on direction scroll
                             if previous > current{
@@ -104,7 +110,7 @@ struct ProfileView: View {
                                 .opacity(headerOpacity)
                                 .padding(.top, safeArea().top)
                                 .padding(.bottom)
-                                .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
+                                .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){ $0 }
                             // Get the header height
                                 .overlayPreferenceValue(HeaderBoundsKey.self){ value in
                                     GeometryReader{ proxy in
@@ -119,13 +125,14 @@ struct ProfileView: View {
                                 }
                                 .offset(y: -headerOffset < headerHeight ? headerOffset : (headerOffset < 0 ? headerOffset : 0))
                         } else {
+                            
                             ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: User(name: "", tagName: "", email: "", streak: 0, profilePicture: "", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: CKRecord.ID(recordName: "placeholder"))))
                                 .opacity(headerOpacity)
                                 .padding(.top, safeArea().top)
                             
                                 .padding(.bottom)
                                 .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
-                                                        
+                            
                             // Get the header height
                                 .overlayPreferenceValue(HeaderBoundsKey.self){ value in
                                     GeometryReader{ proxy in
@@ -208,6 +215,8 @@ struct ProfileView: View {
                     .frame(height: 0)
             }
             .task {
+                
+                
                 if self.user == nil {
                     print("USER IS NIL")
                     guard let user = userVM.user else {

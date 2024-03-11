@@ -11,21 +11,24 @@ import AuthenticationServices
 struct SignInView: View {
     
     @Environment(\.colorScheme) var colorScheme
-
+    
     @EnvironmentObject var userViewModel: UserViewModel
     
     @State private var shouldShowUserDetails = false
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack {
                     Image("AppLogo")
+                        .padding(.bottom)
+                        .shadow(color: .black.opacity(0.15), radius: 13, x: 0, y: 8)
                     
-                    Text("Sign in and start serenading")
+                    Text(LocalizedStringKey("StartSerenading"))
                         .bold()
                         .font(.largeTitle)
                         .multilineTextAlignment(.center)
+                        .padding(.bottom)
                     
                     SignInWithAppleButton(.signIn, onRequest: { request in
                         request.requestedScopes = [.email, .fullName]
@@ -42,12 +45,18 @@ struct SignInView: View {
                                 break;
                             }
                         case .failure(let error):
-                            print("ERROR: Sign In ", error.localizedDescription)
+                            userViewModel.error = error.localizedDescription
+                            break;
                         }
                     })
                     .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
                     .frame(height: 45)
                     .padding()
+                    .padding(.top)
+                    
+                    //                    if userViewModel.error != "" {
+                    //                        Text(userViewModel.error)
+                    //                    }
                     
                 }
                 .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
@@ -56,21 +65,17 @@ struct SignInView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(
-                LinearGradient(
-                    stops: [
-                        Gradient.Stop(color: Color.accentColor.opacity(0.40), location: 0.00),
-                        Gradient.Stop(color: Color.accentColor.opacity(0.7), location: 0.50),
-                        Gradient.Stop(color: Color.accentColor.opacity(0), location: 1.00),
-                    ],
-                    startPoint: UnitPoint(x: 0.5, y: 0),
-                    endPoint: UnitPoint(x: 0.5, y: 1)
-                )
+                ZStack{
+                    LinearGradient(colors: [.accent, .clear], startPoint: .top, endPoint: .bottom)
+                    Color.card.opacity(0.5)
+                    
+                }
+                    .ignoresSafeArea()
             )
             .navigationBarTitleDisplayMode(.inline)
             
             
-        }//: Navigation
-        .preferredColorScheme(colorScheme == .dark ? .dark : .light)
+        }
         .transition(.asymmetric(insertion: .slide, removal: .push(from: .trailing)))
     }
 }

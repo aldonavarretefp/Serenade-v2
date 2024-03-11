@@ -6,8 +6,28 @@
   
 */
 
+// Sign in
+"StartSerenading" = "Sign in and start serenading";
+
+// Onboarding screen
+"WelcomeToSerenade" = "Welcome to Serenade";
+"AddFriends" = "Add friends";
+"AddFriendsDescription" = "Connect effortlessly with friends to share and explore musical tastes together.";
+"DailySongSharing" = "Daily song sharing";
+"DailySharingDescription" = "Share your daily song once every 24 hours with the community, enriching everyone's musical journey.";
+"ListenPreviews" = "Listen previews";
+"ListenPreviewsDescription" = "Listen to 15-second previews of songs before diving into the full experience.";
+"OpenWithFavorite" = "Open with favorite streaming apps";
+"OpenWithFavoriteDescription" = "Enjoy uninterrupted listening by opening songs directly in your preferred streaming app.";
+"Start" = "Start";
+
+// User Details View
+"CompleteYourProfile" = "Completa tu perfil para empezar";
+"FillInYourDetails" = "Rellene sus datos para personalizar su experiencia";
+"CompleteAccount" = "Complete account";
+
 // Tab bar
-"Feed" = "Feed";
+"Feed" = "Home";
 "Search" = "Search";
 "Profile" = "Profile";
 
@@ -83,6 +103,10 @@
 "TapToPausePreview" = "Tap to pause preview";
 "Daily" = "Daily";
 "OpenWith" = "Open with";
+"OpenWithAppleMusic" = "Open with Apple Music";
+"OpenWithSpotify" = "Open with Spotify";
+"OpenWithYouTubeMusic" = "Open with YouTube Music";
+"OpenWithAmazonMusic" = "Open with Amazon Music";
 
 // Song meta data
 "SongInfo" = "Song information";

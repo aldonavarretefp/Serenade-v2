@@ -11,7 +11,7 @@ import CloudKit
 import Combine
 
 class FriendRequestsViewModel: ObservableObject {
-    @Published var friendRequests = [FriendRequest]()
+    @Published var friendRequests: [FriendRequest] = []
     @Published var userDetails: [CKRecord.ID: User] = [:]
     var cancellables = Set<AnyCancellable>()
     
@@ -32,27 +32,57 @@ class FriendRequestsViewModel: ObservableObject {
         }
     }
     
+    func fetchFriendRequestsForUser(user: User) {
+        
+        let recordToMatch = CKRecord.Reference(record: user.record, action: .none)
+        let predicate = NSPredicate(format: "receiver == %@ && status == %@", recordToMatch, FriendRequestStatus.pending.rawValue)
+        let recordType = FriendRequestsRecordKeys.type.rawValue
+        let sortDescriptor = NSSortDescriptor(key: FriendRequestsRecordKeys.timeStamp.rawValue, ascending: false)
+        
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType, sortDescriptions: [sortDescriptor])
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+            } receiveValue: { [weak self] (returnedFriendRequests: [FriendRequest]) in
+                DispatchQueue.main.async {
+                    self?.friendRequests = returnedFriendRequests
+                    print(self?.friendRequests.count ?? -1)
+                }
+                for request in returnedFriendRequests {
+                    let record = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: request.sender.recordID)
+                    self?.fetchUserDetails(for: record.recordID)
+                }
+            }
+            .store(in: &cancellables)
+    }
     /**
      Fetches the friend requests for the user.
      - Parameters:
      - user: The user to fetch the friend requests for.
      */
     func fetchFriendRequestsForUser(user: User, completionHandler: @escaping () -> Void) {
+        
         let recordToMatch = CKRecord.Reference(record: user.record, action: .none)
         let predicate = NSPredicate(format: "receiver == %@ && status == %@", recordToMatch, FriendRequestStatus.pending.rawValue)
         let recordType = FriendRequestsRecordKeys.type.rawValue
         let sortDescriptor = NSSortDescriptor(key: FriendRequestsRecordKeys.timeStamp.rawValue, ascending: false)
+        
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType, sortDescriptions: [sortDescriptor])
             .receive(on: DispatchQueue.main)
             .sink { _ in
             } receiveValue: { [weak self] (returnedFriendRequests: [FriendRequest]) in
-                print(returnedFriendRequests)
+                guard let self else {
+                    print("VM doesn't exists")
+                    return
+                }
                 DispatchQueue.main.async {
-                    self?.friendRequests = returnedFriendRequests
+                    print("Model ",returnedFriendRequests.count)
+                    withAnimation {
+                        self.friendRequests = returnedFriendRequests
+                    }
                 }
                 for request in returnedFriendRequests {
                     let record = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: request.sender.recordID)
-                    self?.fetchUserDetails(for: record.recordID)
+                    self.fetchUserDetails(for: record.recordID)
                 }
                 completionHandler()
             }
@@ -116,13 +146,23 @@ class FriendRequestsViewModel: ObservableObject {
         CloudKitUtility.update(item: friendRequest) { result in
             switch result {
             case .success(_):
-                print("Success accepting friend request!")
+                self.removeFriendRequestFromList(friendRequest)
                 completionHandler()
                 break;
             case .failure(let error):
                 print("Error while accepting the friend request", error.localizedDescription)
                 break;
             }
+        }
+    }
+    
+    func removeFriendRequestFromList(_ friendRequest: FriendRequest) {
+        DispatchQueue.main.async {
+            withAnimation {
+                self.friendRequests = self.friendRequests.filter { $0 != friendRequest }
+                self.userDetails.removeValue(forKey: friendRequest.sender.recordID)
+            }
+            
         }
     }
     
@@ -136,7 +176,8 @@ class FriendRequestsViewModel: ObservableObject {
         CloudKitUtility.update(item: friendRequest) { result in
             switch result {
             case .success(_):
-                print("Updated succesfully")
+                print("DeclinedFriendRequest")
+                self.removeFriendRequestFromList(friendRequest)
                 completionHandler()
                 break;
             case .failure(let error):

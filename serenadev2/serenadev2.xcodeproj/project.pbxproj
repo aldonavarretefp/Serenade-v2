@@ -11,6 +11,8 @@
 		4447C05A2B92223700593AF5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4447C05C2B92223700593AF5 /* Localizable.strings */; };
 		4447C07C2B95B97A00593AF5 /* SongHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */; };
 		446800292B90C87D00A858F1 /* SongMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446800282B90C87D00A858F1 /* SongMetaData.swift */; };
+		446979382B9A59F900A6A8FC /* PostInstagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446979372B9A59F900A6A8FC /* PostInstagramView.swift */; };
+		448CF82B2B9CA7910065B77F /* PostComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448CF82A2B9CA7910065B77F /* PostComponent.swift */; };
 		44D1A4212B91DAC200BE6F92 /* NotificationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */; };
 		44D1A4232B91DB3100BE6F92 /* NotificationActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */; };
 		C402E7D72B8CD42D004EC79C /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402E7D62B8CD42D004EC79C /* CustomTabBar.swift */; };
@@ -23,7 +25,6 @@
 		C40C09B32B863C49009BE4C5 /* SongDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40C09B22B863C49009BE4C5 /* SongDetailView.swift */; };
 		C40C09B62B863CA2009BE4C5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40C09B52B863CA2009BE4C5 /* Extensions.swift */; };
 		C40C09B82B863EFA009BE4C5 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40C09B72B863EFA009BE4C5 /* ActionButton.swift */; };
-		C46C8B8B2B992B8300E77A65 /* IGStoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = C46C8B8A2B992B8300E77A65 /* IGStoryKit */; };
 		C47B8F082B84EE88002027CF /* ItemSmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47B8F072B84EE88002027CF /* ItemSmall.swift */; };
 		C48F64672B99DDC6006AD369 /* PushNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48F64662B99DDC6006AD369 /* PushNotificationViewModel.swift */; };
 		C49B42122B87869800FD66F9 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49B42112B87869800FD66F9 /* SearchView.swift */; };
@@ -68,9 +69,11 @@
 		F1FC0FD82B8E1DB300FD50CB /* CloudKitUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FC0FD72B8E1DB300FD50CB /* CloudKitUtility.swift */; };
 		F709F6C22B90CA0000B60216 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F709F6C12B90CA0000B60216 /* PostViewModel.swift */; };
 		F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7207C9F2B84F52E00E383E6 /* CloudKitConfig.swift */; };
+		F725CCE82B9C6F69007867F7 /* IGStoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = F725CCE72B9C6F69007867F7 /* IGStoryKit */; };
 		F76E0B212B99B0F00048DC83 /* ProfilePicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76E0B202B99B0F00048DC83 /* ProfilePicViewModel.swift */; };
 		F7AE69252B90B5C5003C6A7C /* FriendRequestsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */; };
 		F7AE69272B90B61A003C6A7C /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AE69262B90B61A003C6A7C /* FriendRequest.swift */; };
+		F7D7C5AB2B9CFA820081EC21 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = F7D7C5AA2B9CFA820081EC21 /* Kingfisher */; };
 		F7E810CF2B921E6A00000946 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F928612B878D8E00050926 /* UserViewModel.swift */; };
 		F7F928652B879FAF00050926 /* MockedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F928642B879FAF00050926 /* MockedUser.swift */; };
 /* End PBXBuildFile section */
@@ -99,6 +102,8 @@
 		4447C05E2B92223900593AF5 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongHistoryManager.swift; sourceTree = "<group>"; };
 		446800282B90C87D00A858F1 /* SongMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongMetaData.swift; sourceTree = "<group>"; };
+		446979372B9A59F900A6A8FC /* PostInstagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostInstagramView.swift; sourceTree = "<group>"; };
+		448CF82A2B9CA7910065B77F /* PostComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComponent.swift; sourceTree = "<group>"; };
 		44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationItem.swift; sourceTree = "<group>"; };
 		44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationActionButton.swift; sourceTree = "<group>"; };
 		C402E7D62B8CD42D004EC79C /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
@@ -169,7 +174,8 @@
 			buildActionMask = 2147483647;
 			files = (
 
-				C46C8B8B2B992B8300E77A65 /* IGStoryKit in Frameworks */,
+				F7D7C5AB2B9CFA820081EC21 /* Kingfisher in Frameworks */,
+				F725CCE82B9C6F69007867F7 /* IGStoryKit in Frameworks */,
 
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -264,6 +270,7 @@
 				446800282B90C87D00A858F1 /* SongMetaData.swift */,
 				44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */,
 				44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */,
+				448CF82A2B9CA7910065B77F /* PostComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -298,6 +305,7 @@
 				C4AF43172B9663E10089C62A /* OnboardingView.swift */,
 				C4AF43192B9670D90089C62A /* SplashScreenView.swift */,
 				C4A7635C2B9697CC002A3A5B /* UserDetailsView.swift */,
+				446979372B9A59F900A6A8FC /* PostInstagramView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -441,7 +449,8 @@
 			name = serenadev2;
 			packageProductDependencies = (
 
-				C46C8B8A2B992B8300E77A65 /* IGStoryKit */,
+				F725CCE72B9C6F69007867F7 /* IGStoryKit */,
+				F7D7C5AA2B9CFA820081EC21 /* Kingfisher */,
 			);
 			productName = serenadev2;
 			productReference = F137D22F2B839A82006264C1 /* serenadev2.app */;
@@ -519,7 +528,8 @@
 			mainGroup = F137D2262B839A81006264C1;
 			packageReferences = (
 
-				C46C8B892B992B8300E77A65 /* XCRemoteSwiftPackageReference "IGStoryKit" */,
+				F725CCE62B9C6F69007867F7 /* XCRemoteSwiftPackageReference "IGStoryKit" */,
+				F7D7C5A92B9CFA820081EC21 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = F137D2302B839A82006264C1 /* Products */;
 			projectDirPath = "";
@@ -592,6 +602,7 @@
 				EA216FCA2B8F6B6800A715EB /* ChecklistItem.swift in Sources */,
 				EA9BC9EC2B8501ED00292705 /* PostView.swift in Sources */,
 				C402E7DF2B8CD500004EC79C /* DailyPosted.swift in Sources */,
+				446979382B9A59F900A6A8FC /* PostInstagramView.swift in Sources */,
 				C4AF431A2B9670D90089C62A /* SplashScreenView.swift in Sources */,
 				44D1A4212B91DAC200BE6F92 /* NotificationItem.swift in Sources */,
 				EAB0C0D82B8CEC5A004F47F6 /* EditProfileView.swift in Sources */,
@@ -602,6 +613,7 @@
 				C4AF431C2B9679150089C62A /* UserDefaultsKeys.swift in Sources */,
 				EA9BC9F32B87861C00292705 /* User.swift in Sources */,
 				C402E7D72B8CD42D004EC79C /* CustomTabBar.swift in Sources */,
+				448CF82B2B9CA7910065B77F /* PostComponent.swift in Sources */,
 				C402E7DD2B8CD4E7004EC79C /* FeedView.swift in Sources */,
 				C49B42122B87869800FD66F9 /* SearchView.swift in Sources */,
 				F76E0B212B99B0F00048DC83 /* ProfilePicViewModel.swift in Sources */,
@@ -796,7 +808,7 @@
 				CODE_SIGN_ENTITLEMENTS = serenadev2/serenadev2.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"serenadev2/Preview Content\"";
 				DEVELOPMENT_TEAM = 8T878FXD47;
 				ENABLE_PREVIEWS = YES;
@@ -815,7 +827,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.serenade.serenadev2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -833,7 +845,7 @@
 				CODE_SIGN_ENTITLEMENTS = serenadev2/serenadev2.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"serenadev2/Preview Content\"";
 				DEVELOPMENT_TEAM = 8T878FXD47;
 				ENABLE_PREVIEWS = YES;
@@ -852,7 +864,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.serenade.serenadev2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -981,7 +993,8 @@
 
 /* Begin XCRemoteSwiftPackageReference section */
 
-		C46C8B892B992B8300E77A65 /* XCRemoteSwiftPackageReference "IGStoryKit" */ = {
+		F725CCE62B9C6F69007867F7 /* XCRemoteSwiftPackageReference "IGStoryKit" */ = {
+
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwapnanilDhol/IGStoryKit";
 			requirement = {
@@ -989,15 +1002,28 @@
 				minimumVersion = 1.1.1;
 			};
 		};
+		F7D7C5A92B9CFA820081EC21 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.11.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 
-		C46C8B8A2B992B8300E77A65 /* IGStoryKit */ = {
+		F725CCE72B9C6F69007867F7 /* IGStoryKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C46C8B892B992B8300E77A65 /* XCRemoteSwiftPackageReference "IGStoryKit" */;
+			package = F725CCE62B9C6F69007867F7 /* XCRemoteSwiftPackageReference "IGStoryKit" */;
 
 			productName = IGStoryKit;
+		};
+		F7D7C5AA2B9CFA820081EC21 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F7D7C5A92B9CFA820081EC21 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -15,6 +15,7 @@ struct UserDetailsView: View {
     
     @State private var name: String = ""
     @State var tagname: String = ""
+    @State var tagNameRepeated: Bool = false
     
     var body: some View {
         NavigationView {
@@ -28,14 +29,14 @@ struct UserDetailsView: View {
                     .ignoresSafeArea()
                 
                 VStack (){
-                    Text("Complete your profile to get started")
+                    Text(LocalizedStringKey("CompleteYourProfile"))
                         .font(.largeTitle)
                         .bold()
                         .multilineTextAlignment(.center)
                         .padding()
                         .padding(.bottom, 20)
                     
-                    Text("Please fill in your details to personalize your experience")
+                    Text(LocalizedStringKey("FillInYourDetails"))
                         .multilineTextAlignment(.center)
                         .padding(.bottom, 40)
                     
@@ -43,7 +44,7 @@ struct UserDetailsView: View {
                         VStack(spacing: 20){
                             TextField("", text: $name)
                                 .placeholder(when: name.isEmpty) {
-                                    Text("Full name")
+                                    Text(LocalizedStringKey("Name"))
                                         .foregroundColor(.gray)
                                 }
                                 .foregroundStyle(.black)
@@ -54,53 +55,61 @@ struct UserDetailsView: View {
                             
                             TextField("", text: $tagname)
                                 .placeholder(when: tagname.isEmpty) {
-                                    Text("Username")
+                                    Text(LocalizedStringKey("Username"))
                                         .foregroundColor(.gray)
                                 }
                                 .foregroundStyle(.black)
                                 .padding()
                                 .background(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .autocapitalization(.none)
+                                .onChange(of: tagname) { oldValue, newValue in
+                                    tagname = newValue.lowercased()
+                                }
                         }
                     }
                     
                     Spacer()
                     
-                    ActionButton(label: "Complete account", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname != "" ? false : true){
+                    ActionButton(label: LocalizedStringKey("CompleteAccount"), symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname == "" || name == "" || tagname.containsEmoji) {
                         saveUserDetails()
                     }
                 }
                 .padding()
             }
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                // Clear UserDefaults here if leaving UserDetailsView
-//                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userID)
-//                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userName)
-//                UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userEmail)
-                // Remove other details as necessary
-            }
             .onAppear {
-                // Pre-fill the user details if available
                 if let userName = userViewModel.user?.name {
                     name = userName
                 }
-            
+            }
+            .alert(Text("Tagname already exists."), isPresented: $tagNameRepeated) {
+                
             }
         }
         .foregroundStyle(.white)
     }
     
     private func saveUserDetails() {
-        
-        guard var user = userViewModel.user else {
-            print("No user in DB")
-            return
+        tagname = tagname.formattedForTagName
+        userViewModel.searchUsers(tagname: tagname) { users in
+            
+            guard let users = users else { return }
+            
+            if(!users.isEmpty) {
+                self.tagNameRepeated = true
+                return
+            } else {
+                self.tagNameRepeated = false
+                guard var user = userViewModel.user else {
+                    print("No user in DB")
+                    return
+                }
+                user.tagName = tagname
+                user.name = name
+                userViewModel.tagNameExists = true
+                userViewModel.updateUser(updatedUser: user)
+            }
         }
-        
-        user.tagName = tagname
-        user.name = name
-        userViewModel.tagNameExists = true
-        userViewModel.updateUser(updatedUser: user)
     }
 }
 

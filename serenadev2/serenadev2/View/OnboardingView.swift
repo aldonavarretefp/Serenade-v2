@@ -9,46 +9,60 @@ import SwiftUI
 
 struct OnboardingView: View {
     
+    //    ZStack{
+    //        LinearGradient(colors: [.accent, .clear], startPoint: .top, endPoint: .bottom)
+    //        Color.card.opacity(0.5)
+    //
+    //    }
+    //        .ignoresSafeArea()
+    
     @Binding var hasCompletedOnboarding: Bool
     
     var body: some View {
-        VStack(){
+        ZStack{
+            
+            Color.viewBackground
+                .ignoresSafeArea()
+            
             VStack(){
-                Text("Welcome to Serenade")
+                Text(LocalizedStringKey("WelcomeToSerenade"))
                     .font(.title)
                     .fontWeight(.bold)
-                    .padding(.bottom, 20)
+                    .padding()
                 
-                VStack(alignment: .leading, spacing: 40){
-                    FeatureView(icon: "heart.fill", title: "Add Friends", description: "Connect effortlessly with friends to share and explore musical tastes together.")
-                    
-                    
-                    FeatureView(icon: "hearingdevice.ear.fill", title: "Hear Previews", description: "Listen to 15-second previews of songs before diving into the full experience.")
-                    
-                    FeatureView(icon: "clock.arrow.circlepath", title: "Daily Song Posting", description: "Share your daily song once every 24 hours with the community, enriching everyone's musical journey.")
-                    
-                    FeatureView(icon: "play.circle.fill", title: "Open with Favorite Streaming App", description: "Enjoy uninterrupted listening by opening songs directly in your preferred streaming app.")
+                ScrollView{
+                    VStack(alignment: .leading, spacing: 40){
+                        FeatureView(icon: "person.fill.checkmark", title: LocalizedStringKey("AddFriends"), description: LocalizedStringKey("AddFriendsDescription"))
+                        
+                        FeatureView(icon: "waveform.circle.fill", title: LocalizedStringKey("DailySongSharing"), description: LocalizedStringKey("DailySharingDescription"))
+                        
+                        FeatureView(icon: "play.circle.fill", title: LocalizedStringKey("ListenPreviews"), description: LocalizedStringKey("ListenPreviewsDescription"))
+                        
+                        FeatureView(icon: "arrow.up.right.circle.fill", title: LocalizedStringKey("OpenWithFavorite"), description: LocalizedStringKey("OpenWithFavoriteDescription"))
+                    }
+                    .padding(.horizontal)
                 }
+                .scrollBounceBehavior(.basedOnSize, axes: [.vertical])
                 
+                Spacer ()
+                ActionButton(label: LocalizedStringKey("Start"), symbolName: "", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: false) {
+                    
+                    UserDefaults.standard.set(true, forKey: UserDefaultsKeys.hasCompletedOnboarding)
+                    hasCompletedOnboarding = true
+                    
+                }
+                .padding()
             }
-            .padding()
             
-            Spacer ()
-            ActionButton(label: "Start", symbolName: "", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: false) {
-                
-                UserDefaults.standard.set(true, forKey: UserDefaultsKeys.hasCompletedOnboarding)
-                hasCompletedOnboarding = true
-                
-            }
-            .padding()
         }
+        
     }
 }
 
 struct FeatureView: View {
     var icon: String
-    var title: String
-    var description: String
+    var title: LocalizedStringKey
+    var description: LocalizedStringKey
     
     var body: some View {
         HStack(alignment: .center, spacing: 32){
@@ -68,11 +82,11 @@ struct FeatureView: View {
                     .foregroundColor(.callout)
             }
         }
-        
     }
 }
 
 
 #Preview {
     OnboardingView(hasCompletedOnboarding: .constant(true))
+        .environment(\.locale, .init(identifier: "it"))
 }

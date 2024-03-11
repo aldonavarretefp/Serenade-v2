@@ -20,7 +20,7 @@ struct ProfileBar: View {
     @State var isFriendRequestRecieved: Bool = false
     
     @EnvironmentObject var userViewModel: UserViewModel
-    @EnvironmentObject var friendRequestViewModel: FriendRequestsViewModel
+    @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
     
     @State var user: User
     @State var friendRequest: FriendRequest? = nil
@@ -57,21 +57,22 @@ struct ProfileBar: View {
                     
                     VStack {
                         Spacer()
-                        HStack {
-                            Image(systemName: "flame.circle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 25)
-                                .foregroundStyle(.accent)
-                            Text(String(user.streak))  // user.streak
-                                .bold()
-                                .font(.title3)
-                        }
-                        .padding(5)
-                        .background(Color.card.opacity(0.9))
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                        .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0), radius: 12.5, x: 0, y: 4)
-                        .offset(y: 5)
+                        // STREAK Commented
+//                        HStack {
+//                            Image(systemName: "flame.circle.fill")
+//                                .resizable()
+//                                .aspectRatio(contentMode: .fit)
+//                                .frame(height: 25)
+//                                .foregroundStyle(.accent)
+//                            Text(String(user.streak))  // user.streak
+//                                .bold()
+//                                .font(.title3)
+//                        }
+//                        .padding(5)
+//                        .background(Color.card.opacity(0.9))
+//                        .clipShape(RoundedRectangle(cornerRadius: 6))
+//                        .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0), radius: 12.5, x: 0, y: 4)
+//                        .offset(y: 5)
                     }
                 }
                 .padding(.trailing)
@@ -111,7 +112,7 @@ struct ProfileBar: View {
                         }
                         .font(.caption)
                         VStack {
-                            Text(String(user.friends.count-1))
+                            Text(String(user.friends.count == 0 ? 0 : user.friends.count-1))
                             Text(LocalizedStringKey("Friends"))
                         }
                         .font(.caption)
@@ -120,7 +121,7 @@ struct ProfileBar: View {
                         
                         if !isCurrentUser && isFriendRequestRecieved {
                             HStack(spacing: 5){
-                                NotificationActionButton(icon: "xmark"){
+                                NotificationActionButton(icon: "xmark", isDisabled: false){
                                     guard let friendRequest = friendRequest else {return}
                                     friendRequestViewModel.declineFriendRequest(friendRequest: friendRequest) {
                                         
@@ -130,7 +131,7 @@ struct ProfileBar: View {
                                     isFriendRequestSent = false
                                 }
                                 
-                                NotificationActionButton(icon: "checkmark"){
+                                NotificationActionButton(icon: "checkmark", isDisabled: false){
                                     guard let friendRequest = friendRequest else {return}
                                     
                                     friendRequestViewModel.acceptFriendRequest(friendRequest: friendRequest) {
@@ -229,9 +230,17 @@ struct ProfileBar: View {
                     isFriendRequestSent = true
                 }
             }
-            if userViewModel.user != nil {
-                if user.accountID == userViewModel.user!.accountID {
-                    user = userViewModel.user!
+            
+            if let userVM = userViewModel.user {
+                if(user.accountID == userVM.accountID){
+                    user = userVM
+                }
+            }
+        }
+        .onAppear {
+            if let userVM = userViewModel.user {
+                if(user.accountID == userVM.accountID){
+                    user = userVM
                 }
             }
         }

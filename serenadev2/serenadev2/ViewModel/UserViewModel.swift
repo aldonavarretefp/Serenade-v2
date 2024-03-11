@@ -7,6 +7,7 @@ class UserViewModel: ObservableObject {
     @Published var userID: String? = nil
     @Published var isLoggedIn: Bool = false
     @Published var tagNameExists: Bool = false
+    @Published var error: String = ""
     var cancellables = Set<AnyCancellable>()
     
     init(){
@@ -16,6 +17,7 @@ class UserViewModel: ObservableObject {
             fetchUserFromAccountID(accountID: userID) { returnedUser in
                 guard let user = returnedUser else {
                     print("NO USER FROM DB")
+                    self.error = "No user fetch"
                     return
                 }
                 print("Fetched User from DB: \(user)")
@@ -23,7 +25,7 @@ class UserViewModel: ObservableObject {
                     self.user = returnedUser
                     self.userID = userID
                     self.isLoggedIn = true
-                    self.tagNameExists = user.tagName != ""
+                    self.tagNameExists = user.tagName != userID.lowercased()
                 }
             }
         }
@@ -31,12 +33,12 @@ class UserViewModel: ObservableObject {
     }
     
     func handleAuthorization(userID: String, fullName: String, email: String) {
+        
         UserDefaults.standard.setValue(userID, forKey: UserDefaultsKeys.userID)
+        
         fetchUserFromAccountID(accountID: userID) { returnedUser in
             guard let user = returnedUser else {
-                // User does not exists
-                //                let user = User(name: fullName, tagName: "", email: email, streak: 0, profilePicture: "", isActive: true, record: .init(recordType: UserRecordKeys.type.rawValue))
-                guard let user = User(accountID: userID, name: fullName, tagName: "", email: email, posts: .init(), streak: 0, profilePicture: "", isActive: true, profilePictureAsset: nil) else {
+                guard let user = User(accountID: userID, name: fullName, tagName: userID.lowercased(), email: email, posts: .init(), streak: 0, profilePicture: "", isActive: true, profilePictureAsset: nil) else {
                     return
                 }
                 self.createUser(user: user)
@@ -49,7 +51,7 @@ class UserViewModel: ObservableObject {
                 self.user = returnedUser
                 self.userID = userID
                 self.isLoggedIn = true
-                self.tagNameExists = user.tagName != ""
+                self.tagNameExists = user.tagName != userID.lowercased()
             }
             
         }
@@ -113,44 +115,54 @@ class UserViewModel: ObservableObject {
     }
     
     func createUser(user: User){
-        self.searchUsers(tagname: user.tagName) { returnedUsers in
-            guard let returnedUsers = returnedUsers else { return }
-            if(!returnedUsers.isEmpty){
-                return
-            } else {
-                guard let newUser = User(accountID: user.accountID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, profilePictureAsset: nil) else { return }
-                
-                CloudKitUtility.add(item: newUser) { result in
-                    switch result {
-                    case .success(_):
-                        DispatchQueue.main.async {
-                            self.user = newUser
-                            self.userID = newUser.accountID
-                            self.isLoggedIn = true
-                        }
-                        self.makeFriend(withID: CKRecord.ID(recordName: "3C8B27E4-C778-48AD-A82C-385D9BA262E7"))
-                        break
-                    case .failure(_):
-                        break
-                    }
+        if(user.tagName == "") { return }
+        guard let newUser = User(accountID: user.accountID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, profilePictureAsset: nil) else {
+            self.error.append(" No se pudo crear un nuevo usuario en createUser")
+            return
+        }
+        
+        CloudKitUtility.add(item: newUser) { result in
+            switch result {
+            case .success(_):
+                //self.error.append(" Se pudo agregar al usuario")
+                DispatchQueue.main.async {
+                    self.user = newUser
+                    self.userID = newUser.accountID
+                    self.isLoggedIn = true
+                    self.makeFriend(withID: CKRecord.ID.init(recordName: "AB32E1CA-F299-4124-8D11-807EE922974E"))
                 }
+                break
+            case .failure(_):
+                DispatchQueue.main.async {
+                    self.error = "Couldnt be created"
+                }
+                break
             }
         }
+        
     }
     
-    func updateUser(updatedUser: User) {
+    func updateUser(updatedUser: User) {   
+        
+        if(updatedUser.tagName == "" || updatedUser.name == "") {
+            return
+        }
+        
         var copyUser = updatedUser
         guard let newUser = copyUser.update(newUser: updatedUser) else { return }
         
         CloudKitUtility.update(item: newUser) { result in
             switch result {
             case .success(_):
-                if(updatedUser.accountID == self.user?.accountID){
+                
+                if let user = self.user, updatedUser.accountID == user.accountID {
                     DispatchQueue.main.async {
                         self.user = newUser
                     }
                 }
-                print("User updated")
+                
+                print("\(newUser.name) updated")
+                
                 break;
             case .failure(let error):
                 print("Error while updating the user ", error.localizedDescription)
@@ -164,7 +176,7 @@ class UserViewModel: ObservableObject {
         updateUser(updatedUser: user!)
     }
     
-    func makeFriend(withID friendId: CKRecord.ID){
+    func makeFriend(withID friendId: CKRecord.ID) {
         guard var updatedUser = user else { return }
         
         let referenceToFriend = CKRecord.Reference(recordID: friendId, action: .none)

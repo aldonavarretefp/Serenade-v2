@@ -38,7 +38,7 @@ struct FeedView: View {
     @State var userEmail: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? "")
     
     @EnvironmentObject var userViewModel: UserViewModel
-    @EnvironmentObject var postViewModel: PostViewModel
+    @StateObject var postViewModel: PostViewModel = PostViewModel()
     @StateObject var pushNotificationsVM: PushNotificationViewModel = PushNotificationViewModel()
     
     // MARK: - Environment properties
@@ -60,7 +60,7 @@ struct FeedView: View {
     @State var headerOpacity: Double = 1.0
     @State var dailyButtonOpacity: Double = 1.0
     @State var isDailySheetOpened: Bool = false
-
+    
     // MARK: - Body
     var body: some View {
         
@@ -69,9 +69,11 @@ struct FeedView: View {
                 Color.viewBackground
                     .ignoresSafeArea()
                 ZStack (alignment: .bottom) {
-                    ScrollView (.vertical, showsIndicators: false){
+                    ScrollView (.vertical, showsIndicators: false) {
                         VStack (spacing: 15) {
-                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                                .offset(y: -50)
                             if postViewModel.posts.isEmpty {
                                 ContentUnavailableView(label: {
                                     Label(LocalizedStringKey("No posts"), systemImage: "music.note")
@@ -82,17 +84,18 @@ struct FeedView: View {
                                 ForEach(postViewModel.posts, id: \.self) { post in
                                     // Ensure PostView can handle nil or incomplete data gracefully
                                     if let sender = post.sender, let senderUser = postViewModel.senderDetails[sender.recordID], let song = postViewModel.songsDetails[post.songId] {
-                                        PostView(post: post, sender: senderUser, song: song)
+                                        PostComponent(post: post, sender: senderUser, song: song)
                                     }
                                     else {
-                                        PostView(post: post)
+                                        PostComponent(post: post)
                                     }
                                 }
                             }
                             
                         }
                         .padding(.top, headerHeight)
-                        .padding(.bottom)
+                        .padding([.bottom, .horizontal])
+                        .offset(y: -20)
                         .offsetY{ previous, current in
                             // Moving header based on direction scroll
                             if previous > current{
@@ -131,44 +134,45 @@ struct FeedView: View {
                                 
                                 // Calculate the opaciti for the header and the button
                                 headerOpacity = max(0.0, 1.0 + Double(normalizedOffset))
-                                withAnimation{
+                                withAnimation {
                                     dailyButtonOpacity = 1.0
                                 }
-                                
                             }
                         }
-                        .padding(.horizontal)
                         Spacer()
                             .frame(height: isDailyPosted ? 0 : 80)
                         
+                        
                     }
-                    .coordinateSpace(name: "SCROLL")
                     .refreshable {
+                        print("Fetching post again...")
                         let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? ""
-                        print("UserID: ", userID)
+
                         Task {
                             if let user = userViewModel.user {
                                 print("Fetching posts...")
+                                
                                 await postViewModel.fetchAllPostsAsync(user: user)
                             }
                         }
                     }
+                    .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top){
                         VStack(spacing: 12){
-                            
                             // Header
-                            VStack(spacing: 0){
+                            VStack(spacing: 0) {
                                 HStack{
                                     
                                     // Navigation title
-                                    Text("Feed")
+                                    Text(LocalizedStringKey("Feed"))
                                         .font(.title)
                                         .bold()
                                     
                                     Spacer()
                                     
                                     // Navigation link to open notifications view
-                                    NavigationLink(destination: NotificationsView().toolbarRole(.editor)){
+                                    NavigationLink(destination: NotificationsView()
+                                        .toolbarRole(.editor)){
                                         Image(systemName: "bell")
                                             .fontWeight(.semibold)
                                             .font(.title2)
@@ -209,10 +213,7 @@ struct FeedView: View {
                         .padding(.top, safeArea().top)
                         .background(colorScheme == .dark ? .black : .white)
                         .padding(.bottom)
-                        
                         .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
-                        
-                        // Get the header height
                         .overlayPreferenceValue(HeaderBoundsKey.self){ value in
                             GeometryReader{ proxy in
                                 if let anchor = value {
@@ -246,6 +247,7 @@ struct FeedView: View {
                         .ignoresSafeArea(edges: .top)
                         .frame(height: 0)
                 }
+                
             }
         }
         .task {
