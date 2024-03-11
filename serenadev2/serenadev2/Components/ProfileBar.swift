@@ -57,21 +57,22 @@ struct ProfileBar: View {
                     
                     VStack {
                         Spacer()
-                        HStack {
-                            Image(systemName: "flame.circle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 25)
-                                .foregroundStyle(.accent)
-                            Text(String(user.streak))  // user.streak
-                                .bold()
-                                .font(.title3)
-                        }
-                        .padding(5)
-                        .background(Color.card.opacity(0.9))
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                        .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0), radius: 12.5, x: 0, y: 4)
-                        .offset(y: 5)
+                        // STREAK Commented
+//                        HStack {
+//                            Image(systemName: "flame.circle.fill")
+//                                .resizable()
+//                                .aspectRatio(contentMode: .fit)
+//                                .frame(height: 25)
+//                                .foregroundStyle(.accent)
+//                            Text(String(user.streak))  // user.streak
+//                                .bold()
+//                                .font(.title3)
+//                        }
+//                        .padding(5)
+//                        .background(Color.card.opacity(0.9))
+//                        .clipShape(RoundedRectangle(cornerRadius: 6))
+//                        .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0), radius: 12.5, x: 0, y: 4)
+//                        .offset(y: 5)
                     }
                 }
                 .padding(.trailing)

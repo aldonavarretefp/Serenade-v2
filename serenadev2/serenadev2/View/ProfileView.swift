@@ -110,7 +110,7 @@ struct ProfileView: View {
                                 .opacity(headerOpacity)
                                 .padding(.top, safeArea().top)
                                 .padding(.bottom)
-                                .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){$0}
+                                .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){ $0 }
                             // Get the header height
                                 .overlayPreferenceValue(HeaderBoundsKey.self){ value in
                                     GeometryReader{ proxy in
