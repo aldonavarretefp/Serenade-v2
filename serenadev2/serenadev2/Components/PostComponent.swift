@@ -42,7 +42,7 @@ struct PostComponent: View {
     
     var body: some View {
         
-        var shimmerConfig = ShimmerConfiguration(
+        let shimmerConfig = ShimmerConfiguration(
             gradient: Gradient(stops: [
                 .init(color: .black.opacity(colorScheme == .light ? 1 : 0.2), location: 0),
                 .init(color: .white.opacity(colorScheme == .light ? 1 : 0.2), location: 0.3),
@@ -57,31 +57,38 @@ struct PostComponent: View {
         VStack(alignment: .leading, spacing: 0){
             // User info
             HStack{
-                if let sender, let asset = sender.profilePictureAsset {
-                    AsyncImage(url: asset.fileURL) { phase in
-                        switch phase {
-                        case .success(let img):
-                            img
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 30, height: 30)
-                                .clipShape(Circle())
-                                .onAppear{
-                                    DispatchQueue.main.async {
-                                        userImageToShare = img
+                if song != nil{
+                    if let sender, let asset = sender.profilePictureAsset {
+                        AsyncImage(url: asset.fileURL) { phase in
+                            switch phase {
+                            case .success(let img):
+                                img
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 30, height: 30)
+                                    .clipShape(Circle())
+                                    .onAppear{
+                                        DispatchQueue.main.async {
+                                            userImageToShare = img
+                                        }
                                     }
-                                }
-                            
-                        default:
-                            Image(systemName: "person.circle.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .clipShape(Circle())
-                                .frame(height: 28)
+                                
+                            default:
+                                Image(systemName: "person.circle.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .clipShape(Circle())
+                                    .frame(height: 28)
+                            }
                         }
+                    } else {
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .clipShape(Circle())
+                            .frame(height: 28)
                     }
                 } else {
-                    
                     Rectangle()
                         .fill(.callout.opacity(0.1))
                         .shimmer(configuration: shimmerConfig)
