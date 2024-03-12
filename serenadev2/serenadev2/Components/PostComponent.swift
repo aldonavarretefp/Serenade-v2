@@ -202,7 +202,7 @@ struct PostComponent: View {
                     
                     ZStack{
                         Rectangle()
-                            .fill(.card.opacity(0.7))
+                            .fill(.card.opacity(colorScheme == .light ? 0.6 : 0.8))
                         
                         HStack{
                             if let song {
@@ -230,7 +230,7 @@ struct PostComponent: View {
                                         .fontWeight(.bold)
                                     Text(song.artists)
                                         .font(.footnote)
-                                        .foregroundStyle(colorScheme == .light ? Color(hex: 0x2b2b2b) : .callout)
+                                        .foregroundStyle(.primary.opacity(0.7))
                                 }
                                 .padding(.leading, 5)
                                 .lineLimit(2)
@@ -331,7 +331,12 @@ struct PostComponent: View {
             .font(.subheadline)
             .background(.card)
             .clipShape(RoundedRectangle(cornerRadius: 15))
-            .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0.0), radius: 18, y: 5)
+            .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0.0), radius: 25, y: 4)
+            .background(
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(.clear)
+                    .strokeBorder(.white, lineWidth: colorScheme == .light ? 2 : 0)
+            )
         }
     }
     func shareToInstagramStories(
