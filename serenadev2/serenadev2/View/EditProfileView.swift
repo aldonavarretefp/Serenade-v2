@@ -41,6 +41,7 @@ struct EditProfileView: View {
                 VStack {
                     
                     EditableCircularProfileImage(viewModel: profilePicViewModel)
+                        .padding()
                     VStack{
                         Divider()
                             .padding(.vertical, 4)
@@ -69,12 +70,20 @@ struct EditProfileView: View {
                                 }
                         }
                         Divider()
-                        if self.error != "" {
-                            Text(error)
-                                .foregroundStyle(.red)
+                        
+                        if self.error != ""{
+                            HStack{
+                                Spacer()
+                                
+                                Image(systemName: "info.circle")
+                                Text(error)
+                                Spacer()
+                            }
+                            .font(.footnote)
+                            .foregroundStyle(.red)
                         }
                     }
-                    .padding(.vertical)
+                    .padding(.top)
                     Spacer()
                     ActionButton(label: "Save changes", symbolName: "checkmark.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagName == "" || name == "") {
                         guard var user = userVM.user else {
@@ -104,19 +113,25 @@ struct EditProfileView: View {
                                 let userFromDB = users[0]
                                 if isSameUserInSession(fromUser: user, toCompareWith: userFromDB) {
                                     if trimmedTagName.containsEmoji {
-                                        self.error = "The username can't include emojis. Try again."
+                                        withAnimation {
+                                            self.error = "The username can't include emojis. Try again."
+                                        }
                                         return
                                     }
                                     saveUserDetails(user: user, imageAsset: imageAsset, trimmedTagName: trimmedTagName)
                                 } else {
-                                    self.error = "Sorry! \(trimmedTagName) is already in use."
+                                    withAnimation {
+                                        self.error = "Sorry! \(trimmedTagName) is already in use. Please try another one"
+                                    }
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                         lastTagName = ""
                                     }
                                 }
                             } else {
                                 if trimmedTagName.containsEmoji {
-                                    self.error = "The username can't include emojis. Try again."
+                                    withAnimation {
+                                        self.error = "The username can't include emojis. Try again."
+                                    }
                                     return
                                 }
                                 saveUserDetails(user: user, imageAsset: imageAsset, trimmedTagName: trimmedTagName)
@@ -126,6 +141,7 @@ struct EditProfileView: View {
                     }
                 }
                 .padding()
+                .padding(.top)
             }
             .navigationTitle(LocalizedStringKey("EditProfile"))
             .navigationBarTitleDisplayMode(.inline)
