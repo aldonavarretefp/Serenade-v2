@@ -28,6 +28,8 @@ class UserViewModel: ObservableObject {
                     self.tagNameExists = user.tagName != userID.lowercased()
                 }
             }
+            
+            
         }
         
     }
@@ -143,14 +145,11 @@ class UserViewModel: ObservableObject {
     }
     
     func updateUser(updatedUser: User) {   
-        
         if(updatedUser.tagName == "" || updatedUser.name == "") {
             return
         }
-        
         var copyUser = updatedUser
         guard let newUser = copyUser.update(newUser: updatedUser) else { return }
-        
         CloudKitUtility.update(item: newUser) { result in
             switch result {
             case .success(_):
@@ -172,8 +171,11 @@ class UserViewModel: ObservableObject {
     }
     
     func deleteUser(){
-        user?.isActive = false
-        updateUser(updatedUser: user!)
+        guard var user else {
+            return
+        }
+        user.isActive = false
+        updateUser(updatedUser: user)
     }
     
     func makeFriend(withID friendId: CKRecord.ID) {
@@ -278,10 +280,7 @@ class UserViewModel: ObservableObject {
     }
     
     func logOut() {
-        
         UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userID)
-        
-        
         DispatchQueue.main.async {
             self.user = nil
             self.isLoggedIn = false
@@ -292,11 +291,9 @@ class UserViewModel: ObservableObject {
     func searchUsers(tagname: String, completion: @escaping ([User]?) -> Void) {
         let predicate = NSPredicate(format: "tagName == %@", tagname)
         let recordType = UserRecordKeys.type.rawValue
-        
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
             .receive(on: DispatchQueue.main)
             .sink { _ in
-                
             } receiveValue: { returnedUsers in
                 let friends: [User]? = returnedUsers
                 guard let friendss = friends else {
@@ -323,4 +320,6 @@ class UserViewModel: ObservableObject {
             return false
         }
     }
+    
+    
 }
