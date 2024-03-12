@@ -51,6 +51,7 @@ struct UserDetailsView: View {
                                 .padding()
                                 .background(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .disableAutocorrection(true)
                             
                             
                             TextField("", text: $tagname)

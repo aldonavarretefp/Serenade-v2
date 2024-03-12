@@ -138,6 +138,9 @@ extension ProfilePicViewModel {
 
 
 struct ProfileImage: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    
     let imageState: ProfilePicViewModel.ImageState
     
     var body: some View {
@@ -148,33 +151,25 @@ struct ProfileImage: View {
             ProgressView()
         case .empty:
             Image(systemName: "person.fill")
-                .font(.system(size: 40))
-                .foregroundColor(.white)
+                .font(.largeTitle)
+                .foregroundStyle(colorScheme == .light ? .white : .black)
         case .failure:
             Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 40))
-                .foregroundColor(.white)
+                .font(.largeTitle)
+                .foregroundStyle(colorScheme == .light ? .white : .black)
         }
     }
 }
 
 struct CircularProfileImage: View {
     let imageState: ProfilePicViewModel.ImageState
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         ProfileImage(imageState: imageState)
             .scaledToFill()
-            .frame(width: 100, height: 100)
-            .padding(.bottom, 15)
-            .background {
-                Circle().fill(
-                    LinearGradient(
-                        colors: [.accentColor, .black.opacity(0.1)],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-            }
+            .frame(width: 120, height: 120)
+            .background (colorScheme == .light ? .black : .white)
             .clipShape(Circle())
     }
 }
@@ -183,18 +178,18 @@ struct EditableCircularProfileImage: View {
     @ObservedObject var viewModel: ProfilePicViewModel
     
     var body: some View {
-        CircularProfileImage(imageState: viewModel.imageState)
-            .overlay(alignment: .bottomTrailing) {
-                PhotosPicker(selection: $viewModel.imageSelection,
-                             matching: .images,
-                             photoLibrary: .shared()) {
+        
+        PhotosPicker(selection: $viewModel.imageSelection,
+                     matching: .images,
+                     photoLibrary: .shared()){
+            CircularProfileImage(imageState: viewModel.imageState)
+                .overlay(alignment: .bottomTrailing) {
                     Image(systemName: "pencil.circle.fill")
                         .symbolRenderingMode(.multicolor)
                         .font(.system(size: 30))
                         .foregroundColor(.accentColor)
                 }
-                .buttonStyle(.borderless)
-            }
+        }
     }
 }
 
