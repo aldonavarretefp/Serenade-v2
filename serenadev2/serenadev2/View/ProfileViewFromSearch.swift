@@ -32,7 +32,10 @@ struct ProfileViewFromSearch: View {
             VStack(spacing: 0){
                 let isFriend = userVM.isFriend(of: user)
                 //  PENDING: Check friend requests sent for isFriendRequestSent
-                ProfileBar(isFriendRequestSent: false, isCurrentUser: false, isFriend: isFriend, user: user)
+                
+                if let user = userVM.user {
+                    ProfileBar(isFriendRequestSent: false, isCurrentUser: isSameUserInSession(fromUser: user, toCompareWith: self.user), isFriend: isFriend, user: self.user)
+                }
                 ScrollView (.vertical, showsIndicators: false) {
                     VStack(spacing: 15) {
                         if postVM.posts.isEmpty {
@@ -45,10 +48,10 @@ struct ProfileViewFromSearch: View {
                             ForEach(postVM.posts, id: \.self) { post in
                                 // Ensure PostView can handle nil or incomplete data gracefully
                                 if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID], let song = postVM.songsDetails[post.songId] {
-                                    PostComponent(post: post, sender: senderUser, song: song)
+                                    PostComponentInProfile(post: post, sender: senderUser, song: song)
                                 }
                                 else {
-                                    PostComponent(post: post)
+                                    PostComponentInProfile(post: post)
                                 }
                             }
                         }
@@ -56,7 +59,7 @@ struct ProfileViewFromSearch: View {
                     .padding()
                 }
                 .ignoresSafeArea(.all, edges: .top)
-//                .ignoresSafeArea(.all)
+                //                .ignoresSafeArea(.all)
                 .refreshable {
                     let user = self.user
                     if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
@@ -88,7 +91,7 @@ struct ProfileViewFromSearch: View {
             let user = self.user
             if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
                 
-                    postVM.posts = posts
+                postVM.posts = posts
                 
                 for post in posts {
                     print("Post: ", post.songId)
@@ -109,5 +112,9 @@ struct ProfileViewFromSearch: View {
                 }
             }
         }
+    }
+    
+    func isSameUserInSession(fromUser user1: User, toCompareWith user2: User) -> Bool {
+        return user1.accountID == user2.accountID
     }
 }
