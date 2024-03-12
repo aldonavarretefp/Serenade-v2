@@ -19,7 +19,8 @@ struct DailySongView: View {
     @State private var isPresentingSearchSong = false //for modal presentation of SearchSong
     @State private var isLoading: Bool = false
     @State var song: SongModel? // Optional to handle the case where no song is selected
-    
+    //State fot the caption
+    @FocusState var isTextEditorFocused : Bool
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var postViewModel: PostViewModel
     
@@ -120,7 +121,7 @@ struct DailySongView: View {
                                 .font(.callout)
                                 .foregroundColor(caption.count < characterLimit ? .callout : .red)
                         }
-                        CaptionView(caption: $caption, characterLimit: $characterLimit, isSongFromDaily: false)
+                        CaptionView(caption: $caption, characterLimit: $characterLimit, isSongFromDaily: false, isTextEditorFocused: $isTextEditorFocused)
                     }
                     Spacer()
                     // Enable the 'Daily' button only if a song is selected
@@ -131,6 +132,7 @@ struct DailySongView: View {
                             print("ERROR: User does not exist")
                             return
                         }
+                        caption = sanitizeText(caption)
                         let reference = CKRecord.Reference(recordID: user.record.recordID, action: .none)
                         let post = Post(postType: .daily, sender: reference, caption: self.caption,  songId: song.id, date: Date.now, isAnonymous: false, isActive: true)
                         
@@ -149,6 +151,18 @@ struct DailySongView: View {
                 .padding(.horizontal)
             }
             .ignoresSafeArea(.keyboard)
+            .gesture(
+                DragGesture()
+                    .onChanged{gesture in
+                        if gesture.translation.height > 0 {
+                            // El usuario está arrastrando hacia abajo
+                            
+                            isTextEditorFocused = false // Cambia el estado de la otra variable
+                        }
+                    }
+                
+                
+            )
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Text(LocalizedStringKey("Daily"))
@@ -176,54 +190,65 @@ struct DailySongView: View {
 }
 
 struct CaptionView: View {
-    
     @Environment(\.colorScheme) var colorScheme
     
     @Binding var caption: String
     @Binding var characterLimit: Int
     var isSongFromDaily: Bool
-    @FocusState private var isTextFieldFocused: Bool
+    //@FocusState private var isTextFieldFocused: Bool
+    @FocusState.Binding var isTextEditorFocused : Bool
     
     var body: some View {
         GeometryReader { geo in
-            Button(action: {
-                isTextFieldFocused = true
-            }) {
-                ZStack(alignment: .topLeading) {
-                    Rectangle()
-                        .fill(Color.card) // Change to the actual color
+            ZStack(alignment: .topLeading) {
+                Rectangle()
+                    .fill(Color.card) // Change this to your actual color variable
+                TextEditor(text: $caption)
+                    .multilineTextAlignment(.leading)
+                    .font(.subheadline)
+                //.lineLimit(3)
+                    .padding(4)
+                    .scrollContentBackground(.hidden)
+                    .background(Color.clear) // Set background color to clear
+                    .foregroundColor(colorScheme == .light ? .black : .white)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .focused($isTextEditorFocused)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .onChange(of: caption) {
+                        if caption.count > characterLimit {
+                            caption = String(caption.prefix(characterLimit))
+                        }
+                    }
+                
                     
-                    TextField(LocalizedStringKey("PlaceholderCaption"), text: $caption)
-                                .multilineTextAlignment(.leading)
-                                .font(.subheadline)
-                                .padding()
-                                .foregroundStyle(colorScheme == .light ? .black : .white) // Adjust as needed; white text may not be visible on a light background
-                                .focused($isTextFieldFocused)
-                                .onSubmit {
-                                    // This will dismiss the keyboard
-                                    isTextFieldFocused = false
-                                }
-                                .onReceive(caption.publisher.collect()) {
-                                    self.caption = String($0.prefix(characterLimit))
-                                }
-                                .toolbar {
-                                    // The toolbar is conditionally added based on the focus state
-                                    if isTextFieldFocused {
-                                        ToolbarItemGroup(placement: .keyboard) {
-                                            Spacer()
-                                            Button("Done") {
-                                                isTextFieldFocused = false
-                                            }
-                                            .foregroundColor(.accentColor)
-                                        }
-                                    }
-                                }
+                
+                if caption.isEmpty {
+                    Text(LocalizedStringKey ("PlaceholderCaption"))
+                        .font(.subheadline)
+                        .foregroundColor(.callout) // Placeholder text color
+                        .padding()
+                        .opacity(isTextEditorFocused ? 0 : 1)
                 }
             }
-            .frame(width: geo.size.width, height: isSongFromDaily ? geo.size.height * 2/7 : max(geo.size.height * 2/7, 100)) // Adjust the minimum height as needed
-            .cornerRadius(10)
+            .frame(width: geo.size.width, height: isSongFromDaily ? geo.size.height * 2/7 : max(geo.size.height * 2/7, 100))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .onTapGesture {
+                isTextEditorFocused = true
+                print($isTextEditorFocused)
+            }
         }
     }
+}
+ //function to get the final trimmed caption
+extension View{
+    
+    func sanitizeText(_ text: String) -> String {
+        // Esto reemplazará los saltos de línea con puntos
+        let replacedText = text.replacingOccurrences(of: "\\n+", with: " ", options: .regularExpression)
+        
+        return replacedText
+    }
+
 }
 
 struct SelectSong: View {

@@ -230,8 +230,10 @@ struct PostView: View {
                             Button {
                                 print("Shared pressed")
                                 if imageLoaded {
+
                                     
                                     let postViewInstance = PostInstagramView(sender: self.sender, post: post, song: self.song, artwork: artworkToShare!, userImage: userImageToShare)
+
                                     let image = snapshot(postViewInstance)
                                     guard let song = song, let topColor = song.bgColor else {
                                         return
