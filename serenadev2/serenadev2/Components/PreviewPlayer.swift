@@ -22,8 +22,8 @@ struct PreviewPlayer: View {
         // Player created with the passed url (each song preview url)
         self.player = AVPlayer(url: audioURL)
         
-        // Adjust the volume 50% less
-        self.player.volume = 0.1
+        // Adjust the volume 40% less
+        self.player.volume = 0.6
         // This audio session configuration must be done before starting audio playback
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
