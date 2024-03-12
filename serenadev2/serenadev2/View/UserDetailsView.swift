@@ -83,9 +83,6 @@ struct UserDetailsView: View {
                     name = userName
                 }
             }
-            .alert(Text("Tagname already exists."), isPresented: $tagNameRepeated) {
-                
-            }
         }
         .foregroundStyle(.white)
     }
