@@ -187,7 +187,7 @@ struct EditableCircularProfileImage: View {
                     Image(systemName: "pencil.circle.fill")
                         .symbolRenderingMode(.multicolor)
                         .font(.system(size: 30))
-                        .foregroundColor(.accentColor)
+                        .foregroundStyle(Color.accent)
                 }
         }
     }

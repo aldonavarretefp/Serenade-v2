@@ -22,9 +22,13 @@
 "Start" = "Start";
 
 // User Details View
-"CompleteYourProfile" = "Completa tu perfil para empezar";
-"FillInYourDetails" = "Rellene sus datos para personalizar su experiencia";
+"CompleteYourProfile" = "Complete your profile to get started";
+"FillInYourDetails" = "Fill in your data to personalize your experience";
+"Next" = "Next";
+"UploadProfilePictureTitle" = "Upload profile picture";
+"UploadProfilePictureDescription" = "Add a profile picture to make it easier for your friends to find you";
 "CompleteAccount" = "Complete account";
+"Skip" = "Skip";
 
 // Tab bar
 "Feed" = "Home";

@@ -35,7 +35,7 @@ struct serenadev2App: App {
                     SignInView()
                         .zIndex(2)
                         .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
-                } else if userViewModel.user != nil && !userViewModel.tagNameExists {
+                } else if userViewModel.user != nil && !userViewModel.tagNameExists && !userViewModel.finishedTheProfile {
                     UserDetailsView()
                         .zIndex(1) // Lower zIndex as it's not initially important.
                 } else {
@@ -54,6 +54,7 @@ struct serenadev2App: App {
                     }
                 }
             }
+            
         }
     }
 }

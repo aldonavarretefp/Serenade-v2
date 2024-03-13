@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		443FC9E82BA1136700F49EC7 /* UserDetailsPPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443FC9E72BA1136700F49EC7 /* UserDetailsPPictureView.swift */; };
 		4447C0562B920FD100593AF5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4447C0552B920FD100593AF5 /* NotificationsView.swift */; };
 		4447C05A2B92223700593AF5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4447C05C2B92223700593AF5 /* Localizable.strings */; };
 		4447C07C2B95B97A00593AF5 /* SongHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */; };
@@ -38,10 +39,6 @@
 		C4D5111B2B8F759300E95549 /* SongModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D5111A2B8F759300E95549 /* SongModel.swift */; };
 		C4D5111E2B8FBF6D00E95549 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D5111D2B8FBF6D00E95549 /* SongService.swift */; };
 		C4D511242B8FC42700E95549 /* SongServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D511232B8FC42700E95549 /* SongServiceTest.swift */; };
-		C4F14A7B2B88FBC800D7111E /* CreateUsernameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F14A7A2B88FBC800D7111E /* CreateUsernameView.swift */; };
-		C4F14A7D2B88FBD800D7111E /* CreatePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F14A7C2B88FBD800D7111E /* CreatePasswordView.swift */; };
-		E0491C692B99053800892FEE /* IGStoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = E0491C682B99053800892FEE /* IGStoryKit */; };
-
 		E0540C732B8E703A001A7561 /* DailySongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0540C722B8E703A001A7561 /* DailySongView.swift */; };
 		E0540C772B8E71AF001A7561 /* SelectSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0540C762B8E71AF001A7561 /* SelectSongView.swift */; };
 		E0C891572B9387D70065234F /* OpenWithView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C891562B9387D70065234F /* OpenWithView.swift */; };
@@ -97,6 +94,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		443FC9E72BA1136700F49EC7 /* UserDetailsPPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsPPictureView.swift; sourceTree = "<group>"; };
 		4447C0552B920FD100593AF5 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		4447C05B2B92223700593AF5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4447C05D2B92223900593AF5 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -175,10 +173,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-
 				F7D7C5AB2B9CFA820081EC21 /* Kingfisher in Frameworks */,
 				F725CCE82B9C6F69007867F7 /* IGStoryKit in Frameworks */,
-
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +305,7 @@
 				C4AF43192B9670D90089C62A /* SplashScreenView.swift */,
 				C4A7635C2B9697CC002A3A5B /* UserDetailsView.swift */,
 				446979372B9A59F900A6A8FC /* PostInstagramView.swift */,
+				443FC9E72BA1136700F49EC7 /* UserDetailsPPictureView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -451,7 +448,6 @@
 			);
 			name = serenadev2;
 			packageProductDependencies = (
-
 				F725CCE72B9C6F69007867F7 /* IGStoryKit */,
 				F7D7C5AA2B9CFA820081EC21 /* Kingfisher */,
 			);
@@ -530,7 +526,6 @@
 			);
 			mainGroup = F137D2262B839A81006264C1;
 			packageReferences = (
-
 				F725CCE62B9C6F69007867F7 /* XCRemoteSwiftPackageReference "IGStoryKit" */,
 				F7D7C5A92B9CFA820081EC21 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
@@ -605,6 +600,7 @@
 				EA216FCA2B8F6B6800A715EB /* ChecklistItem.swift in Sources */,
 				EA9BC9EC2B8501ED00292705 /* PostView.swift in Sources */,
 				C402E7DF2B8CD500004EC79C /* DailyPosted.swift in Sources */,
+				443FC9E82BA1136700F49EC7 /* UserDetailsPPictureView.swift in Sources */,
 				446979382B9A59F900A6A8FC /* PostInstagramView.swift in Sources */,
 				C4AF431A2B9670D90089C62A /* SplashScreenView.swift in Sources */,
 				44D1A4212B91DAC200BE6F92 /* NotificationItem.swift in Sources */,
@@ -996,9 +992,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-
 		F725CCE62B9C6F69007867F7 /* XCRemoteSwiftPackageReference "IGStoryKit" */ = {
-
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwapnanilDhol/IGStoryKit";
 			requirement = {
@@ -1017,11 +1011,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-
 		F725CCE72B9C6F69007867F7 /* IGStoryKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F725CCE62B9C6F69007867F7 /* XCRemoteSwiftPackageReference "IGStoryKit" */;
-
 			productName = IGStoryKit;
 		};
 		F7D7C5AA2B9CFA820081EC21 /* Kingfisher */ = {

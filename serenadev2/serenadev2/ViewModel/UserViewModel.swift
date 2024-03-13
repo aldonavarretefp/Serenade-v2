@@ -8,6 +8,7 @@ class UserViewModel: ObservableObject {
     @Published var isLoggedIn: Bool = false
     @Published var tagNameExists: Bool = false
     @Published var error: String = ""
+    @Published var finishedTheProfile: Bool = false
     var cancellables = Set<AnyCancellable>()
     
     init(){
