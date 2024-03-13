@@ -127,10 +127,6 @@ struct UserDetailsView: View {
                             }
                         }
                     }
-                    
-                    NavigationLink(destination: UserDetailsPPictureView(), isActive: $isLinkActive) {
-                        EmptyView()
-                    }
                 }
                 .padding()
             }
@@ -138,6 +134,9 @@ struct UserDetailsView: View {
                 if let userName = userViewModel.user?.name {
                     name = userName
                 }
+            }
+            .navigationDestination(isPresented: $isLinkActive) {
+                UserDetailsPPictureView()
             }
         }
     }
