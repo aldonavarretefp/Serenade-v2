@@ -70,7 +70,7 @@ struct FeedView: View {
                     .ignoresSafeArea()
                 ZStack (alignment: .bottom) {
                     ScrollView (.vertical, showsIndicators: false) {
-                        VStack (spacing: 15) {
+                        LazyVStack (spacing: 15) {
                             ProgressView()
                                 .progressViewStyle(.circular)
                                 .offset(y: -50)

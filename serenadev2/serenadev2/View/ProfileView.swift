@@ -36,7 +36,7 @@ struct ProfileView: View {
                     .ignoresSafeArea()
                 VStack(spacing: 0) {
                     ScrollView (.vertical, showsIndicators: false) {
-                        VStack(spacing: 15) {
+                        LazyVStack(spacing: 15) {
                             
                             if postVM.posts.isEmpty {
                                 ContentUnavailableView(label: {
