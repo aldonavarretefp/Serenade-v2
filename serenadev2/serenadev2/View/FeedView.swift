@@ -224,7 +224,8 @@ struct FeedView: View {
         .task {
             if let user = userViewModel.user {
                 pushNotificationsVM.requestNotificationPermissions()
-                pushNotificationsVM.subscribeToNotifications(user: user)
+                //pushNotificationsVM.unsubscribeToNotifications()
+                //pushNotificationsVM.subscribeToNotifications(user: user)
             }
         }
     }

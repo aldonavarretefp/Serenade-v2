@@ -13,6 +13,7 @@ import Combine
 class FriendRequestsViewModel: ObservableObject {
     @Published var friendRequests: [FriendRequest] = []
     @Published var userDetails: [CKRecord.ID: User] = [:]
+    var pushNotificationsVM: PushNotificationViewModel = PushNotificationViewModel()
     var cancellables = Set<AnyCancellable>()
     
     private func fetchUserDetails(for recordID: CKRecord.ID) {
@@ -113,9 +114,9 @@ class FriendRequestsViewModel: ObservableObject {
      - senderID: The ID of the user that is sending the friend request.
      - receiverID: The ID of the user that is receiving the friend request.
      */
-    func createFriendRequest(senderID: CKRecord.ID, receiverID: CKRecord.ID) {
-        let senderReference = CKRecord.Reference(recordID: senderID, action: .none)
-        let receiverReference = CKRecord.Reference(recordID: receiverID, action: .none)
+    func createFriendRequest(sender: User, receiver: User) {
+        let senderReference = CKRecord.Reference(recordID: sender.record.recordID, action: .none)
+        let receiverReference = CKRecord.Reference(recordID: receiver.record.recordID, action: .none)
         let requestStatus: FriendRequestStatus = .pending
         let timeStamp: Date = .now
         
@@ -128,6 +129,7 @@ class FriendRequestsViewModel: ObservableObject {
             switch result {
             case .success(_):
                 print("Success sending friend request!")
+                self.pushNotificationsVM.suscribeToFriendRequestAccepted(me: sender, friend: receiver)
                 break;
             case .failure(let error):
                 print(error.localizedDescription)
