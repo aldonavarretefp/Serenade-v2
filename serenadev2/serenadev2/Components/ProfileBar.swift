@@ -167,11 +167,11 @@ struct ProfileBar: View {
                             if !isFriend {
                                 if !isFriendRequestSent {
                                     Button(action: {
-                                        guard let my = userViewModel.user else {
+                                        guard let me = userViewModel.user else {
                                             print("No user")
                                             return
                                         }
-                                        friendRequestViewModel.createFriendRequest(sender: my, receiver: user)
+                                        friendRequestViewModel.createFriendRequest(sender: me, receiver: user)
                                         isFriendRequestSent = true
                                     }, label: {
                                         ZStack {
