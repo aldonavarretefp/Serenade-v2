@@ -203,14 +203,14 @@ extension CloudKitUtility {
         if let limit = resultsLimit {
             queryOperation.resultsLimit = limit
         }
-
+        
         var records: [CKRecord] = []
         let database = CKContainer.default().publicCloudDatabase
         
         // Here we assume a helper function to run the operation and collect results.
         // See below for the implementation.
         records = try await runQueryOperation(queryOperation, in: database)
-
+        
         // Convert CKRecords to your model objects
         let items: [T] = records.compactMap { T(record: $0) }
         return items
@@ -230,19 +230,69 @@ extension CloudKitUtility {
         return records
     }
 }
-
+extension CloudKitUtility {
+    static func fetch<T: CloudKitableProtocol>(
+        predicate: NSPredicate,
+        recordType: CKRecord.RecordType,
+        sortDescriptions: [NSSortDescriptor]? = nil,
+        resultsLimit: Int = 10, // Default to 10 or any appropriate batch size
+        cursor: CKQueryOperation.Cursor? = nil
+    ) async throws -> (items: [T], newCursor: CKQueryOperation.Cursor?) {
+        let query = CKQuery(recordType: recordType, predicate: predicate)
+        query.sortDescriptors = sortDescriptions
+        
+        let operation = cursor != nil ? CKQueryOperation(cursor: cursor!) : CKQueryOperation(query: query)
+        operation.resultsLimit = resultsLimit
+        
+        var newCursor: CKQueryOperation.Cursor?
+        var items: [T] = []
+        
+        let database = CKContainer.default().publicCloudDatabase
+        (items, newCursor) = try await performQueryOperation(operation, in: database)
+        
+        return (items, newCursor)
+    }
+    
+    // Existing helper function, slightly modified to handle cursor-based pagination
+    static func performQueryOperation<T: CloudKitableProtocol>(_ operation: CKQueryOperation, in database: CKDatabase) async throws -> ([T], CKQueryOperation.Cursor?) {
+        var records: [CKRecord] = []
+        var cursor: CKQueryOperation.Cursor?
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<([CKRecord], CKQueryOperation.Cursor?), Error>) in
+            operation.recordFetchedBlock = { record in
+                records.append(record)
+            }
+            
+            addQueryResultBlock(operation: operation) { finished in
+                continuation.resume(returning: (records, cursor))
+            }
+            
+            if let operationCursor = cursor {
+                let cursorOperation = CKQueryOperation(cursor: operationCursor)
+                cursorOperation.recordFetchedBlock = operation.recordFetchedBlock
+                cursorOperation.queryCompletionBlock = operation.queryCompletionBlock
+                database.add(cursorOperation)
+            } else {
+                database.add(operation)
+            }
+        }
+        
+        // Convert CKRecords to your model objects outside the continuation
+        let items: [T] = records.compactMap { T(record: $0) }
+        return (items, cursor)
+    }
+}
 
 extension CKDatabase {
     func performQueryOperation(_ operation: CKQueryOperation, cursor: CKQueryOperation.Cursor? = nil) async throws -> ([CKRecord], CKQueryOperation.Cursor?) {
         try await withCheckedThrowingContinuation { continuation in
             // Initialize an empty array to collect records.
             var fetchedRecords: [CKRecord] = []
-
+            
             // Handle each fetched record.
             operation.recordFetchedBlock = { record in
                 fetchedRecords.append(record)
             }
-
+            
             // Completion block to resume the continuation.
             operation.queryCompletionBlock = { cursor, error in
                 if let error = error {
@@ -251,7 +301,7 @@ extension CKDatabase {
                     continuation.resume(returning: (fetchedRecords, cursor))
                 }
             }
-
+            
             // Add the operation to the database.
             if let cursor = cursor {
                 // If a cursor is provided, initialize a new operation with the cursor.

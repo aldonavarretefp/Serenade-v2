@@ -11,6 +11,7 @@ import AVFoundation
 struct PreviewPlayer: View {
     
     var player: AVPlayer!
+    @EnvironmentObject var loadingState: LoadingState
     
     init(mainColor: Color, audioURL: URL, fontColor: Color, secondaryColor: Color, seconds: Double = 15.0) {
         self.mainColor = mainColor
@@ -22,8 +23,8 @@ struct PreviewPlayer: View {
         // Player created with the passed url (each song preview url)
         self.player = AVPlayer(url: audioURL)
         
-        // Adjust the volume 50% less
-        self.player.volume = 0.1
+        // Adjust the volume 40% less
+        self.player.volume = 0.6
         // This audio session configuration must be done before starting audio playback
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
@@ -56,9 +57,15 @@ struct PreviewPlayer: View {
         // Button to play/pause audio
         VStack(spacing: 5){
             
-            Text(isPlaying ? LocalizedStringKey("TapToPausePreview") :LocalizedStringKey("TapToPlayPreview"))
-                .font(.caption)
-                .foregroundStyle(.white.opacity(0.7))
+            if !loadingState.isLoading {
+                Text(isPlaying ? LocalizedStringKey("TapToPausePreview") :LocalizedStringKey("TapToPlayPreview"))
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.7))
+            } else {
+                Text(" ")
+                    .font(.caption)
+                    .foregroundStyle(.clear)
+            }
             
             ZStack{
                 // Image to show the lines at the device width
@@ -82,22 +89,35 @@ struct PreviewPlayer: View {
                         .shadow(color: .black.opacity(0.13), radius: 25, x: 0, y: 8)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     
-                    // Play / pause icon
-                    Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                        .font(.largeTitle)
-                        .symbolRenderingMode(.palette)
-                        .foregroundStyle(secondaryColor.adjustedForContrast(), .white)
+                    
+                    if loadingState.isLoading {
+                        ZStack{
+                            Image(systemName: "circle.fill")
+                                .font(.largeTitle)
+                                .foregroundStyle(.white)
+                            
+                            ProgressView()
+                                .font(.largeTitle)
+                                .progressViewStyle(CircularProgressViewStyle(tint: secondaryColor.adjustedForContrast()))
+                        }
+                    } else {
+                        // Play / pause icon
+                        Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                            .font(.largeTitle)
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(secondaryColor.adjustedForContrast(), .white)
+                    }
                 }
                 .onTapGesture {
-                    if self.isPlaying {
-                        self.player.pause()
-                        
-                    } else {
-                        self.startTimer()
-                        self.player.play()
-                        
-                    }
-                    withAnimation{
+                    if !loadingState.isLoading {
+                        if self.isPlaying {
+                            self.player.pause()
+                            
+                        } else {
+                            self.startTimer()
+                            self.player.play()
+                            
+                        }
                         self.isPlaying.toggle()
                     }
                 }

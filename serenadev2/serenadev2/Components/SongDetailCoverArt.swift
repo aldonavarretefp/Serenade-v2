@@ -6,11 +6,17 @@
 //
 
 import SwiftUI
+import Kingfisher
+
+class LoadingState: ObservableObject {
+    @Published var isLoading: Bool = false
+}
 
 struct SongDetailCoverArt: View {
     
     // MARK: - Properties
     var song: SongModel
+    @EnvironmentObject var loadingState: LoadingState
     
     // MARK: - Body
     var body: some View {
@@ -19,74 +25,67 @@ struct SongDetailCoverArt: View {
         
         ZStack{
             // Background song cover art
-            AsyncImage(url: song.artworkUrlLarge, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
-                switch phase {
-                case .empty:
-                    Rectangle()
-                        .fill(Color(song.bgColor!).opacity(0.5))
-                        .frame(width: screenWidth, height: screenWidth)
-                        .blur(radius: 30)
-                        .scaleEffect(1.1)
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .ignoresSafeArea()
-                        .overlay(
-                            LinearGradient(gradient: Gradient(colors: [Color.clear.opacity(0.4), Color.black.opacity(0.4)]),
-                                           startPoint: .bottom,
-                                           endPoint: .top)
-                        )
-                        .blur(radius: 30)
-                        .scaleEffect(1.1)
-                        .transition(.opacity.animation(.easeIn(duration: 0.5)))
-                case .failure(_):
-                    Rectangle()
-                        .fill(Color(song.bgColor!).opacity(0.5))
-                        .frame(width: screenWidth, height: screenWidth)
-                        .blur(radius: 30)
-                        .scaleEffect(1.1)
-                default:
-                    Rectangle()
-                        .fill(Color(song.bgColor!).opacity(0.5))
-                        .frame(width: screenWidth, height: screenWidth)
-                        .blur(radius: 30)
-                        .scaleEffect(1.1)
+            KFImage(song.artworkUrlLarge)
+                .placeholder{
+                    if let songColor = song.bgColor {
+                        Rectangle()
+                            .fill(Color(songColor).opacity(0.5))
+                            .frame(width: screenWidth, height: screenWidth)
+                            .blur(radius: 30)
+                            .scaleEffect(1.1)
+                    } else {
+                        Rectangle()
+                            .fill(Color(hex: 0x202020).opacity(0.5))
+                            .frame(width: screenWidth, height: screenWidth)
+                            .blur(radius: 30)
+                            .scaleEffect(1.1)
+                    }
                 }
-            }
+                .fade(duration: 0.5)
+                .resizable()
+                .scaledToFit()
+                .ignoresSafeArea()
+                .overlay(
+                    LinearGradient(gradient: Gradient(colors: [Color.clear.opacity(0.4), Color.black.opacity(0.4)]),
+                                   startPoint: .bottom,
+                                   endPoint: .top)
+                )
+                .blur(radius: 30)
+                .scaleEffect(1.1)
             
             // Front song cover art
-            AsyncImage(url: song.artworkUrlLarge, transaction: Transaction(animation: .spring(response: 0.5, dampingFraction: 0.6))) { phase in
-                switch phase {
-                case .empty:
-                    Rectangle()
-                        .fill(Color(song.bgColor!).opacity(0.8))
-                        .frame(width: screenWidth - 32, height: screenWidth - 32)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color(song.bgColor!), lineWidth: 0.5)
-                        )
-                        .shadow(color: .black.opacity(0.13), radius: 18, x: 0, y: 8)
-                        .padding()
-                        .transition(.opacity.animation(.easeIn(duration: 0.5)))
-                case .failure(_):
-                    Rectangle()
-                        .fill(Color(song.bgColor!).opacity(0.8))
-                        .frame(width: screenWidth - 32, height: screenWidth - 32)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                default:
-                    Rectangle()
-                        .fill(Color(song.bgColor!).opacity(0.8))
-                        .frame(width: screenWidth - 32, height: screenWidth - 32)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+            KFImage(song.artworkUrlLarge)
+                .onSuccess{ result in
+                    self.loadingState.isLoading = false
+                    print("end")
                 }
-            }
+                .placeholder{
+                    if let songColor = song.bgColor {
+                        Rectangle()
+                            .fill(Color(songColor).opacity(0.8))
+                            .frame(width: screenWidth - 32, height: screenWidth - 32)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    } else {
+                        Rectangle()
+                            .fill(Color(hex: 0x202020).opacity(0.8))
+                            .frame(width: screenWidth - 32, height: screenWidth - 32)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                }
+                .onProgress{ receivedSize, totalSize in
+                    self.loadingState.isLoading = true
+                    print(loadingState.isLoading)
+                }
+                .fade(duration: 0.5)
+                .resizable()
+                .scaledToFit()
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color(song.bgColor!), lineWidth: 0.5)
+                )
+                .shadow(color: .black.opacity(0.13), radius: 18, x: 0, y: 8)
+                .padding()
         }
     }
 }

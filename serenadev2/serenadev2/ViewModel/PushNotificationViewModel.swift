@@ -25,17 +25,18 @@ class PushNotificationViewModel: ObservableObject {
         }
     }
     
-    func subscribeToNotifications(user: User?) {
-        guard let user = user else { return }
-        let recordToMatch = CKRecord.Reference(record: user.record, action: .none)
-        let predicate = NSPredicate(format: "receiver == %@ && status == %@", recordToMatch, FriendRequestStatus.pending.rawValue)
-
-        let subscription = CKQuerySubscription(recordType: FriendRequestsRecordKeys.type.rawValue, predicate: predicate, subscriptionID: "new_friend_request", options: .firesOnRecordCreation)
+    //The user that sends a friend request gets a notification when it's accepted
+    func suscribeToFriendRequestAccepted(me: User, friend: User){
+        let recordToMatchSender = CKRecord.Reference(record: me.record, action: .none)
+        let recordToMatchReceiver = CKRecord.Reference(record: friend.record, action: .none)
+        let predicate = NSPredicate(format: "sender == %@ && receiver == %@", recordToMatchSender, recordToMatchReceiver)
+        let subscription = CKQuerySubscription(recordType: FriendRequestsRecordKeys.type.rawValue, predicate: predicate, subscriptionID: "friend_request_accepted", options: .firesOnRecordUpdate)
         
         let notification = CKSubscription.NotificationInfo()
-        notification.title = "You have a new friend request!"
-        notification.alertBody = "Open the app to accept your friend."
+        notification.title = "\(friend.tagName) has accepted your friend request"
+        notification.alertBody = "Open the app to see your friend's profile"
         notification.soundName = "default"
+        notification.shouldBadge = true
         
         subscription.notificationInfo = notification
         
@@ -43,13 +44,12 @@ class PushNotificationViewModel: ObservableObject {
             if let error = returnedError {
                 print(error)
             } else {
-                print("Successfully subscribed to notifications!")
+                print("Successfully subscribed to notifications! \(friend.tagName)")
             }
         }
     }
-    
+
     func unsubscribeToNotifications() {
-//        CKContainer.default().publicCloudDatabase.fetchAllSubscriptions
         CKContainer.default().publicCloudDatabase.delete(withSubscriptionID: "new_friend_request") { returnedID, returnedError in
             if let error = returnedError {
                 print(error)

@@ -10,7 +10,7 @@ import IGStoryKit
 import CloudKit
 import Kingfisher
 
-struct PostComponent: View {
+struct PostComponentInProfile: View {
     
     @EnvironmentObject var userViewModel: UserViewModel
     @Environment(\.colorScheme) var colorScheme
@@ -62,43 +62,34 @@ struct PostComponent: View {
                 HStack{
                     if song != nil{
                         if let sender, let asset = sender.profilePictureAsset {
-                            NavigationLink(destination: ProfileViewFromSearch(user: sender)){
-                                AsyncImage(url: asset.fileURL) { phase in
-                                    switch phase {
-                                    case .success(let img):
-                                        img
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                            .frame(width: 30, height: 30)
-                                            .clipShape(Circle())
-                                            .onAppear{
-                                                DispatchQueue.main.async {
-                                                    userImageToShare = img
-                                                }
+                            AsyncImage(url: asset.fileURL) { phase in
+                                switch phase {
+                                case .success(let img):
+                                    img
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 30, height: 30)
+                                        .clipShape(Circle())
+                                        .onAppear{
+                                            DispatchQueue.main.async {
+                                                userImageToShare = img
                                             }
-                                        
-                                    default:
-                                        Image(systemName: "person.circle.fill")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .clipShape(Circle())
-                                            .frame(height: 28)
-                                    }
-
-                                }
-                            }
-                            .buttonStyle(.plain)
-                        } else {
-                            if let sender{
-                                NavigationLink(destination: ProfileViewFromSearch(user: sender)){
+                                        }
+                                    
+                                default:
                                     Image(systemName: "person.circle.fill")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .clipShape(Circle())
                                         .frame(height: 28)
                                 }
-                                .buttonStyle(.plain)
                             }
+                        } else {
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .clipShape(Circle())
+                                .frame(height: 28)
                         }
                     } else {
                         Rectangle()
@@ -106,15 +97,13 @@ struct PostComponent: View {
                             .shimmer(configuration: shimmerConfig)
                             .frame(width: 28, height: 28)
                             .clipShape(Circle())
-
                     }
                     
+                    
                     if let sender , sender.tagName != "" {
+                        
                         HStack(spacing: 0){
-                            NavigationLink(destination: ProfileViewFromSearch(user: sender)){
-                                Text(sender.tagName)
-                            }
-                            .buttonStyle(.plain)
+                            Text(sender.tagName)
                             
                             Text(LocalizedStringKey("TypePostDaily"))
                                 .foregroundStyle(.callout)
@@ -183,9 +172,6 @@ struct PostComponent: View {
                             .frame(height: 115)
                             .blur(radius: 20.0)
                             .clipShape(UnevenRoundedRectangle(cornerRadii: .init( bottomLeading: 15.0, bottomTrailing: 15.0)))
-                            .allowsHitTesting(false)
-                        
-                        
                     } else {
                         if let songBGColor = song?.bgColor{
                             Rectangle()

@@ -12,20 +12,22 @@ var sebastian = User(name: "Sebastian Leon", tagName: "sebatoo", email: "mail@do
 
 struct ProfileBar: View {
     @Environment(\.colorScheme) var colorScheme
-    @State var isSettingsSheetDisplayed: Bool = false
-    @State var isUnfriendSheetDisplayed: Bool = false
-    @State var isFriendRequestSent: Bool
-    @State var isCurrentUser: Bool
-    @State var isFriend: Bool
-    @State var isFriendRequestRecieved: Bool = false
-    @State private var shouldNavigate = false
+
+
     @EnvironmentObject var userViewModel: UserViewModel
     @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
     @Binding var friends :[User]
     
     
-    @State var user: User
     @State var friendRequest: FriendRequest? = nil
+    @State var isSettingsSheetDisplayed: Bool = false
+    @State var isUnfriendSheetDisplayed: Bool = false
+    @Binding var user: User
+    @Binding var isFriend: Bool
+    @Binding var isFriendRequestSent: Bool
+    @Binding var isFriendRequestRecieved: Bool
+    @Binding var showFriendRequestButton: Bool
+    let isCurrentUser: Bool
     
     var body: some View {
         NavigationStack {
@@ -67,22 +69,23 @@ struct ProfileBar: View {
                     
                     VStack {
                         Spacer()
-                        // STREAK Commented
-                        //                        HStack {
-                        //                            Image(systemName: "flame.circle.fill")
-                        //                                .resizable()
-                        //                                .aspectRatio(contentMode: .fit)
-                        //                                .frame(height: 25)
-                        //                                .foregroundStyle(.accent)
-                        //                            Text(String(user.streak))  // user.streak
-                        //                                .bold()
-                        //                                .font(.title3)
-                        //                        }
-                        //                        .padding(5)
-                        //                        .background(Color.card.opacity(0.9))
-                        //                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                        //                        .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0), radius: 12.5, x: 0, y: 4)
-                        //                        .offset(y: 5)
+
+                        HStack {
+                            Image(systemName: "flame.circle.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 25)
+                                .foregroundStyle(.accent)
+                            Text(String(user.streak))  // user.streak
+                                .bold()
+                                .font(.title3)
+                        }
+                        .padding(5)
+                        .background(Color.card.opacity(0.9))
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                        .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0), radius: 12.5, x: 0, y: 4)
+                        .offset(y: 5)
+
                     }
                 }
                 .padding(.trailing)
@@ -136,7 +139,7 @@ struct ProfileBar: View {
                         
                         Spacer()
                         
-                        if !isCurrentUser && isFriendRequestRecieved {
+                        if !isCurrentUser && isFriendRequestRecieved && showFriendRequestButton {
                             HStack(spacing: 5){
                                 NotificationActionButton(icon: "xmark", isDisabled: false){
                                     guard let friendRequest = friendRequest else {return}
@@ -160,16 +163,15 @@ struct ProfileBar: View {
                                     isFriendRequestSent = false
                                 }
                             }
-                            .padding(.leading)
-                        } else if !isCurrentUser {
+                        } else if !isCurrentUser && showFriendRequestButton {
                             if !isFriend {
                                 if !isFriendRequestSent {
                                     Button(action: {
-                                        guard let myID = userViewModel.user?.record.recordID else {
+                                        guard let my = userViewModel.user else {
                                             print("No user")
                                             return
                                         }
-                                        friendRequestViewModel.createFriendRequest(senderID: myID, receiverID: user.record.recordID)
+                                        friendRequestViewModel.createFriendRequest(sender: my, receiver: user)
                                         isFriendRequestSent = true
                                     }, label: {
                                         ZStack {
@@ -215,8 +217,7 @@ struct ProfileBar: View {
                                     }
                                 })
                                 .sheet(isPresented: $isUnfriendSheetDisplayed, content: {
-                                    ConfirmationSheet(titleStart: LocalizedStringKey("UnfriendTitleStart"), titleEnd: LocalizedStringKey("UnfriendTitleEnd"), user: user.tagName, descriptionStart: LocalizedStringKey("UnfriendDescriptionStart"), descriptionEnd: LocalizedStringKey("UnfriendDescriptionEnd"), buttonLabel: "DeleteFriend"){
-                                        
+                                    ConfirmationSheet(titleStart: LocalizedStringKey("UnfriendTitleStart"), titleEnd: LocalizedStringKey("UnfriendTitleEnd"), user: user.tagName, descriptionStart: LocalizedStringKey("UnfriendDescriptionStart"), descriptionEnd: LocalizedStringKey("UnfriendDescriptionEnd"), buttonLabel: "DeleteFriend") {
                                         isFriend = false
                                         userViewModel.unmakeFriend(friend: user)
                                     }
@@ -232,39 +233,49 @@ struct ProfileBar: View {
             .frame(height: 130)
             .background()
         }
+        .onChange(of: isFriendRequestRecieved) {
+            userViewModel.fetchUserFromRecord(record: self.user.record) { returnedUser in
+                guard let updatedUser = returnedUser else {
+                    print("NO USER FROM DB")
+                    return
+                }
+                print("Fetched User from DB: \(updatedUser)")
+                self.user = updatedUser
+                fetchUserFriendRequests()
+            }
+        }
+        
         .task {
-            guard let me = userViewModel.user else { return }
-            friendRequestViewModel.fetchFriendRequest(from: user, for: me) { resultFriendRequest in
-                if(!resultFriendRequest.isEmpty){
-                    self.friendRequest = resultFriendRequest.first
-                    isFriendRequestRecieved = true
-                }
+            fetchUserFriendRequests()
+        }
+    }
+    private func fetchUserFriendRequests() {
+        guard let me = userViewModel.user else { return }
+        
+        friendRequestViewModel.fetchFriendRequest(from: me, for: user) { resultFriendRequest in
+            if(!resultFriendRequest.isEmpty){
+                self.friendRequest = resultFriendRequest.first
             }
-            
-            friendRequestViewModel.fetchFriendRequest(from: me, for: user) { resultFriendRequest in
-                if(!resultFriendRequest.isEmpty){
-                    self.friendRequest = resultFriendRequest.first
-                    isFriendRequestSent = true
-                }
-            }
-            
-            if let userVM = userViewModel.user {
-                if(user.accountID == userVM.accountID){
-                    user = userVM
+            else {
+                friendRequestViewModel.fetchFriendRequest(from: user, for: me) { resultFriendRequest in
+                    if(!resultFriendRequest.isEmpty){
+                        self.friendRequest = resultFriendRequest.first
+                    }
                 }
             }
         }
-        .onAppear {
-            if let userVM = userViewModel.user {
-                if(user.accountID == userVM.accountID){
-                    user = userVM
-                }
+        
+        if let mainUser = userViewModel.user {
+            if(user.accountID == mainUser.accountID){
+                user = mainUser
             }
         }
     }
 }
 
 //#Preview {
-//    ProfileBar(isFriendRequestSent: true, isCurrentUser: false, isFriend: false, friends: [], user: sebastian)
+
+//    ProfileBar(isFriendRequestSent: true, isCurrentUser: false, isFriend: false, user: sebastian)
+
 //        .environment(\.locale, .init(identifier: "us"))
 //}

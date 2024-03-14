@@ -12,6 +12,7 @@ struct SongDetailView: View {
     // MARK: - Environment properties
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject var postViewModel: PostViewModel
     
     @State var isDailySheetDisplayed: Bool = false
     @State var isOpenWithSheetDisplayed: Bool = false
@@ -29,6 +30,7 @@ struct SongDetailView: View {
     init(song: SongModel) {
         self.song = song
         self.previewPlayer = PreviewPlayer(mainColor: Color(song.bgColor!), audioURL: song.previewUrl!, fontColor: Color(song.priColor!), secondaryColor: Color(song.secColor!), seconds: 15)
+        
     }
     
     let selectedStreamingApps: [ButtonType] = [.appleMusic, .spotify, .youtubeMusic].filter {
@@ -43,6 +45,8 @@ struct SongDetailView: View {
             return false
         }
     }
+    
+    @StateObject private var loadingState = LoadingState()
     
     
     // MARK: - Body
@@ -68,6 +72,11 @@ struct SongDetailView: View {
                     ZStack{
                         // Art work of the passed song
                         SongDetailCoverArt(song: song)
+                            .environmentObject(loadingState)
+                            .onAppear {
+                                // Set isLoading to true when the view appears
+                                self.loadingState.isLoading = true
+                            }
                         
                         // Song meta data
                         ZStack{
@@ -96,22 +105,21 @@ struct SongDetailView: View {
                     
                     // View to play the preview of the passed song
                     previewPlayer
+                        .environmentObject(loadingState)
                     
                     Spacer()
                     
                     // Daily and open with buttons
                     VStack(spacing: 15){
-                        
                         // Daily button
-                        ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false, isDisabled: false) {
-                            
-                            
-                            isDailySheetDisplayed.toggle()
-                            
-                        }
-                        .sheet(isPresented: $isDailySheetDisplayed){
-                            DailySongView(song: song, isSongFromDaily: false)
-                                .presentationDetents([.fraction(0.7)])
+                        if !postViewModel.isDailyPosted {
+                            ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false, isDisabled: false) {
+                                isDailySheetDisplayed.toggle()
+                            }
+                            .sheet(isPresented: $isDailySheetDisplayed){
+                                DailySongView(song: song, isSongFromDaily: false)
+                                    .presentationDetents([.fraction(0.7)])
+                            }
                         }
                         
                         // Open with button

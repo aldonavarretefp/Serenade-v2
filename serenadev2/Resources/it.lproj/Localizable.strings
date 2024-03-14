@@ -24,7 +24,11 @@
 // User Details View
 "CompleteYourProfile" = "Completate il vostro profilo per iniziare";
 "FillInYourDetails" = "Inserite i vostri dati per personalizzare la vostra esperienza";
+"Next" = "Avanti";
+"UploadProfilePictureTitle" = "Caricare l'immagine del profilo";
+"UploadProfilePictureDescription" = "Aggiungete un'immagine del profilo per facilitare la ricerca dei vostri amici";
 "CompleteAccount" = "Completa la tua cuenta";
+"Skip" = "Saltare";
 
 // Tab bar
 "Feed" = "Home";

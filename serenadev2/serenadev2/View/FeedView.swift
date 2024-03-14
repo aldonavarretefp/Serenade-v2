@@ -33,22 +33,16 @@ let songObj: SongModel = SongModel(
     releaseDate: Date(timeIntervalSince1970: 1445558400))
 
 struct FeedView: View {
-    @State var userId: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? "")
-    @State var userName: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userName) ?? "")
-    @State var userEmail: String = (UserDefaults.standard.string(forKey: UserDefaultsKeys.userEmail) ?? "")
-    
     @EnvironmentObject var userViewModel: UserViewModel
-    @StateObject var postViewModel: PostViewModel = PostViewModel()
+    @EnvironmentObject var postViewModel: PostViewModel
     @StateObject var pushNotificationsVM: PushNotificationViewModel = PushNotificationViewModel()
+    @StateObject var friendRequestsVM: FriendRequestsViewModel = FriendRequestsViewModel()
     
     // MARK: - Environment properties
     // Color scheme of the phone
     @Environment(\.colorScheme) var colorScheme
     
-    // MARK: - Variables
-    // Check if the daily is already posted
-    @State var isDailyPosted: Bool = false
-    
+    // MARK: - Variables    
     // Variables to hide/show the header
     @State var headerHeight: CGFloat = 0
     @State var headerOffset: CGFloat = 0
@@ -64,13 +58,13 @@ struct FeedView: View {
     // MARK: - Body
     var body: some View {
         
-        NavigationStack{
+        NavigationStack {
             ZStack (alignment: .top) {
                 Color.viewBackground
                     .ignoresSafeArea()
                 ZStack (alignment: .bottom) {
                     ScrollView (.vertical, showsIndicators: false) {
-                        VStack (spacing: 15) {
+                        LazyVStack (spacing: 15) {
                             ProgressView()
                                 .progressViewStyle(.circular)
                                 .offset(y: -50)
@@ -93,12 +87,12 @@ struct FeedView: View {
                             }
                             
                         }
-                        .padding(.top, headerHeight)
+                        .padding(.top, postViewModel.dailySong != nil ? 180 : headerHeight)
                         .padding([.bottom, .horizontal])
                         .offset(y: -20)
                         .offsetY{ previous, current in
                             // Moving header based on direction scroll
-                            if previous > current{
+                            if previous > current {
                                 // MARK: - Up
                                 if direction != .up && current < 0{
                                     shiftOffset = current - headerOffset
@@ -112,12 +106,11 @@ struct FeedView: View {
                                 headerOffset = (-offset < headerHeight ? (offset < 0 ? offset : 0) : -headerHeight)
                                 
                                 // get the normalized offset so it is always between 0 and 1
-                                let normalizedOffset = headerOffset / (isDailyPosted ? 100 : 50)
+                                let normalizedOffset = headerOffset / (postViewModel.isDailyPosted ? 100 : 50)
                                 
                                 // Calculate the opaciti for the header and the button
                                 headerOpacity = max(0.0, 1.0 + Double(normalizedOffset))
                                 dailyButtonOpacity = max(0.3, 1.0 + Double(normalizedOffset))
-                                
                             } else {
                                 // MARK: - Down
                                 if direction != .down{
@@ -130,7 +123,7 @@ struct FeedView: View {
                                 headerOffset = (offset > 0 ? 0 : offset)
                                 
                                 // get the normalized offset so it is always between 0 and 1
-                                let normalizedOffset = headerOffset / (isDailyPosted ? 100 : 50)
+                                let normalizedOffset = headerOffset / (postViewModel.isDailyPosted ? 100 : 50)
                                 
                                 // Calculate the opaciti for the header and the button
                                 headerOpacity = max(0.0, 1.0 + Double(normalizedOffset))
@@ -140,20 +133,18 @@ struct FeedView: View {
                             }
                         }
                         Spacer()
-                            .frame(height: isDailyPosted ? 0 : 80)
+                            .frame(height: postViewModel.isDailyPosted ? 0 : 80)
                         
                         
                     }
+                    .onAppear {
+                        fetchUpdatedUser()
+                    }
                     .refreshable {
                         print("Fetching post again...")
-                        let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? ""
-
+                        fetchUpdatedUser()
                         Task {
-                            if let user = userViewModel.user {
-                                print("Fetching posts...")
-                                
-                                await postViewModel.fetchAllPostsAsync(user: user)
-                            }
+                            await fetchAllSongs()
                         }
                     }
                     .coordinateSpace(name: "SCROLL")
@@ -173,9 +164,18 @@ struct FeedView: View {
                                     // Navigation link to open notifications view
                                     NavigationLink(destination: NotificationsView()
                                         .toolbarRole(.editor)){
-                                        Image(systemName: "bell")
-                                            .fontWeight(.semibold)
-                                            .font(.title2)
+                                            if friendRequestsVM.friendRequests.count == 0 {
+                                                Image(systemName: "bell")
+                                                    .fontWeight(.semibold)
+                                                    .font(.title2)
+                                            }
+                                            else {
+                                                Image(systemName: "bell.badge")
+                                                    .fontWeight(.semibold)
+                                                    .font(.title2)
+                                                    .foregroundStyle(.red, .primary)
+                                                    .symbolRenderingMode(.palette)
+                                            }
                                     }
                                     .foregroundStyle(.primary)
                                 }
@@ -186,23 +186,8 @@ struct FeedView: View {
                                     .padding(.horizontal, -15)
                                 
                                 // If the daily post has already been made, show the user's post
-                                if isDailyPosted {
-                                    DailyPosted(song: SongModel(
-                                        id: "1",
-                                        title: "Hello",
-                                        artists: "Adele",
-                                        artworkUrlSmall: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/100x100bb.jpg"), artworkUrlMedium: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/500x500bb.jpg"),
-                                        artworkUrlLarge: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/62/bc/87/62bc8791-2a12-4b01-8928-d601684a951c/634904074005.png/1000x1000bb.jpg"),
-                                        bgColor: CGColor(srgbRed: 0.12549, green: 0.12549, blue: 0.12549, alpha: 1),
-                                        priColor: CGColor(srgbRed: 0.898039, green: 0.894118, blue: 0.886275, alpha: 1),
-                                        secColor: CGColor(srgbRed: 0.815686, green: 0.807843, blue: 0.8, alpha: 1),
-                                        terColor: CGColor(srgbRed: 0.745098, green: 0.741176, blue: 0.733333, alpha: 1),
-                                        quaColor: CGColor(srgbRed: 0.67451, green: 0.670588, blue: 0.662745, alpha: 1),
-                                        previewUrl: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5e/46/de/5e46de64-70d7-01a9-438f-8395a0e41b58/mzaf_15694838464598234027.plus.aac.p.m4a"), albumTitle: "",
-                                        duration: 295.502,
-                                        composerName: "Greg Kurstin & Adele Adkins",
-                                        genreNames: ["Pop"],
-                                        releaseDate: Date(timeIntervalSince1970: 1445558400)))
+                                if let dailySong = postViewModel.dailySong {
+                                    DailyPosted(song: dailySong)
                                 }
                                 
                                 Divider()
@@ -229,13 +214,14 @@ struct FeedView: View {
                     }
                     .ignoresSafeArea(.all, edges: .top)
                     // If the daily post has not yet been made, show the button to do it
-                    if !isDailyPosted {
+                    if postViewModel.dailySong == nil {
                         ActionButton(label: LocalizedStringKey("ShareDailyButton"), symbolName: "waveform", fontColor: .white, backgroundColor: .purple, isShareDaily: true, isDisabled: false) {
                             isDailySheetOpened.toggle()
                         }
                         .opacity(dailyButtonOpacity)
-                        .fullScreenCover(isPresented: $isDailySheetOpened){
+                        .fullScreenCover(isPresented: $isDailySheetOpened) {
                             DailySongView(isSongFromDaily: true)
+                                
                         }
                         .padding()
                     }
@@ -247,25 +233,45 @@ struct FeedView: View {
                         .ignoresSafeArea(edges: .top)
                         .frame(height: 0)
                 }
-                
             }
         }
+        
         .task {
-            let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? ""
-            print("UserID: ", userID)
-            Task {
-                if let user = userViewModel.user {
-                    pushNotificationsVM.requestNotificationPermissions()
-                    pushNotificationsVM.subscribeToNotifications(user: user)
-                    print("Fetching posts...")
-                    await postViewModel.fetchAllPostsAsync(user: user)
-                }
+            if let user = userViewModel.user {
+                pushNotificationsVM.requestNotificationPermissions()
+                //pushNotificationsVM.unsubscribeToNotifications()
+                //pushNotificationsVM.subscribeToNotifications(user: user)
             }
+        }
+    }
+    
+    private func fetchAllSongs() async -> Void {
+        Task {
+            if let user = userViewModel.user {
+                print("Fetching post again...")
+                await postViewModel.fetchAllPostsAsync(user: user)
+            }
+            }
+        }
+    
+    private func fetchUpdatedUser() {
+        guard let mainUser = userViewModel.user else {
+            print("No user from userViewModel")
+            return
+        }
+        userViewModel.fetchUserFromRecord(record: mainUser.record) { returnedUser in
+            guard let updatedUser = returnedUser else {
+                print("NO USER FROM DB")
+                return
+            }
+            print("Fetched User from DB: \(updatedUser)")
+            userViewModel.user = updatedUser
+            friendRequestsVM.fetchFriendRequestsForUser(user: updatedUser)
         }
     }
 }
 
-#Preview {
-    FeedView()
-}
+//#Preview {
+//    FeedView()
+//}
 

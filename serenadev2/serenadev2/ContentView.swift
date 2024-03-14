@@ -16,7 +16,7 @@ struct ContentView: View {
     @EnvironmentObject var postViewModel: PostViewModel
     
     @Environment(\.colorScheme) var colorScheme
-    @State var user: User? = nil
+    @State var user : User? = nil
     
     // MARK: - Body
     var body: some View {
@@ -32,9 +32,7 @@ struct ContentView: View {
                     .tabItem {
                         Label(LocalizedStringKey("Search"), systemImage: "magnifyingglass")
                     }
-                
-                ProfileView(user: user)
-                
+                ProfileView()
                     .tabItem {
                         Label(LocalizedStringKey("Profile"), systemImage: "person.fill")
                     }
@@ -42,10 +40,11 @@ struct ContentView: View {
             .toolbarBackground(.visible, for: .tabBar)
             .toolbarBackground(colorScheme == .light ? .white : .black, for: .tabBar)
             .task {
-                guard let user = userViewModel.user else {
+                guard var user = userViewModel.user else {
                     print("NO USER FROM PROFILE")
                     return
                 }
+
                 self.user = user
                 
                 userViewModel.friends = await userViewModel.fetchFriendsForUser(user: user)
@@ -59,6 +58,15 @@ struct ContentView: View {
                 //                    }
                 //                    self.user = returnedUser
                 //                }
+
+                await postViewModel.fetchAllPostsAsync(user: user)
+                await postViewModel.verifyDailyPostForUser(user: user)
+                await postViewModel.verifyPostFromYesterdayForUser(user: user)
+                if postViewModel.hasPostedYesterday == false && postViewModel.isDailyPosted == false {
+                    user.streak = 0
+                    userViewModel.updateUser(updatedUser: user)
+                }
+
             }
         }
     }
