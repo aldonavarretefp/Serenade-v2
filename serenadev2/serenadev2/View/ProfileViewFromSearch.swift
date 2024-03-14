@@ -12,17 +12,14 @@ struct ProfileViewFromSearch: View {
     
     @StateObject var postVM: PostViewModel = PostViewModel()
     @EnvironmentObject var userVM: UserViewModel
+    @StateObject var friendRequestsVM: FriendRequestsViewModel = FriendRequestsViewModel()
     
     @State var posts: [Post] = []
     @State var user: User
-    
-    func isFriendCheck(user: User) -> Bool {
-        if userVM.user!.friends.contains(where: { $0 == user.record.recordID }) {
-            return true
-        } else {
-            return false
-        }
-    }
+    @State var isFriend: Bool = false
+    @State var isFriendRequestSent: Bool = false
+    @State var isFriendRequestReceived: Bool = false
+    @State var showFriendRequestButton: Bool = false
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -30,11 +27,10 @@ struct ProfileViewFromSearch: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0){
-                let isFriend = userVM.isFriend(of: user)
-                //  PENDING: Check friend requests sent for isFriendRequestSent
                 
+                //  PENDING: Check friend requests sent for isFriendRequestSent
                 if let user = userVM.user {
-                    ProfileBar(isFriendRequestSent: false, isCurrentUser: isSameUserInSession(fromUser: user, toCompareWith: self.user), isFriend: isFriend, user: self.user)
+                    ProfileBar(user: $user, isFriend: $isFriend, isFriendRequestSent: $isFriendRequestSent, isFriendRequestRecieved: $isFriendRequestReceived, showFriendRequestButton: $showFriendRequestButton, isCurrentUser: isSameUserInSession(fromUser: user, toCompareWith: self.user))
                 }
                 ScrollView (.vertical, showsIndicators: false) {
                     LazyVStack(spacing: 15) {
@@ -59,37 +55,76 @@ struct ProfileViewFromSearch: View {
                 }
                 .ignoresSafeArea(.all, edges: .top)
                 .refreshable {
-                    let user = self.user
-                    if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
-                        postVM.posts = posts
-                        for post in posts {
-                            print("Post: ", post.songId)
-                            guard let sender = post.sender else {
-                                print("Post has no sender")
-                                return
-                            }
-                            // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
-                            await postVM.fetchSenderDetailsAsync(for: sender.recordID)
-                            let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
-                            switch result {
-                            case .success(let songModel):
-                                postVM.songsDetails[post.songId] = songModel
-                            default:
-                                print("ERROR: Couldn't bring song details")
-                                break;
-                            }
-                        }
-                    }
+                    fetchUserAndFriendRequest()
+                    await fetchProfilePosts()
                 }
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            fetchUserAndFriendRequest()
+        }
         .task {
+            await fetchProfilePosts()
+        }
+    }
+    
+    func isSameUserInSession(fromUser user1: User, toCompareWith user2: User) -> Bool {
+        return user1.accountID == user2.accountID
+    }
+    
+    private func fetchUserAndFriendRequest() {
+        userVM.fetchUserFromRecord(record: self.user.record) { returnedUser in
+            guard let updatedUser = returnedUser else {
+                print("NO USER FROM DB")
+                return
+            }
+            print("Fetched User from DB: \(updatedUser)")
+            self.user = updatedUser
+        }
+        let user = self.user
+        guard let mainUser = userVM.user else {
+            print("No user from userViewModel")
+            return
+        }
+        userVM.fetchUserFromRecord(record: mainUser.record) { returnedUser in
+            guard let updatedUser = returnedUser else {
+                print("NO USER FROM DB")
+                return
+            }
+            print("Fetched User from DB: \(updatedUser)")
+            userVM.user = updatedUser
+            self.isFriend = userVM.isFriend(of: user)
+            print(String("isFriend: \(self.isFriend)"))
+        }
+        guard let mainUser = userVM.user else {
+            print("No user from userViewModel")
+            return
+        }
+        
+        friendRequestsVM.fetchFriendRequest(from: user, for: mainUser) { incomingFriendRequest in
+            guard let incomingFriendRequest = incomingFriendRequest.first else {
+                self.isFriendRequestReceived = false
+                friendRequestsVM.fetchFriendRequest(from: mainUser, for: user) { outgoingFriendRequest in
+                    guard let outgoingFriendRequest = outgoingFriendRequest.first else {
+                        self.isFriendRequestSent = false
+                        return
+                    }
+                    self.isFriendRequestSent = true
+                }
+                self.showFriendRequestButton = true
+                return
+            }
+            self.isFriendRequestReceived = true
+            self.showFriendRequestButton = true
+        }
+    }
+    
+    private func fetchProfilePosts() async -> Void {
+        Task {
             let user = self.user
             if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
-                
                 postVM.posts = posts
-                
                 for post in posts {
                     print("Post: ", post.songId)
                     guard let sender = post.sender else {
@@ -109,9 +144,5 @@ struct ProfileViewFromSearch: View {
                 }
             }
         }
-    }
-    
-    func isSameUserInSession(fromUser user1: User, toCompareWith user2: User) -> Bool {
-        return user1.accountID == user2.accountID
     }
 }

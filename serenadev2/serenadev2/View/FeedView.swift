@@ -36,6 +36,7 @@ struct FeedView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var postViewModel: PostViewModel
     @StateObject var pushNotificationsVM: PushNotificationViewModel = PushNotificationViewModel()
+    @StateObject var friendRequestsVM: FriendRequestsViewModel = FriendRequestsViewModel()
     
     // MARK: - Environment properties
     // Color scheme of the phone
@@ -136,7 +137,12 @@ struct FeedView: View {
                         
                         
                     }
+                    .onAppear {
+                        fetchUpdatedUser()
+                    }
                     .refreshable {
+                        print("Fetching post again...")
+                        fetchUpdatedUser()
                         Task {
                             await fetchAllSongs()
                         }
@@ -158,11 +164,20 @@ struct FeedView: View {
                                     // Navigation link to open notifications view
                                     NavigationLink(destination: NotificationsView()
                                         .toolbarRole(.editor)){
-                                            Image(systemName: "bell")
-                                                .fontWeight(.semibold)
-                                                .font(.title2)
-                                        }
-                                        .foregroundStyle(.primary)
+                                            if friendRequestsVM.friendRequests.count == 0 {
+                                                Image(systemName: "bell")
+                                                    .fontWeight(.semibold)
+                                                    .font(.title2)
+                                            }
+                                            else {
+                                                Image(systemName: "bell.badge")
+                                                    .fontWeight(.semibold)
+                                                    .font(.title2)
+                                                    .foregroundStyle(.red, .primary)
+                                                    .symbolRenderingMode(.palette)
+                                            }
+                                    }
+                                    .foregroundStyle(.primary)
                                 }
                                 .padding(.bottom, 10)
                                 .padding([.horizontal, .top])
@@ -218,9 +233,9 @@ struct FeedView: View {
                         .ignoresSafeArea(edges: .top)
                         .frame(height: 0)
                 }
-                
             }
         }
+        
         .task {
             if let user = userViewModel.user {
                 pushNotificationsVM.requestNotificationPermissions()
@@ -236,11 +251,27 @@ struct FeedView: View {
                 print("Fetching post again...")
                 await postViewModel.fetchAllPostsAsync(user: user)
             }
+            }
+        }
+    
+    private func fetchUpdatedUser() {
+        guard let mainUser = userViewModel.user else {
+            print("No user from userViewModel")
+            return
+        }
+        userViewModel.fetchUserFromRecord(record: mainUser.record) { returnedUser in
+            guard let updatedUser = returnedUser else {
+                print("NO USER FROM DB")
+                return
+            }
+            print("Fetched User from DB: \(updatedUser)")
+            userViewModel.user = updatedUser
+            friendRequestsVM.fetchFriendRequestsForUser(user: updatedUser)
         }
     }
 }
 
-#Preview {
-    FeedView()
-}
+//#Preview {
+//    FeedView()
+//}
 

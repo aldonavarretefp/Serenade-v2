@@ -16,7 +16,6 @@ struct ContentView: View {
     @EnvironmentObject var postViewModel: PostViewModel
     
     @Environment(\.colorScheme) var colorScheme
-    @State var user: User? = nil
     
     // MARK: - Body
     var body: some View {
@@ -32,12 +31,10 @@ struct ContentView: View {
                     .tabItem {
                         Label(LocalizedStringKey("Search"), systemImage: "magnifyingglass")
                     }
-                if let user = userViewModel.user {
-                    ProfileView(user: user)
-                        .tabItem {
-                            Label(LocalizedStringKey("Profile"), systemImage: "person.fill")
-                        }
-                }
+                ProfileView()
+                    .tabItem {
+                        Label(LocalizedStringKey("Profile"), systemImage: "person.fill")
+                    }
             }
             .toolbarBackground(.visible, for: .tabBar)
             .toolbarBackground(colorScheme == .light ? .white : .black, for: .tabBar)
@@ -52,7 +49,7 @@ struct ContentView: View {
                 if postViewModel.hasPostedYesterday == false && postViewModel.isDailyPosted == false {
                     user.streak = 0
                     userViewModel.updateUser(updatedUser: user)
-                } 
+                }
             }
         }
     }
