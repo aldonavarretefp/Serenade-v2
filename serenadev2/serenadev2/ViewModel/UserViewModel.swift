@@ -9,6 +9,7 @@ class UserViewModel: ObservableObject {
     @Published var tagNameExists: Bool = false
     @Published var error: String = ""
     @Published var finishedTheProfile: Bool = false
+    @Published var hasPostedHisDaily: Bool = false
     var cancellables = Set<AnyCancellable>()
     
     init(){
@@ -145,7 +146,7 @@ class UserViewModel: ObservableObject {
         
     }
     
-    func updateUser(updatedUser: User) {   
+    func updateUser(updatedUser: User, completionHandler: (() -> ())? = nil) {   
         if(updatedUser.tagName == "" || updatedUser.name == "") {
             return
         }

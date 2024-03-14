@@ -32,28 +32,27 @@ struct ContentView: View {
                     .tabItem {
                         Label(LocalizedStringKey("Search"), systemImage: "magnifyingglass")
                     }
-                
-                ProfileView(user: user)
-                
-                    .tabItem {
-                        Label(LocalizedStringKey("Profile"), systemImage: "person.fill")
-                    }
+                if let user = userViewModel.user {
+                    ProfileView(user: user)
+                        .tabItem {
+                            Label(LocalizedStringKey("Profile"), systemImage: "person.fill")
+                        }
+                }
             }
             .toolbarBackground(.visible, for: .tabBar)
             .toolbarBackground(colorScheme == .light ? .white : .black, for: .tabBar)
             .task {
-                guard let user = userViewModel.user else {
+                guard var user = userViewModel.user else {
                     print("NO USER FROM PROFILE")
                     return
                 }
-                self.user = user
-                //                userViewModel.fetchUserFromAccountID(accountID: "000758.2f1d6dd1cd4e4563a99a6ad78f20cde3.0946") { returnedUser in
-                //                    guard let user = returnedUser else {
-                //                        print("No user returned")
-                //                        return
-                //                    }
-                //                    self.user = returnedUser
-                //                }
+                await postViewModel.fetchAllPostsAsync(user: user)
+                await postViewModel.verifyDailyPostForUser(user: user)
+                await postViewModel.verifyPostFromYesterdayForUser(user: user)
+                if postViewModel.hasPostedYesterday == false && postViewModel.isDailyPosted == false {
+                    user.streak = 0
+                    userViewModel.updateUser(updatedUser: user)
+                } 
             }
         }
     }

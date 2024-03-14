@@ -12,6 +12,7 @@ struct SongDetailView: View {
     // MARK: - Environment properties
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject var postViewModel: PostViewModel
     
     @State var isDailySheetDisplayed: Bool = false
     @State var isOpenWithSheetDisplayed: Bool = false
@@ -110,17 +111,15 @@ struct SongDetailView: View {
                     
                     // Daily and open with buttons
                     VStack(spacing: 15){
-                        
                         // Daily button
-                        ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false, isDisabled: false) {
-                            
-                            
-                            isDailySheetDisplayed.toggle()
-                            
-                        }
-                        .sheet(isPresented: $isDailySheetDisplayed){
-                            DailySongView(song: song, isSongFromDaily: false)
-                                .presentationDetents([.fraction(0.7)])
+                        if !postViewModel.isDailyPosted {
+                            ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false, isDisabled: false) {
+                                isDailySheetDisplayed.toggle()
+                            }
+                            .sheet(isPresented: $isDailySheetDisplayed){
+                                DailySongView(song: song, isSongFromDaily: false)
+                                    .presentationDetents([.fraction(0.7)])
+                            }
                         }
                         
                         // Open with button

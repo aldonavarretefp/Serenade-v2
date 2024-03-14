@@ -10,7 +10,7 @@ import CloudKit
 
 struct ProfileViewFromSearch: View {
     
-    @EnvironmentObject var postVM: PostViewModel
+    @StateObject var postVM: PostViewModel = PostViewModel()
     @EnvironmentObject var userVM: UserViewModel
     
     @State var posts: [Post] = []
@@ -37,7 +37,7 @@ struct ProfileViewFromSearch: View {
                     ProfileBar(isFriendRequestSent: false, isCurrentUser: isSameUserInSession(fromUser: user, toCompareWith: self.user), isFriend: isFriend, user: self.user)
                 }
                 ScrollView (.vertical, showsIndicators: false) {
-                    VStack(spacing: 15) {
+                    LazyVStack(spacing: 15) {
                         if postVM.posts.isEmpty {
                             ContentUnavailableView(label: {
                                 Label(LocalizedStringKey("No posts"), systemImage: "music.note")
@@ -46,7 +46,6 @@ struct ProfileViewFromSearch: View {
                             })
                         } else {
                             ForEach(postVM.posts, id: \.self) { post in
-                                // Ensure PostView can handle nil or incomplete data gracefully
                                 if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID], let song = postVM.songsDetails[post.songId] {
                                     PostComponentInProfile(post: post, sender: senderUser, song: song)
                                 }
@@ -59,12 +58,10 @@ struct ProfileViewFromSearch: View {
                     .padding()
                 }
                 .ignoresSafeArea(.all, edges: .top)
-                //                .ignoresSafeArea(.all)
                 .refreshable {
                     let user = self.user
                     if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
                         postVM.posts = posts
-                        postVM.sortPostsByDate()
                         for post in posts {
                             print("Post: ", post.songId)
                             guard let sender = post.sender else {

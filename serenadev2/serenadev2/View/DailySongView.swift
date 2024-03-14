@@ -24,8 +24,6 @@ struct DailySongView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var postViewModel: PostViewModel
     
-    
-    
     var isSongFromDaily : Bool
     
     var body: some View {
@@ -34,6 +32,9 @@ struct DailySongView: View {
                 Rectangle()
                     .fill(.ultraThinMaterial)
                     .ignoresSafeArea()
+                    .onTapGesture {
+                        hideKeyboard()
+                    }
                 VStack(alignment: .leading, spacing: 30) {
                     Text(LocalizedStringKey("DailyDescription"))
                         .fontWeight(.light)
@@ -126,9 +127,9 @@ struct DailySongView: View {
                     Spacer()
                     // Enable the 'Daily' button only if a song is selected
                     
-                    ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: song == nil || isLoading, isLoading: isLoading) {
+                    ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: song == nil || isLoading || postViewModel.isDailyPosted || (postViewModel.dailySong != nil), isLoading: isLoading) {
                         
-                        guard let user = userViewModel.user, let song = song else {
+                        guard var user = userViewModel.user, let song = song else {
                             print("ERROR: User does not exist")
                             return
                         }
@@ -137,12 +138,14 @@ struct DailySongView: View {
                         let post = Post(postType: .daily, sender: reference, caption: self.caption,  songId: song.id, date: Date.now, isAnonymous: false, isActive: true)
                         
                         isLoading = true
-                        
-                        postViewModel.createAPost(post: post) {
-                            userViewModel.addPostToUser(sender: user, post: post)
-                            isLoading = false
-                            self.dismiss()
-                            print("Shared daily")
+                        Task {
+                            await postViewModel.verifyDailyPostForUser(user: user)
+                            await postViewModel.verifyPostFromYesterdayForUser(user: user)
+                            if postViewModel.hasPostedYesterday == false && postViewModel.isDailyPosted == false {
+                                user.streak = 0
+                            }
+                            
+                            createAPost(user: user, post: post)
                         }
                         
                     }
@@ -187,6 +190,21 @@ struct DailySongView: View {
     }
     
     
+    func createAPost(user: User, post: Post) {
+        var user = user
+        // User has tapped on the daily button
+        postViewModel.createAPost(post: post) {
+            postViewModel.dailySong = song
+            postViewModel.isDailyPosted = true
+            user.streak += 1
+            userViewModel.updateUser(updatedUser: user)
+            userViewModel.addPostToUser(sender: user, post: post)
+            isLoading = false
+            self.dismiss()
+            print("Shared daily")
+        }
+    }
+    
 }
 
 struct CaptionView: View {
@@ -220,7 +238,7 @@ struct CaptionView: View {
                         }
                     }
                 
-                    
+                
                 
                 if caption.isEmpty {
                     Text(LocalizedStringKey ("PlaceholderCaption"))
@@ -239,7 +257,7 @@ struct CaptionView: View {
         }
     }
 }
- //function to get the final trimmed caption
+//function to get the final trimmed caption
 extension View{
     
     func sanitizeText(_ text: String) -> String {
@@ -248,15 +266,14 @@ extension View{
         
         return replacedText
     }
-
+    
 }
 
 struct SelectSong: View {
     @Environment(\.colorScheme) private var colorScheme
     var action: () -> Void
     var body: some View {
-        Button(action: action)
-        {
+        Button(action: action) {
             HStack(alignment: .center) {
                 Spacer()
                 Image(systemName: "plus.circle.fill")
