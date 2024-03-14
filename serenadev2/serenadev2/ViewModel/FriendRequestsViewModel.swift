@@ -130,6 +130,22 @@ class FriendRequestsViewModel: ObservableObject {
             case .success(_):
                 print("Success sending friend request!")
                 self.pushNotificationsVM.suscribeToFriendRequestAccepted(me: sender, friend: receiver)
+                
+                let senderName = sender.tagName
+                let notificationInfo = ["senderName": senderName]
+                
+                let notificationRecord = CKRecord(recordType: "Notification")
+                let reference = CKRecord.Reference(recordID: CKRecord.ID(recordName: "notification"), action: .none)
+                // Asignar el valor al registro
+                notificationRecord["notificationInfo"] = reference
+                    CKContainer.default().publicCloudDatabase.save(notificationRecord) { _, error in
+                        if let error = error {
+                            print("Error saving notification: \(error.localizedDescription)")
+                            return
+                        }
+                        print("Notification saved successfully!")
+                    }
+                
                 break;
             case .failure(let error):
                 print(error.localizedDescription)

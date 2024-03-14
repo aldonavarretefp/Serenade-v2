@@ -50,6 +50,9 @@ struct NotificationsView: View {
                 self.updateNotifications()
             }
         }
+        .onAppear {
+            UNUserNotificationCenter.current().setBadgeCount(0, withCompletionHandler: nil)
+        }
     }
 
     func updateNotifications() {
