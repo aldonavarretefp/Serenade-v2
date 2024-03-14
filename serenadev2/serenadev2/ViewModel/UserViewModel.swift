@@ -8,6 +8,7 @@ class UserViewModel: ObservableObject {
     @Published var isLoggedIn: Bool = false
     @Published var tagNameExists: Bool = false
     @Published var error: String = ""
+    @Published var friends : [User] = []
     var cancellables = Set<AnyCancellable>()
     
     init(){
@@ -113,6 +114,53 @@ class UserViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
+    
+    
+    
+    func fetchUserFromRecordReference(recordReference: CKRecord.Reference, completion: @escaping (User?) -> Void) {
+        // Extract the CKRecord.ID from the reference
+        let recordID = recordReference.recordID
+        
+        // The rest of your code remains the same, now using the extracted recordID
+        let predicate = NSPredicate(format: "recordID == %@ && isActive == 1", recordID)
+        let recordType = UserRecordKeys.type.rawValue
+        
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                // Handle completion if needed
+            } receiveValue: { (returnedUsers: [User]?) in
+                guard let returnedUsers, returnedUsers.count > 0 else {
+                    completion(nil)
+                    return
+                }
+                let user = returnedUsers[0]
+                completion(user)
+            }
+            .store(in: &cancellables)
+    }
+
+    func fetchUserFromRecordIDAsync(recordID: CKRecord.ID) async -> User? {
+        await withCheckedContinuation { continuation in
+            fetchUserFromRecordID(recordID: recordID) { user in
+                continuation.resume(returning: user)
+            }
+        }
+    }
+
+    func fetchFriendsForUser(user: User) async -> [User] {
+        var friendsFromUser: [User] = []
+
+        for friendReference in user.friends {
+            if let friend = await fetchUserFromRecordIDAsync(recordID: friendReference.recordID) {
+                friendsFromUser.append(friend)
+                print("This is the friend added:", friend)
+            }
+        }
+
+        return friendsFromUser
+    }
+
     
     func createUser(user: User){
         if(user.tagName == "") { return }
@@ -306,6 +354,10 @@ class UserViewModel: ObservableObject {
                 completion(friendss)
             }
             .store(in: &cancellables)
+    }
+    
+    func searchFriendsFromUser(){
+        
     }
     
     func addPostToUser(sender: User, post: Post) {

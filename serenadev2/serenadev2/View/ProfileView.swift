@@ -27,6 +27,7 @@ struct ProfileView: View {
     @State var user: User?
     
     @State private var isLoading: Bool = true
+    @State var friendsFromUser : [User] = []
     
     
     var body: some View {
@@ -106,7 +107,7 @@ struct ProfileView: View {
                     .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top) {
                         if let user = self.user {
-                            ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: false, user: user)
+                            ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: false, friends: $friendsFromUser, user: user)
                                 .opacity(headerOpacity)
                                 .padding(.top, safeArea().top)
                                 .padding(.bottom)
@@ -126,7 +127,7 @@ struct ProfileView: View {
                                 .offset(y: -headerOffset < headerHeight ? headerOffset : (headerOffset < 0 ? headerOffset : 0))
                         } else {
                             
-                            ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, user: User(name: "", tagName: "", email: "", streak: 0, profilePicture: "", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: CKRecord.ID(recordName: "placeholder"))))
+                            ProfileBar(isFriendRequestSent: false, isCurrentUser: true, isFriend: true, friends: $friendsFromUser, user: User(name: "", tagName: "", email: "", streak: 0, profilePicture: "", isActive: true, record: CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: CKRecord.ID(recordName: "placeholder"))))
                                 .opacity(headerOpacity)
                                 .padding(.top, safeArea().top)
                             
@@ -214,6 +215,8 @@ struct ProfileView: View {
                     .ignoresSafeArea(edges: .top)
                     .frame(height: 0)
             }
+            .onAppear{
+            }
             .task {
                 
                 
@@ -270,8 +273,25 @@ struct ProfileView: View {
                             
                         }
                     }
+                    
+                    
+                }
+                
+                guard let user else{
+                    return
+                }
+                friendsFromUser = await userVM.fetchFriendsForUser(user: user)
+                for friend in friendsFromUser{
+                    print("THIS ARE THE UPDATED FRIENDS")
+                    print(friend.tagName)
                 }
             }
         }
+    }
+}
+struct ProfileView_Previews: PreviewProvider {
+    static var previews: some View {
+        ProfileView()
+        
     }
 }

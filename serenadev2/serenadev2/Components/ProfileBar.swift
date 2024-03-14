@@ -18,9 +18,11 @@ struct ProfileBar: View {
     @State var isCurrentUser: Bool
     @State var isFriend: Bool
     @State var isFriendRequestRecieved: Bool = false
-    
+    @State private var shouldNavigate = false
     @EnvironmentObject var userViewModel: UserViewModel
     @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
+    @Binding var friends :[User]
+    
     
     @State var user: User
     @State var friendRequest: FriendRequest? = nil
@@ -38,41 +40,49 @@ struct ProfileBar: View {
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 80, height: 80)
                                     .clipShape(Circle())
-
+                                
                             default:
-                                Image(systemName: "person.circle.fill")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
+                                Image(systemName: "person.fill")
+                                    .font(.title)
                                     .frame(width: 80, height: 80)
                                     .clipShape(Circle())
+                                    .foregroundStyle(colorScheme == .light ? .white : .black)
+                                    .background {
+                                        Circle().fill(.primary)
+                                    }
+                                    .padding(.trailing)
                             }
                         }
                     } else {
-                        Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
+                        Image(systemName: "person.fill")
+                            .font(.title)
                             .frame(width: 80, height: 80)
                             .clipShape(Circle())
+                            .foregroundStyle(colorScheme == .light ? .white : .black)
+                            .background {
+                                Circle().fill(.primary)
+                            }
+                            .padding(.trailing)
                     }
                     
                     VStack {
                         Spacer()
                         // STREAK Commented
-//                        HStack {
-//                            Image(systemName: "flame.circle.fill")
-//                                .resizable()
-//                                .aspectRatio(contentMode: .fit)
-//                                .frame(height: 25)
-//                                .foregroundStyle(.accent)
-//                            Text(String(user.streak))  // user.streak
-//                                .bold()
-//                                .font(.title3)
-//                        }
-//                        .padding(5)
-//                        .background(Color.card.opacity(0.9))
-//                        .clipShape(RoundedRectangle(cornerRadius: 6))
-//                        .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0), radius: 12.5, x: 0, y: 4)
-//                        .offset(y: 5)
+                        //                        HStack {
+                        //                            Image(systemName: "flame.circle.fill")
+                        //                                .resizable()
+                        //                                .aspectRatio(contentMode: .fit)
+                        //                                .frame(height: 25)
+                        //                                .foregroundStyle(.accent)
+                        //                            Text(String(user.streak))  // user.streak
+                        //                                .bold()
+                        //                                .font(.title3)
+                        //                        }
+                        //                        .padding(5)
+                        //                        .background(Color.card.opacity(0.9))
+                        //                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                        //                        .shadow(color: .black.opacity(colorScheme == .light ? 0.13 : 0), radius: 12.5, x: 0, y: 4)
+                        //                        .offset(y: 5)
                     }
                 }
                 .padding(.trailing)
@@ -111,12 +121,19 @@ struct ProfileBar: View {
                             Text(LocalizedStringKey("Posts"))
                         }
                         .font(.caption)
-                        VStack {
-                            Text(String(user.friends.count == 0 ? 0 : user.friends.count-1))
-                            Text(LocalizedStringKey("Friends"))
-                        }
-                        .font(.caption)
-                        .padding(.horizontal)
+                        
+                        
+                        NavigationLink(destination: FriendsListView(userTagName: user.tagName, friends: $friends)) {
+                                   VStack {
+                                       Text("\(user.friends.count == 0 ? "0" : "\(user.friends.count - 1)")")
+                                       Text("Friends")
+                                   }
+                                   .font(.caption)
+                                   .padding(.horizontal)
+                               }
+                               .buttonStyle(PlainButtonStyle())
+                        
+                        
                         Spacer()
                         
                         if !isCurrentUser && isFriendRequestRecieved {
@@ -201,7 +218,7 @@ struct ProfileBar: View {
                                     ConfirmationSheet(titleStart: LocalizedStringKey("UnfriendTitleStart"), titleEnd: LocalizedStringKey("UnfriendTitleEnd"), user: user.tagName, descriptionStart: LocalizedStringKey("UnfriendDescriptionStart"), descriptionEnd: LocalizedStringKey("UnfriendDescriptionEnd"), buttonLabel: "DeleteFriend"){
                                         
                                         isFriend = false
-                                        userViewModel.unmakeFriend(friend: user)           
+                                        userViewModel.unmakeFriend(friend: user)
                                     }
                                     .presentationDetents([.fraction(0.3)])
                                 })
@@ -247,7 +264,7 @@ struct ProfileBar: View {
     }
 }
 
-#Preview {
-    ProfileBar(isFriendRequestSent: true, isCurrentUser: false, isFriend: false, user: sebastian)
-        .environment(\.locale, .init(identifier: "us"))
-}
+//#Preview {
+//    ProfileBar(isFriendRequestSent: true, isCurrentUser: false, isFriend: false, friends: [], user: sebastian)
+//        .environment(\.locale, .init(identifier: "us"))
+//}

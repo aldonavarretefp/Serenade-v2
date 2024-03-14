@@ -21,6 +21,8 @@ struct ItemSmall: View {
     var showXMark: Bool
     var comesFromDaily: Bool
     var xMarkAction: (() -> Void)?
+    @Environment(\.colorScheme) var colorScheme
+    
     
     init(item: ContentItem, showArrow: Bool = false, showXMark: Bool = false, comesFromDaily: Bool = false, xMarkAction: (() -> Void)? = nil) {
         self.item = item
@@ -31,7 +33,7 @@ struct ItemSmall: View {
     }
     
     var body: some View {
-        HStack {
+        HStack (spacing: 0) {
             if(!item.isPerson) {
                 KFImage(item.song?.artworkUrlSmall)
                     .placeholder { progress in
@@ -40,11 +42,13 @@ struct ItemSmall: View {
                             .aspectRatio(contentMode: .fit)
                             .clipShape(RoundedRectangle(cornerRadius: 5))
                             .frame(width: 50, height: 50)
+                            .padding(.trailing)
                     }
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 5))
                     .frame(width: 50, height: 50)
+                    .padding(.trailing)
             } else {
                 if let user = item.user {
                     if let asset = user.profilePictureAsset {
@@ -56,19 +60,28 @@ struct ItemSmall: View {
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 50, height: 50)
                                     .clipShape(Circle())
+                                    .padding(.trailing)
 
                             default:
-                                Image(systemName: "person.circle.fill")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
+                                Image(systemName: "person.fill")
                                     .frame(width: 50, height: 50)
                                     .clipShape(Circle())
+                                    .foregroundStyle(colorScheme == .light ? .white : .black)
+                                    .background {
+                                        Circle().fill(.primary)
+                                    }
+                                    .padding(.trailing)
                             }
                         }
                     } else {
-                        Image(systemName: "person.crop.circle.fill")
+                        Image(systemName: "person.fill")
                             .frame(width: 50, height: 50)
                             .clipShape(Circle())
+                            .foregroundStyle(colorScheme == .light ? .white : .black)
+                            .background {
+                                Circle().fill(.primary)
+                            }
+                            .padding(.trailing)
                     }
                     
                 }

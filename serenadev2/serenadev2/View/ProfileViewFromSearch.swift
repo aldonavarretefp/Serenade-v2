@@ -15,6 +15,7 @@ struct ProfileViewFromSearch: View {
     
     @State var posts: [Post] = []
     @State var user: User
+    @State var friends : [User] = []
     
     func isFriendCheck(user: User) -> Bool {
         if userVM.user!.friends.contains(where: { $0 == user.record.recordID }) {
@@ -32,7 +33,7 @@ struct ProfileViewFromSearch: View {
             VStack(spacing: 0){
                 let isFriend = userVM.isFriend(of: user)
                 //  PENDING: Check friend requests sent for isFriendRequestSent
-                ProfileBar(isFriendRequestSent: false, isCurrentUser: false, isFriend: isFriend, user: user)
+                ProfileBar(isFriendRequestSent: false, isCurrentUser: false, isFriend: isFriend, friends: $friends, user: user)
                 ScrollView (.vertical, showsIndicators: false) {
                     VStack(spacing: 15) {
                         if postVM.posts.isEmpty {
@@ -84,6 +85,9 @@ struct ProfileViewFromSearch: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear{
+            
+        }
         .task {
             let user = self.user
             if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
@@ -108,6 +112,15 @@ struct ProfileViewFromSearch: View {
                     }
                 }
             }
+            
+            friends = await userVM.fetchFriendsForUser(user: user)
+            print("THIS ARE THE FRIENDS FROM THE SEARCH \(user.name)")
+            print("THIS ARE THE FRIENDS ")
+            print(friends.count)
+            for friend in friends{
+                print(friend.tagName)
+            }
+            
         }
     }
 }

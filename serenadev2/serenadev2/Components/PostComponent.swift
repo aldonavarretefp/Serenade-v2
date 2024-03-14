@@ -74,19 +74,27 @@ struct PostComponent: View {
                                     }
                                 
                             default:
-                                Image(systemName: "person.circle.fill")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
+                                Image(systemName: "person.fill")
+                                    .font(.callout)
+                                    .frame(width: 28, height: 28)
                                     .clipShape(Circle())
-                                    .frame(height: 28)
+                                    .foregroundStyle(colorScheme == .light ? .white : .black)
+                                    .background {
+                                        Circle().fill(.primary)
+                                    }
+                                    .padding(.trailing)
                             }
                         }
                     } else {
-                        Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
+                        Image(systemName: "person.fill")
+                            .font(.callout)
+                            .frame(width: 28, height: 28)
                             .clipShape(Circle())
-                            .frame(height: 28)
+                            .foregroundStyle(colorScheme == .light ? .white : .black)
+                            .background {
+                                Circle().fill(.primary)
+                            }
+                            .padding(.trailing)
                     }
                 } else {
                     Rectangle()
