@@ -98,7 +98,7 @@ struct UserDetailsView: View {
                     ActionButton(label: "Next", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname == "" || name == "" || tagname.containsEmoji) {
                         print("Passed name: \(self.name) & passed username: \(self.tagname)")
                         
-                        userViewModel.searchUsers(tagname: tagname) { users in
+                        userViewModel.searchUsers(searchText: tagname) { users in
                             if let users, users.count > 0 && tagname != "" {
                                 let userFromDB = users[0]
                                 guard let user = userViewModel.user else {return}
@@ -143,7 +143,7 @@ struct UserDetailsView: View {
     
     private func saveUserDetails() {
         tagname = tagname.formattedForTagName
-        userViewModel.searchUsers(tagname: tagname) { users in
+        userViewModel.searchUsers(searchText: tagname) { users in
             
             guard let users = users else { return }
             
