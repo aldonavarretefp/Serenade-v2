@@ -238,6 +238,7 @@ struct FeedView: View {
         
         .task {
             if let user = userViewModel.user {
+                await fetchAllSongs()
                 pushNotificationsVM.requestNotificationPermissions()
                 //pushNotificationsVM.unsubscribeToNotifications()
                 //pushNotificationsVM.subscribeToNotifications(user: user)

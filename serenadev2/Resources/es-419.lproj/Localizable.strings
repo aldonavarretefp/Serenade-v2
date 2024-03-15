@@ -57,7 +57,7 @@
 "NoMatchesFound" = "No se han encontrado resultados";
 "NoMatchesDescription" = "No hemos encontrado nada para su búsqueda. Pruebe con otras palabras clave o compruebe si hay errores tipográficos";
 "SearchForPeople" = "Busca personas";
-"SearchPeopleDescription" = "Busca a tus amigos. (Escribe su nombre de usuario exacto)";
+"SearchPeopleDescription" = "Busca a tus amigos.";
 
 // Profile View
 "Posts" = "Posts";
