@@ -110,8 +110,7 @@ struct ProfileView: View {
                     }
                     .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top) {
-                        
-                        ProfileBar(friends: $friendsFromUser, user: $user, isFriend: $isFriend, isFriendRequestSent: $isFriendRequestSent, isFriendRequestRecieved: $isFriendRequestReceived, showFriendRequestButton: $showFriendRequestButton, isLoading: $isLoading, isCurrentUser: true)
+                        ProfileBar(friends: $friendsFromUser, user: $user, isFriend: $isFriend, isFriendRequestSent: $isFriendRequestSent, isFriendRequestRecieved: $isFriendRequestReceived, showFriendRequestButton: $showFriendRequestButton, isLoading: $isLoading, isLoadingStateOfFriendship: .constant(false), isCurrentUser: true)
                             .opacity(headerOpacity)
                             .padding(.top, safeArea().top)
                             .padding(.bottom)
@@ -147,7 +146,6 @@ struct ProfileView: View {
             .onAppear{
             }
             .task {
-                
                 await fetchProfileUserAndPosts()
                 isLoading = true
                 friendsFromUser = await userVM.fetchFriendsForUser(user: user)

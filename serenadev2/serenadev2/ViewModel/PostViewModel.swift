@@ -20,8 +20,8 @@ class PostViewModel: ObservableObject {
     @Published var songsDetails: [String: SongModel] = [:]
     @Published var posts: [Post] = []
     @Published var dailyPost: Post?
-    @Published var dailySong: SongModel?
-    @Published var isDailyPosted: Bool = false
+    @Published var dailySong: SongModel? = nil
+    @Published var isDailyPosted: Bool = true
     @Published var hasPostedYesterday: Bool = true
     @Published var streak: Int = 0
     
@@ -57,7 +57,7 @@ class PostViewModel: ObservableObject {
             let users: [User] = try await CloudKitUtility.fetch(predicate: predicate, recordType: UserRecordKeys.type.rawValue)
             if users.count > 0 {
                 let user = users[0]
-                await MainActor.run {
+                DispatchQueue.main.async {
                     self.senderDetails[recordID] = user
                 }
             }
@@ -103,7 +103,7 @@ class PostViewModel: ObservableObject {
             let predicate = NSPredicate(format: "sender == %@ && date >= %@ && date < %@ && isActive == 1", recordToMatch, startOfDay as NSDate, endOfDay as NSDate)
             
             if let posts = await fetchAllPostsFromUserIDAsync(id: user.record.recordID, customPredicate: predicate) {
-                DispatchQueue.main.async {
+                await MainActor.run {
                     self.posts = posts
                 }
                 for post in posts {
@@ -323,7 +323,9 @@ class PostViewModel: ObservableObject {
             do {
                 if let newestPost {
                     let song: SongModel = try await SongService.fetchSongById(newestPost.songId)
-                    self.dailySong = song
+                    await MainActor.run {
+                        self.dailySong = song
+                    }
                 }
             } catch let error {
                 print("ERROR: hasPostFromDate \(error.localizedDescription)")

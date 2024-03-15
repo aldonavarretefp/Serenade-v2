@@ -8,15 +8,14 @@
 import SwiftUI
 import CloudKit
 
+
 struct ProfileViewFromSearch: View {
     
     @StateObject var postVM: PostViewModel = PostViewModel()
-    @EnvironmentObject var userVM: UserViewModel
     @StateObject var friendRequestsVM: FriendRequestsViewModel = FriendRequestsViewModel()
-    
+    @EnvironmentObject var userVM: UserViewModel
     @State var posts: [Post] = []
     @State var user: User
-
     @State var friends : [User] = []
     
     func isFriendCheck(user: User) -> Bool {
@@ -33,6 +32,7 @@ struct ProfileViewFromSearch: View {
     @State var showFriendRequestButton: Bool = false
 
     @State private var isLoading = false
+    @State private var isLoadingStateOfFriendShip = false
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -44,7 +44,7 @@ struct ProfileViewFromSearch: View {
                 //  PENDING: Check friend requests sent for isFriendRequestSent
 
                 if let user = userVM.user {
-                    ProfileBar(friends: $friends, user: $user, isFriend: $isFriend, isFriendRequestSent: $isFriendRequestSent, isFriendRequestRecieved: $isFriendRequestReceived, showFriendRequestButton: $showFriendRequestButton, isLoading: $isLoading, isCurrentUser: isSameUserInSession(fromUser: user, toCompareWith: self.user))
+                    ProfileBar(friends: $friends, user: $user, isFriend: $isFriend, isFriendRequestSent: $isFriendRequestSent, isFriendRequestRecieved: $isFriendRequestReceived, showFriendRequestButton: $showFriendRequestButton, isLoading: $isLoading, isLoadingStateOfFriendship: $isLoadingStateOfFriendShip, isCurrentUser: isSameUserInSession(fromUser: user, toCompareWith: self.user))
                 }
 
                 ScrollView (.vertical, showsIndicators: false) {
@@ -76,23 +76,14 @@ struct ProfileViewFromSearch: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-
-        .onAppear {
-            fetchUserAndFriendRequest()
-
-        }
         .task {
-            await fetchProfilePosts()
             isLoading = true
+            isLoadingStateOfFriendShip = true
+            fetchUserAndFriendRequest()
+            await fetchProfilePosts()
+            
             friends = await userVM.fetchFriendsForUser(user: user)
-//            print("FINISHED FETCHING FRIENDS")
             isLoading = false
-//                print("THIS ARE THE FRIENDS FROM THE SEARCH \(user.name)")
-//                print("THIS ARE THE FRIENDS ")
-//                print(friends.count)
-//                for friend in friends{
-//                    print(friend.tagName)
-//                }
             
         }
     }
@@ -102,14 +93,14 @@ struct ProfileViewFromSearch: View {
     }
     
     private func fetchUserAndFriendRequest() {
-        userVM.fetchUserFromRecord(record: self.user.record) { returnedUser in
-            guard let updatedUser = returnedUser else {
-                print("NO USER FROM DB")
-                return
-            }
-            print("Fetched User from DB: \(updatedUser)")
-            self.user = updatedUser
-        }
+//        userVM.fetchUserFromRecord(record: self.user.record) { returnedUser in
+//            guard let updatedUser = returnedUser else {
+//                print("NO USER FROM DB")
+//                return
+//            }
+//            print("Fetched User from DB: \(updatedUser)")
+//            self.user = updatedUser
+//        }
         let user = self.user
         guard let mainUser = userVM.user else {
             print("No user from userViewModel")
@@ -131,20 +122,22 @@ struct ProfileViewFromSearch: View {
         }
         
         friendRequestsVM.fetchFriendRequest(from: user, for: mainUser) { incomingFriendRequest in
-            guard let incomingFriendRequest = incomingFriendRequest.first else {
+            guard incomingFriendRequest.first != nil else {
                 self.isFriendRequestReceived = false
                 friendRequestsVM.fetchFriendRequest(from: mainUser, for: user) { outgoingFriendRequest in
-                    guard let outgoingFriendRequest = outgoingFriendRequest.first else {
+                    guard outgoingFriendRequest.first != nil else {
                         self.isFriendRequestSent = false
                         return
                     }
                     self.isFriendRequestSent = true
                 }
                 self.showFriendRequestButton = true
+                isLoadingStateOfFriendShip = false
                 return
             }
             self.isFriendRequestReceived = true
             self.showFriendRequestButton = true
+            isLoadingStateOfFriendShip = false
         }
     }
     

@@ -46,7 +46,6 @@ class FriendRequestsViewModel: ObservableObject {
             } receiveValue: { [weak self] (returnedFriendRequests: [FriendRequest]) in
                 DispatchQueue.main.async {
                     self?.friendRequests = returnedFriendRequests
-                    print(self?.friendRequests.count ?? -1)
                 }
                 for request in returnedFriendRequests {
                     let record = CKRecord(recordType: UserRecordKeys.type.rawValue, recordID: request.sender.recordID)
@@ -130,7 +129,6 @@ class FriendRequestsViewModel: ObservableObject {
             case .success(_):
                 print("Success sending friend request!")
                 self.pushNotificationsVM.suscribeToFriendRequestAccepted(me: sender, friend: receiver)
-                
                 let senderName = sender.tagName
                 let notificationInfo = ["senderName": senderName]
                 

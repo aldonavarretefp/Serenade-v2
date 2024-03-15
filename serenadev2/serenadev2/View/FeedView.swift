@@ -214,7 +214,7 @@ struct FeedView: View {
                     }
                     .ignoresSafeArea(.all, edges: .top)
                     // If the daily post has not yet been made, show the button to do it
-                    if postViewModel.dailySong == nil {
+                    if postViewModel.dailySong == nil && !postViewModel.isDailyPosted {
                         ActionButton(label: LocalizedStringKey("ShareDailyButton"), symbolName: "waveform", fontColor: .white, backgroundColor: .purple, isShareDaily: true, isDisabled: false) {
                             isDailySheetOpened.toggle()
                         }

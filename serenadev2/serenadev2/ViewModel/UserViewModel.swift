@@ -49,9 +49,6 @@ class UserViewModel: ObservableObject {
                 self.createUser(user: user)
                 return
             }
-            
-            // User exists
-            print("Fetched User from DB: \(user)")
             DispatchQueue.main.async {
                 self.user = returnedUser
                 self.userID = userID
@@ -154,14 +151,11 @@ class UserViewModel: ObservableObject {
 
     func fetchFriendsForUser(user: User) async -> [User] {
         var friendsFromUser: [User] = []
-
         for friendReference in user.friends {
             if let friend = await fetchUserFromRecordIDAsync(recordID: friendReference.recordID) {
                 friendsFromUser.append(friend)
-                print("This is the friend added:", friend)
             }
         }
-
         return friendsFromUser
     }
 
@@ -357,6 +351,23 @@ class UserViewModel: ObservableObject {
                 }
                 
                 completion(filteredUsers)
+            }
+            .store(in: &self.cancellables)
+    }
+    
+    func fetchAllUsers(completion: @escaping ([User]?) -> Void) {
+        let predicate = NSPredicate(format: "isActive == 1")
+        let recordType = UserRecordKeys.type.rawValue
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                // Handle any subscription-related responses here, if necessary.
+            } receiveValue: { [weak self] (returnedUsers: [User]?) in
+                guard let self = self, let users = returnedUsers else {
+                    completion(nil)
+                    return
+                }
+                completion(users)
             }
             .store(in: &self.cancellables)
     }

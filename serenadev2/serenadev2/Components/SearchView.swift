@@ -36,15 +36,25 @@ struct SearchView: View {
     @State private var selectedUser: ContentItem?
     
     @State private var peopleList: [ContentItem]  = []
+    @State var users: [User] = []
     
     init() {
         loadHistory()
+        
     }
     
     func loadHistory() {
         Task {
             historySong = await historySongManager.getHistory()
             historyPeople = await historyPeopleManager.getHistory()
+        }
+    }
+    
+    func loadUsers() {
+        userViewModel.fetchAllUsers { returnedUsers in
+            if let returnedUsers = returnedUsers {
+                self.users = returnedUsers
+            }
         }
     }
     
@@ -149,7 +159,7 @@ struct SearchView: View {
                                     ForEach(filteredResults) { value in
                                         NavigationLink(destination: ProfileViewFromSearch(user: value.user!), label: {
                                             ItemSmall(item: ContentItem(isPerson: true, user: value.user), showArrow: true)
-                                            .padding([.leading, .top, .bottom])
+                                                .padding([.leading, .top, .bottom])
                                         })
                                         .buttonStyle(.plain)
                                     }
@@ -183,7 +193,7 @@ struct SearchView: View {
                     }
                 } else if selectedTab == .people {
                     if viewModel.searchText.isEmpty {
-                        if self.historyPeople.count == 0 {
+                        if self.historyPeople.count == 0 && self.peopleList.count == 0 && viewModel.searchText == "" {
                             // Display this when no search has been made yet (for Music tab only)
                             ContentUnavailableView(label: {
                                 Label(LocalizedStringKey("SearchForPeople"), systemImage: "person.3.fill")
@@ -210,13 +220,19 @@ struct SearchView: View {
             if selectedTab == .music {
                 viewModel.fetchMusic(with: viewModel.searchText)
             } else {
-                userViewModel.searchUsers(searchText: viewModel.searchText) { returnedUsers in
-                    if let returnedUsers = returnedUsers {
-                        peopleList = returnedUsers.map({ user in
-                            ContentItem(isPerson: true, user: user)
-                        })
-                    }
-                }
+                /*userViewModel.searchUsers(searchText: viewModel.searchText) { returnedUsers in
+                 if let returnedUsers = returnedUsers {
+                 peopleList = returnedUsers.map({ user in
+                 ContentItem(isPerson: true, user: user)
+                 })
+                 }
+                 }*/
+                self.peopleList = self.users.filter({ user in
+                    user.tagName.lowercased().contains(viewModel.searchText.lowercased()) || user.name.lowercased().contains(viewModel.searchText.lowercased())
+                }).map({ user in
+                    ContentItem(isPerson: true, user: user)
+                })
+                print(viewModel.searchText)
             }
         }
         
@@ -225,6 +241,9 @@ struct SearchView: View {
         }
         .onAppear{
             loadHistory()
+        }
+        .task {
+            loadUsers()
         }
     }
     

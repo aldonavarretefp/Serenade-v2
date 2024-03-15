@@ -31,9 +31,7 @@ struct FriendsListView: View {
         NavigationStack {
             GeometryReader { geometry in
                 VStack(spacing: 0) {
-                    
-                    
-                    if isLoading{
+                    if isLoading {
                         VStack {
                             Spacer()
                             HStack {
@@ -46,8 +44,7 @@ struct FriendsListView: View {
                             Spacer()
                         }
                         
-                    }
-                    else {
+                    }else {
                         if  viewModel.searchText.isEmpty {
                             ScrollView {
                                 VStack(spacing: 0){
@@ -86,7 +83,6 @@ struct FriendsListView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(colorScheme == .light ? .white : .black,for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
-            
             .overlay {
                 
                 if filteredFriends.isEmpty && !viewModel.searchText.isEmpty {
@@ -103,13 +99,11 @@ struct FriendsListView: View {
             .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .always))
             .disableAutocorrection(true)
         }
-        .onChange(of: viewModel.searchText) {newValue in
+        .onChange(of: viewModel.searchText) { (oldValue, newValue) in
             filterFriends(searchText: newValue)
             print("this are the FILTERED friends on the LIST from \(String(describing: userTagName))")
             print(filteredFriends)
         }
-        
-        
         
         .onAppear{
             print("this are the friends on the LIST")

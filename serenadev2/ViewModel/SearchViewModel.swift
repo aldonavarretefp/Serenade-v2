@@ -66,7 +66,7 @@ class SearchViewModel: ObservableObject {
             switch status {
             case .authorized:
                 var request = MusicCatalogSearchRequest(term: searchText, types: [Song.self])
-                request.limit = 25
+                request.limit = 10
                 do {
                     let result = try await request.response()
                     DispatchQueue.main.async {
