@@ -26,7 +26,7 @@ struct ProfileView: View {
     @State var posts: [Post] = []
     @State var user: User = User(name: "No User", tagName: "nouser", email: "", streak: 0, profilePicture: "", isActive: false, record: CKRecord(recordType: UserRecordKeys.type.rawValue))
     
-    @State private var isLoading: Bool = true
+    @State private var isLoading: Bool = false
     @State var friendsFromUser : [User] = []
     
     @State var isFriend: Bool = false
@@ -111,7 +111,7 @@ struct ProfileView: View {
                     .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top) {
                         
-                        ProfileBar(friends: $friendsFromUser, user: $user, isFriend: $isFriend, isFriendRequestSent: $isFriendRequestSent, isFriendRequestRecieved: $isFriendRequestReceived, showFriendRequestButton: $showFriendRequestButton, isCurrentUser: true)
+                        ProfileBar(friends: $friendsFromUser, user: $user, isFriend: $isFriend, isFriendRequestSent: $isFriendRequestSent, isFriendRequestRecieved: $isFriendRequestReceived, showFriendRequestButton: $showFriendRequestButton, isLoading: $isLoading, isCurrentUser: true)
                             .opacity(headerOpacity)
                             .padding(.top, safeArea().top)
                             .padding(.bottom)
@@ -147,13 +147,15 @@ struct ProfileView: View {
             .onAppear{
             }
             .task {
-                await fetchProfileUserAndPosts()
                 
+                await fetchProfileUserAndPosts()
+                isLoading = true
                 friendsFromUser = await userVM.fetchFriendsForUser(user: user)
-                for friend in friendsFromUser{
-                    print("THIS ARE THE UPDATED FRIENDS")
-                    print(friend.tagName)
-                }
+                isLoading = false
+//                for friend in friendsFromUser{
+//                    print("THIS ARE THE UPDATED FRIENDS")
+//                    print(friend.tagName)
+//                }
             }
         }
     }

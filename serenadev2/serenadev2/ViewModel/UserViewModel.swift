@@ -355,9 +355,6 @@ class UserViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func searchFriendsFromUser(){
-        
-    }
     
     func addPostToUser(sender: User, post: Post) {
         var newUser = sender

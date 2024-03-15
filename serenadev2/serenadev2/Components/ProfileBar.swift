@@ -27,6 +27,7 @@ struct ProfileBar: View {
     @Binding var isFriendRequestSent: Bool
     @Binding var isFriendRequestRecieved: Bool
     @Binding var showFriendRequestButton: Bool
+    @Binding var isLoading :Bool
     let isCurrentUser: Bool
     
     var body: some View {
@@ -126,7 +127,7 @@ struct ProfileBar: View {
                         .font(.caption)
                         
                         
-                        NavigationLink(destination: FriendsListView(userTagName: user.tagName, friends: $friends)) {
+                        NavigationLink(destination: FriendsListView(userTagName: user.tagName, friends: $friends, isLoading: $isLoading)) {
                                    VStack {
                                        Text("\(user.friends.count == 0 ? "0" : "\(user.friends.count - 1)")")
                                        Text("Friends")

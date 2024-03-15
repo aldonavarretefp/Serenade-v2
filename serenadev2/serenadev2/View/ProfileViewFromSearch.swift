@@ -32,6 +32,7 @@ struct ProfileViewFromSearch: View {
     @State var isFriendRequestReceived: Bool = false
     @State var showFriendRequestButton: Bool = false
 
+    @State private var isLoading = false
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -43,7 +44,7 @@ struct ProfileViewFromSearch: View {
                 //  PENDING: Check friend requests sent for isFriendRequestSent
 
                 if let user = userVM.user {
-                    ProfileBar(friends: $friends, user: $user, isFriend: $isFriend, isFriendRequestSent: $isFriendRequestSent, isFriendRequestRecieved: $isFriendRequestReceived, showFriendRequestButton: $showFriendRequestButton, isCurrentUser: isSameUserInSession(fromUser: user, toCompareWith: self.user))
+                    ProfileBar(friends: $friends, user: $user, isFriend: $isFriend, isFriendRequestSent: $isFriendRequestSent, isFriendRequestRecieved: $isFriendRequestReceived, showFriendRequestButton: $showFriendRequestButton, isLoading: $isLoading, isCurrentUser: isSameUserInSession(fromUser: user, toCompareWith: self.user))
                 }
 
                 ScrollView (.vertical, showsIndicators: false) {
@@ -82,6 +83,17 @@ struct ProfileViewFromSearch: View {
         }
         .task {
             await fetchProfilePosts()
+            isLoading = true
+            friends = await userVM.fetchFriendsForUser(user: user)
+//            print("FINISHED FETCHING FRIENDS")
+            isLoading = false
+//                print("THIS ARE THE FRIENDS FROM THE SEARCH \(user.name)")
+//                print("THIS ARE THE FRIENDS ")
+//                print(friends.count)
+//                for friend in friends{
+//                    print(friend.tagName)
+//                }
+            
         }
     }
     
@@ -159,15 +171,7 @@ struct ProfileViewFromSearch: View {
                     }
                 }
             }
-            
-            friends = await userVM.fetchFriendsForUser(user: user)
-            print("THIS ARE THE FRIENDS FROM THE SEARCH \(user.name)")
-            print("THIS ARE THE FRIENDS ")
-            print(friends.count)
-            for friend in friends{
-                print(friend.tagName)
-            }
-            
         }
+        
     }
 }

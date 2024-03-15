@@ -16,20 +16,15 @@ struct FriendsListView: View {
     @StateObject private var viewModel = SearchViewModel() // Initialize the view model
     
     
-    @State var historyPeople: [User] = []
     @State var userTagName : String?
     @Binding var friends: [User]
-    @State private var underlineOffset: CGFloat = 0
     
     @EnvironmentObject var userViewModel: UserViewModel
-    
-    private let underlineHeight: CGFloat = 2
-    private let animationDuration = 0.2
     
     @State private var selectedUser: ContentItem?
     
     @State private var filteredFriends: [User]  = []
-    
+    @Binding var isLoading : Bool
     
     var body: some View {
         
@@ -38,35 +33,51 @@ struct FriendsListView: View {
                 VStack(spacing: 0) {
                     
                     
-                    if  viewModel.searchText.isEmpty {
-                        ScrollView {
-                            VStack(spacing: 0){
-                                ForEach(friends, id: \.self) { friend in
-                                    NavigationLink(destination: ProfileViewFromSearch(user: friend)) {
-                                        ItemSmall(item: ContentItem(isPerson: true, user: friend), showArrow: true)
-                                            .padding([.leading, .top, .bottom ])
+                    if isLoading{
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                    .scaleEffect(1.5) // Makes the spinner larger
+                                    .progressViewStyle(CircularProgressViewStyle()) // Customize the spinner
+                                Spacer()
+                            }
+                            Spacer()
+                        }
+                        
+                    }
+                    else {
+                        if  viewModel.searchText.isEmpty {
+                            ScrollView {
+                                VStack(spacing: 0){
+                                    ForEach(friends, id: \.self) { friend in
+                                        NavigationLink(destination: ProfileViewFromSearch(user: friend)) {
+                                            ItemSmall(item: ContentItem(isPerson: true, user: friend), showArrow: true)
+                                                .padding([.leading, .top, .bottom ])
+                                            
+                                        }
+                                        .buttonStyle(.plain)
                                         
                                     }
-                                    .buttonStyle(.plain)
-                                    
                                 }
                             }
-                        }
-                        .scrollDismissesKeyboard(.immediately)
-                    } else {
-                        ScrollView {
-                            VStack(spacing: 0) {
-                                ForEach(filteredFriends, id: \.self) { friend in
-                                    NavigationLink(destination: ProfileViewFromSearch(user: friend), label: {
-                                        ItemSmall(item: ContentItem(isPerson: true, user: friend), showArrow: true)
-                                            .padding([.leading, .top, .bottom])
-                                    })
-                                    .buttonStyle(.plain)
-                                    
+                            .scrollDismissesKeyboard(.immediately)
+                        } else {
+                            ScrollView {
+                                VStack(spacing: 0) {
+                                    ForEach(filteredFriends, id: \.self) { friend in
+                                        NavigationLink(destination: ProfileViewFromSearch(user: friend), label: {
+                                            ItemSmall(item: ContentItem(isPerson: true, user: friend), showArrow: true)
+                                                .padding([.leading, .top, .bottom])
+                                        })
+                                        .buttonStyle(.plain)
+                                        
+                                    }
                                 }
                             }
+                            .scrollDismissesKeyboard(.immediately)
                         }
-                        .scrollDismissesKeyboard(.immediately)
                     }
                 }
                 
@@ -78,7 +89,7 @@ struct FriendsListView: View {
             
             .overlay {
                 
-                if friends.isEmpty && viewModel.searchText.isEmpty {
+                if filteredFriends.isEmpty && !viewModel.searchText.isEmpty {
                     ContentUnavailableView(label: {
                         Label(LocalizedStringKey("NoMatchesFound"), systemImage: "exclamationmark")
                     }, description: {
