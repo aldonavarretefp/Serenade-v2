@@ -338,22 +338,29 @@ class UserViewModel: ObservableObject {
         }
     }
     
-    func searchUsers(tagname: String, completion: @escaping ([User]?) -> Void) {
-        let predicate = NSPredicate(format: "tagName == %@", tagname)
+    func searchUsers(searchText: String, completion: @escaping ([User]?) -> Void) {
+        let predicate = NSPredicate(format: "isActive == 1")
         let recordType = UserRecordKeys.type.rawValue
         CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
             .receive(on: DispatchQueue.main)
             .sink { _ in
-            } receiveValue: { returnedUsers in
-                let friends: [User]? = returnedUsers
-                guard let friendss = friends else {
+                // Handle any subscription-related responses here, if necessary.
+            } receiveValue: { [weak self] (returnedUsers: [User]?) in
+                guard let self = self, let users = returnedUsers else {
                     completion(nil)
                     return
                 }
-                completion(friendss)
+                
+                // Perform local filtering based on searchText
+                let filteredUsers = users.filter { user in
+                    return user.tagName.lowercased().contains(searchText.lowercased()) || user.name.lowercased().contains(searchText.lowercased())
+                }
+                
+                completion(filteredUsers)
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
+
     
     
     func addPostToUser(sender: User, post: Post) {

@@ -210,7 +210,7 @@ struct SearchView: View {
             if selectedTab == .music {
                 viewModel.fetchMusic(with: viewModel.searchText)
             } else {
-                userViewModel.searchUsers(tagname: viewModel.searchText) { returnedUsers in
+                userViewModel.searchUsers(searchText: viewModel.searchText) { returnedUsers in
                     if let returnedUsers = returnedUsers {
                         peopleList = returnedUsers.map({ user in
                             ContentItem(isPerson: true, user: user)
