@@ -101,7 +101,6 @@ extension View {
 #endif
 
 // MARK: - Custom String extensions
-
 extension String {
     var formattedForTagName: String {
         self.lowercased().replacingOccurrences(of: " ", with: "")
@@ -122,7 +121,6 @@ extension Character {
 
 extension String {
     var containsEmoji: Bool { contains { $0.isEmoji } }
-    
 }
 
 extension Color {

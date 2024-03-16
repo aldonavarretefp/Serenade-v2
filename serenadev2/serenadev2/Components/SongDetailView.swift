@@ -86,11 +86,10 @@ struct SongDetailView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                             
                             SongMetaData(song: song)
-                                .padding([.top, .bottom], 10)
+                                .padding(.vertical, 10)
                         }
                         .opacity(metaDataOpacity)
-                        .frame(height: screenWidth - 32)
-                        .padding(.horizontal)
+                        .frame(width: screenWidth - 32, height: screenWidth - 32)
                     }
                     
                     // Info of the passed song

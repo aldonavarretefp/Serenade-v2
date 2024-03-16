@@ -57,7 +57,6 @@ struct SongDetailCoverArt: View {
             KFImage(song.artworkUrlLarge)
                 .onSuccess{ result in
                     self.loadingState.isLoading = false
-                    print("end")
                 }
                 .placeholder{
                     if let songColor = song.bgColor {
@@ -74,18 +73,17 @@ struct SongDetailCoverArt: View {
                 }
                 .onProgress{ receivedSize, totalSize in
                     self.loadingState.isLoading = true
-                    print(loadingState.isLoading)
                 }
                 .fade(duration: 0.5)
                 .resizable()
                 .scaledToFit()
-                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(Color(song.bgColor!), lineWidth: 0.5)
                 )
+                .frame(width: screenWidth - 32, height: screenWidth - 32)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .shadow(color: .black.opacity(0.13), radius: 18, x: 0, y: 8)
-                .padding()
         }
     }
 }
