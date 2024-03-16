@@ -8,69 +8,38 @@
 import SwiftUI
 import MusicKit
 
+// Enum to define the tabs
 enum selectedTab {
     case music
     case people
 }
 
 struct SearchView: View {
+    
+    // MARK: - ViewModel
+    @EnvironmentObject private var userViewModel: UserViewModel
+    @StateObject private var searchViewModel = SearchViewModel()
+    @ObservedObject private var historySongManager = SongHistoryManager.shared
+    @ObservedObject private var historyPeopleManager = PeopleHistoryManager.shared
+    
+    // MARK: - Environment properties
     @Environment(\.colorScheme) private var colorScheme
-    @StateObject private var viewModel = SearchViewModel() // Initialize the view model
     
-    @ObservedObject var historySongManager = SongHistoryManager.shared
-    @ObservedObject var historyPeopleManager = PeopleHistoryManager.shared
-    
-    @State var historySong: [SongModel] = []
-    @State var historyPeople: [User] = []
-    
-    @State private var selectedTab: selectedTab = .music
+    // MARK: - Properties
     @State private var underlineOffset: CGFloat = 0
-    @State var isSongInfoDisplayed: Bool = false
-    
-    @EnvironmentObject var userViewModel: UserViewModel
-    
     private let underlineHeight: CGFloat = 2
     private let animationDuration = 0.2
+    @State var selectedTab: selectedTab = .music
     
-    @State private var selectedSong: ContentItem?
-    @State private var selectedUser: ContentItem?
-    
-    @State private var peopleList: [ContentItem]  = []
-    @State var users: [User] = []
-    
-    init() {
-        loadHistory()
-        
-    }
-    
-    func loadHistory() {
-        Task {
-            historySong = await historySongManager.getHistory()
-            historyPeople = await historyPeopleManager.getHistory()
-        }
-    }
-    
-    func loadUsers() {
-        userViewModel.fetchAllUsers { returnedUsers in
-            if let returnedUsers = returnedUsers {
-                self.users = returnedUsers
-            }
-        }
-    }
-    
+    // MARK: - Body
     var body: some View {
-        
         NavigationStack {
             GeometryReader { geometry in
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
                         // Music tab
-                        Text(LocalizedStringKey("Music"))
-                            .padding(.vertical)
-                            .frame(maxWidth: .infinity)
-                            .background()
+                        TabSelection(selectedTab: .music)
                             .foregroundColor(selectedTab == .music ? colorScheme == .dark ? .white : .black : .callout)
-                            .fontWeight(.semibold)
                             .onTapGesture {
                                 withAnimation(.easeOut(duration: animationDuration)) {
                                     selectedTab = .music
@@ -78,12 +47,8 @@ struct SearchView: View {
                                 }
                             }
                         
-                        // People tab
-                        Text(LocalizedStringKey("People"))
-                            .padding(.vertical)
-                            .frame(maxWidth: .infinity)
-                            .background()
-                            .fontWeight(.semibold)
+                        // people tab
+                        TabSelection(selectedTab: .people)
                             .foregroundColor(selectedTab == .people ? colorScheme == .dark ? .white : .black : .callout)
                             .onTapGesture {
                                 withAnimation(.easeOut(duration: animationDuration)) {
@@ -102,46 +67,47 @@ struct SearchView: View {
                     .frame(height: 50)
                     .background()
                     
+                    // If the user tap on music show the history / search for music
                     if selectedTab == .music {
-                        if self.historySong.count != 0 && viewModel.searchText.isEmpty {
-                            ScrollView {
-                                VStack(spacing: 0) {
-                                    ForEach(self.historySong, id:\.self) { song in
+                        ScrollView{
+                            VStack(spacing: 0){
+                                
+                                // If the history is not empty and the user has not typed anything in the search show history for songs
+                                if searchViewModel.historySong.count != 0 && searchViewModel.searchText.isEmpty {
+                                    ForEach(searchViewModel.historySong, id:\.self) { song in
                                         ItemSmall(item: ContentItem(isPerson: false, song: song), showXMark: true){
                                             historySongManager.removeSong(songId: song.id)
                                             loadHistory()
                                         }
                                         .padding([.leading, .top, .bottom])
                                         .onTapGesture{
-                                            selectedSong = ContentItem(isPerson: false, song: song)
+                                            searchViewModel.selectedSong = ContentItem(isPerson: false, song: song)
                                             historySongManager.addToHistory(song.id)
                                             loadHistory()
                                         }
                                     }
-                                }
-                            }
-                            .scrollDismissesKeyboard(.immediately)
-                        } else {
-                            ScrollView {
-                                VStack(spacing: 0) {
-                                    ForEach(filteredResults) { value in
+                                } else {
+                                    // Show all the filtered results (search for music)
+                                    ForEach(searchViewModel.filteredResults(for: .music)) { value in
                                         ItemSmall(item: value)
                                             .padding()
                                             .onTapGesture{
-                                                selectedSong = value
+                                                searchViewModel.selectedSong = value
                                                 historySongManager.addToHistory(value.song!.id)
                                                 loadHistory()
                                             }
                                     }
                                 }
                             }
-                            .scrollDismissesKeyboard(.immediately)
                         }
-                    } else {
-                        if self.historyPeople.count != 0 && viewModel.searchText.isEmpty {
-                            ScrollView {
-                                VStack(spacing: 0){
-                                    ForEach(self.historyPeople, id:\.self) { user in
+                        .scrollDismissesKeyboard(.immediately)
+                    } else { // If the user tap on people show the history / search for users
+                        ScrollView{
+                            VStack(spacing: 0){
+                                
+                                // If the history is not empty and the user has not typed anything in the search show history for people
+                                if searchViewModel.historyPeople.count != 0 && searchViewModel.searchText.isEmpty {
+                                    ForEach(searchViewModel.historyPeople, id:\.self) { user in
                                         NavigationLink(destination: ProfileViewFromSearch(user: user), label: {
                                             ItemSmall(item: ContentItem(isPerson: true, user: user), showXMark: true){
                                                 historyPeopleManager.removeUser(userID: user.record.recordID.recordName)
@@ -150,13 +116,10 @@ struct SearchView: View {
                                             .padding([.leading, .top, .bottom])
                                         })
                                     }
-                                }
-                            }
-                            .scrollDismissesKeyboard(.immediately)
-                        } else {
-                            ScrollView {
-                                VStack(spacing: 0) {
-                                    ForEach(filteredResults) { value in
+                                    
+                                } else {
+                                    // Show all the filtered results (search for people)
+                                    ForEach(searchViewModel.filteredResults(for: .people)) { value in
                                         NavigationLink(destination: ProfileViewFromSearch(user: value.user!), label: {
                                             ItemSmall(item: ContentItem(isPerson: true, user: value.user), showArrow: true)
                                                 .padding([.leading, .top, .bottom])
@@ -165,15 +128,15 @@ struct SearchView: View {
                                     }
                                 }
                             }
-                            .scrollDismissesKeyboard(.immediately)
                         }
+                        .scrollDismissesKeyboard(.immediately)
                     }
                 }
             }
             .overlay {
                 if selectedTab == .music {
-                    if viewModel.searchText.isEmpty {
-                        if self.historySong.count == 0 {
+                    if searchViewModel.searchText.isEmpty {
+                        if searchViewModel.historySong.count == 0 {
                             // Display this when no search has been made yet (for Music tab only)
                             ContentUnavailableView(label: {
                                 Label(LocalizedStringKey("SearchForMusic"), systemImage: "music.note")
@@ -182,7 +145,7 @@ struct SearchView: View {
                             })
                         }
                         
-                    } else if filteredResults.isEmpty {
+                    } else if searchViewModel.filteredResults(for: .music).isEmpty {
                         // Display this when there are no results (for Music tab only)
                         ContentUnavailableView(label: {
                             Label(LocalizedStringKey("NoMatchesFound"), systemImage: "exclamationmark")
@@ -192,8 +155,8 @@ struct SearchView: View {
                         
                     }
                 } else if selectedTab == .people {
-                    if viewModel.searchText.isEmpty {
-                        if self.historyPeople.count == 0 && self.peopleList.count == 0 && viewModel.searchText == "" {
+                    if searchViewModel.searchText.isEmpty {
+                        if searchViewModel.historyPeople.count == 0 && searchViewModel.peopleList.count == 0 && searchViewModel.searchText == "" {
                             // Display this when no search has been made yet (for Music tab only)
                             ContentUnavailableView(label: {
                                 Label(LocalizedStringKey("SearchForPeople"), systemImage: "person.3.fill")
@@ -202,7 +165,8 @@ struct SearchView: View {
                             })
                         }
                         
-                    } else if peopleList.isEmpty {
+                    } else if searchViewModel.peopleList.isEmpty {
+                        // Display this when there are no results (for Pople tab only)
                         ContentUnavailableView(label: {
                             Label(LocalizedStringKey("NoMatchesFound"), systemImage: "exclamationmark")
                         }, description: {
@@ -213,30 +177,22 @@ struct SearchView: View {
                 }
             }
             .background(.viewBackground)
-            .searchable(text: $viewModel.searchText)
+            .searchable(text: $searchViewModel.searchText)
             .disableAutocorrection(true)
         }
-        .onChange(of: viewModel.searchText) {
+        .onChange(of: searchViewModel.searchText) {
+            // Everytime the user type perform the search
             if selectedTab == .music {
-                viewModel.fetchMusic(with: viewModel.searchText)
+                searchViewModel.fetchMusic(with: searchViewModel.searchText)
             } else {
-                /*userViewModel.searchUsers(searchText: viewModel.searchText) { returnedUsers in
-                 if let returnedUsers = returnedUsers {
-                 peopleList = returnedUsers.map({ user in
-                 ContentItem(isPerson: true, user: user)
-                 })
-                 }
-                 }*/
-                self.peopleList = self.users.filter({ user in
-                    user.tagName.lowercased().contains(viewModel.searchText.lowercased()) || user.name.lowercased().contains(viewModel.searchText.lowercased())
+                searchViewModel.peopleList = searchViewModel.users.filter({ user in
+                    user.tagName.lowercased().contains(searchViewModel.searchText.lowercased()) || user.name.lowercased().contains(searchViewModel.searchText.lowercased())
                 }).map({ user in
                     ContentItem(isPerson: true, user: user)
                 })
-                print(viewModel.searchText)
             }
         }
-        
-        .fullScreenCover(item: $selectedSong){ item in
+        .fullScreenCover(item: $searchViewModel.selectedSong){ item in
             SongDetailView(song: item.song!)
         }
         .onAppear{
@@ -247,15 +203,23 @@ struct SearchView: View {
         }
     }
     
-    var filteredResults: [ContentItem] {
-        if selectedTab == .music {
-            return viewModel.songs.map { song in
-                ContentItem(isPerson: false, song: song)
-            }
-        } else {
-            return peopleList
+    // Load the song and people history from the historymanager
+    func loadHistory() {
+        Task {
+            searchViewModel.historySong = await historySongManager.getHistory()
+            searchViewModel.historyPeople = await historyPeopleManager.getHistory()
         }
     }
+    
+    // Load all the users in the app
+    func loadUsers() {
+        userViewModel.fetchAllUsers { returnedUsers in
+            if let returnedUsers = returnedUsers {
+                searchViewModel.users = returnedUsers
+            }
+        }
+    }
+    
 }
 
 struct SearchView_Previews: PreviewProvider {

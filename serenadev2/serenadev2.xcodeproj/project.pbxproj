@@ -11,6 +11,7 @@
 		4447C0562B920FD100593AF5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4447C0552B920FD100593AF5 /* NotificationsView.swift */; };
 		4447C05A2B92223700593AF5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4447C05C2B92223700593AF5 /* Localizable.strings */; };
 		4447C07C2B95B97A00593AF5 /* SongHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */; };
+		445E95F82BA5F3A5004C8BB1 /* TabSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445E95F72BA5F3A5004C8BB1 /* TabSelection.swift */; };
 		446800292B90C87D00A858F1 /* SongMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446800282B90C87D00A858F1 /* SongMetaData.swift */; };
 		446979382B9A59F900A6A8FC /* PostInstagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446979372B9A59F900A6A8FC /* PostInstagramView.swift */; };
 		448CF82B2B9CA7910065B77F /* PostComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448CF82A2B9CA7910065B77F /* PostComponent.swift */; };
@@ -103,6 +104,7 @@
 		4447C05D2B92223900593AF5 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4447C05E2B92223900593AF5 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongHistoryManager.swift; sourceTree = "<group>"; };
+		445E95F72BA5F3A5004C8BB1 /* TabSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSelection.swift; sourceTree = "<group>"; };
 		446800282B90C87D00A858F1 /* SongMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongMetaData.swift; sourceTree = "<group>"; };
 		446979372B9A59F900A6A8FC /* PostInstagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostInstagramView.swift; sourceTree = "<group>"; };
 		448CF82A2B9CA7910065B77F /* PostComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComponent.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 				44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */,
 				448CF82A2B9CA7910065B77F /* PostComponent.swift */,
 				44ADCC542B9F91DF008A050E /* PostComponentInProfile.swift */,
+				445E95F72BA5F3A5004C8BB1 /* TabSelection.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -634,6 +637,7 @@
 				F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */,
 				C4D5111B2B8F759300E95549 /* SongModel.swift in Sources */,
 				C40C09B82B863EFA009BE4C5 /* ActionButton.swift in Sources */,
+				445E95F82BA5F3A5004C8BB1 /* TabSelection.swift in Sources */,
 				EAD6383F2B993877007E2B67 /* ProfileViewFromSearch.swift in Sources */,
 				EA5A43DE2B88F66800F6F04C /* SettingsView.swift in Sources */,
 			);

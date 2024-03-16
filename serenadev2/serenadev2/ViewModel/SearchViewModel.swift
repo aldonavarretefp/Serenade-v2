@@ -14,24 +14,41 @@ import MusicKit
 /// A ViewModel class responsible for handling the search functionality within the application.
 /// It utilizes the MusicKit API to search for songs based on user input and manages the application's state related to the search operation.
 class SearchViewModel: ObservableObject {
-    // MARK: - Properties
     
-    /// The search text input by the user. Observing this property allows the view to update in response to changes.
+    // MARK: - Properties
+    // The search text input by the user. Observing this property allows the view to update in response to changes.
     @Published var searchText = ""
     @Published var isLoading = false
     
-    /// The list of songs retrieved from the search. It's observed by the view to update the song list display.
+    // The list of songs retrieved from the search. It's observed by the view to update the song list display.
     @Published var songs: [SongModel] = []
     
-    /// A set to hold all the cancellables, i.e., the subscriptions to publishers. This is necessary to keep the subscriptions alive.
+    // A set to hold all the cancellables, i.e., the subscriptions to publishers. This is necessary to keep the subscriptions alive.
     private var cancellables = Set<AnyCancellable>()
     
-    /// The delay in seconds before the search is executed, used for debouncing the search input to reduce API calls.
+    // The delay in seconds before the search is executed, used for debouncing the search input to reduce API calls.
     private let searchDelay = 0.5
     
-    // MARK: - Initializer
+    // Array of the songs in history
+    @Published var historySong: [SongModel] = []
     
-    /// Initializes the SearchViewModel, setting up the necessary bindings and subscriptions.
+    // Array of the people in history
+    @Published var historyPeople: [User] = []
+    
+    // The selected song
+    @Published var selectedSong: ContentItem?
+    
+    // The selected user
+    @Published var selectedUser: ContentItem?
+    
+    // List of people to search
+    @Published var peopleList: [ContentItem] = []
+    
+    // List of all the active users
+    @Published var users: [User] = []
+    
+    // MARK: - Initializer
+    // Initializes the SearchViewModel, setting up the necessary bindings and subscriptions.
     init() {
         $searchText
         // Removes consecutive duplicates to prevent unnecessary searches.
@@ -47,9 +64,8 @@ class SearchViewModel: ObservableObject {
     }
     
     // MARK: - Methods
-    
-    /// Fetches music from the MusicKit API based on the current search text.
-    /// - Parameter searchText: The text to search for in the MusicKit API.
+    // Fetches music from the MusicKit API based on the current search text.
+    // - Parameter searchText: The text to search for in the MusicKit API.
     func fetchMusic(with searchText: String) {
         
         if searchText.isEmpty {
@@ -100,6 +116,17 @@ class SearchViewModel: ObservableObject {
             default:
                 print("Not authorized to access MusicKit")
             }
+        }
+    }
+    
+    // Filter the results for the selected tab
+    func filteredResults(for selectedTab: selectedTab) -> [ContentItem] {
+        if selectedTab == .music {
+            return songs.map { song in
+                ContentItem(isPerson: false, song: song)
+            }
+        } else {
+            return peopleList
         }
     }
 }
