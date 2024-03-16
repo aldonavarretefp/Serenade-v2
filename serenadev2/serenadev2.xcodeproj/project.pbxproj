@@ -227,15 +227,6 @@
 			path = ViewExtensions;
 			sourceTree = "<group>";
 		};
-		C4D511172B8E67DA00E95549 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				C4D511182B8E67F000E95549 /* SearchViewModel.swift */,
-				F76E0B202B99B0F00048DC83 /* ProfilePicViewModel.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
 		C4D5111C2B8FBF6200E95549 /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -323,7 +314,6 @@
 			children = (
 				4447C0572B9221E100593AF5 /* Resources */,
 				C4D5111C2B8FBF6200E95549 /* Service */,
-				C4D511172B8E67DA00E95549 /* ViewModel */,
 				F137D2312B839A82006264C1 /* serenadev2 */,
 				F137D2462B839A84006264C1 /* serenadev2Tests */,
 				F137D2502B839A84006264C1 /* serenadev2UITests */,
@@ -420,7 +410,9 @@
 				F709F6C12B90CA0000B60216 /* PostViewModel.swift */,
 				F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */,
 				C48F64662B99DDC6006AD369 /* PushNotificationViewModel.swift */,
+				F76E0B202B99B0F00048DC83 /* ProfilePicViewModel.swift */,
 				44E7BA292BA5C4F200E35FE4 /* SongDetailViewModel.swift */,
+				C4D511182B8E67F000E95549 /* SearchViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
