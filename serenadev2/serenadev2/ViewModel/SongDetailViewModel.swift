@@ -11,15 +11,7 @@ import SwiftUI
 final class SongDetailViewModel: ObservableObject {
     
     // MARK: - Properties
-    // Status of the daily sheet
-    @Published var isDailySheetDisplayed: Bool = false
-    
-    // Status of the open with sheet
-    @Published var isOpenWithSheetDisplayed: Bool = false
-    
-    // Opacity of the meta data
-    @Published var metaDataOpacity = 0.0
-    
+    // Message to alert an error
     @Published var alertMessage: String?
     
     // Get the user favorite streaming apps
@@ -55,21 +47,17 @@ final class SongDetailViewModel: ObservableObject {
     // MARK: - Functions
     // Action to do when pressing the open with button
     func openWithAction(_ song: SongModel) {
-        if selectedStreamingApps.count != 1 {
-            toggleOpenWithSheet()
-        } else {
-            guard let streamingApp = self.selectedStreamingApps.first else { return }
-            
-            switch streamingApp {
-            case .appleMusic:
-                openWithAppleMusic(song: song)
-            case .spotify:
-                openWithSpotify(song: song)
-            case .youtubeMusic:
-                openWithYouTubeMusic(song: song)
-            case .amazonMusic:
-                openWithAmazonMusic(song: song)
-            }
+        guard let streamingApp = self.selectedStreamingApps.first else { return }
+        
+        switch streamingApp {
+        case .appleMusic:
+            openWithAppleMusic(song: song)
+        case .spotify:
+            openWithSpotify(song: song)
+        case .youtubeMusic:
+            openWithYouTubeMusic(song: song)
+        case .amazonMusic:
+            openWithAmazonMusic(song: song)
         }
     }
     
@@ -142,19 +130,5 @@ final class SongDetailViewModel: ObservableObject {
             return
         }
         UIApplication.shared.open(amazonMusicUrl)
-    }
-    
-    // Toggle to show the daily sheet
-    func toggleDailySheet() {
-        DispatchQueue.main.async {
-            self.isDailySheetDisplayed.toggle()
-        }
-    }
-    
-    // Toggle to show the open with sheet
-    func toggleOpenWithSheet() {
-        DispatchQueue.main.async {
-            self.isOpenWithSheetDisplayed.toggle()
-        }
     }
 }

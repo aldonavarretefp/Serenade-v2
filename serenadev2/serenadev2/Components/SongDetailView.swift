@@ -19,6 +19,14 @@ struct SongDetailView: View {
     
     // MARK: - Properties
     var song: SongModel
+    // Status of the daily sheet
+    @State var isDailySheetDisplayed: Bool = false
+    
+    // Status of the open with sheet
+    @State var isOpenWithSheetDisplayed: Bool = false
+    
+    // Opacity of the meta data
+    @State var metaDataOpacity = 0.0
     
     // Create an instance of PreviewPlayer once
     let previewPlayer: PreviewPlayer
@@ -68,14 +76,14 @@ struct SongDetailView: View {
                             SongMetaData(song: song)
                                 .padding(.vertical, 10)
                         }
-                        .opacity(songViewModel.metaDataOpacity)
+                        .opacity(metaDataOpacity)
                         .frame(width: screenWidth - 32, height: screenWidth - 32)
                     }
                     
                     // Info of the passed song
-                    SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff), isMetaDataDisplayed: songViewModel.metaDataOpacity == 1.0 ? true : false){
+                    SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff), isMetaDataDisplayed: metaDataOpacity == 1.0 ? true : false){
                         withAnimation(.linear(duration: 0.3)){
-                            songViewModel.metaDataOpacity = songViewModel.metaDataOpacity == 1.0 ? 0.0 : 1.0
+                            metaDataOpacity = metaDataOpacity == 1.0 ? 0.0 : 1.0
                         }
                     }
                     .padding(.horizontal)
@@ -92,9 +100,9 @@ struct SongDetailView: View {
                     VStack(spacing: 15){
                         // Daily button
                         ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false, isDisabled: postViewModel.isDailyPosted) {
-                            songViewModel.isDailySheetDisplayed.toggle()
+                            isDailySheetDisplayed.toggle()
                         }
-                        .sheet(isPresented: $songViewModel.isDailySheetDisplayed){
+                        .sheet(isPresented: $isDailySheetDisplayed){
                             DailySongView(selectedSongBinding: song, isSongFromDaily: false)
                                 .presentationDetents([.fraction(0.7)])
                         }
@@ -104,8 +112,8 @@ struct SongDetailView: View {
                         // If the user selects more than one favorite app open the open with sheet
                         if songViewModel.selectedStreamingApps.count != 1 {
                             ActionButton(label: LocalizedStringKey("OpenWith"), symbolName: "arrow.up.forward.circle.fill", fontColor: Color(song.priColor!), backgroundColor: Color(song.bgColor!), isShareDaily: false, isDisabled: false) {
-                                songViewModel.isOpenWithSheetDisplayed.toggle()
-                            }.sheet(isPresented: $songViewModel.isOpenWithSheetDisplayed){
+                                isOpenWithSheetDisplayed.toggle()
+                            }.sheet(isPresented: $isOpenWithSheetDisplayed){
                                 OpenWithView(buttonTypes: [.appleMusic, .spotify, .youtubeMusic], songTitle: song.title, songArtist: song.artists, songId: song.id)
                                     .presentationDetents([.fraction(0.4)])
                             }
