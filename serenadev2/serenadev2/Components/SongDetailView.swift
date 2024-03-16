@@ -9,54 +9,34 @@ import SwiftUI
 
 struct SongDetailView: View {
     
+    // MARK: - ViewModel
+    @EnvironmentObject private var postViewModel: PostViewModel
+    @StateObject private var songViewModel = SongDetailViewModel()
+    @StateObject private var loadingStateModel = LoadingState()
+    
     // MARK: - Environment properties
     @Environment(\.dismiss) var dismiss
     
-    @EnvironmentObject var postViewModel: PostViewModel
-    
-    @State var isDailySheetDisplayed: Bool = false
-    @State var isOpenWithSheetDisplayed: Bool = false
-    
     // MARK: - Properties
     var song: SongModel
-    var seconds: Double = 15.0
-    
-    @State var metaDataOpacity = 0.0
     
     // Create an instance of PreviewPlayer once
     let previewPlayer: PreviewPlayer
     
-    // Initialization of the preview player
+    // Initialization of the preview player and the received song
     init(song: SongModel) {
         self.song = song
         self.previewPlayer = PreviewPlayer(mainColor: Color(song.bgColor!), audioURL: song.previewUrl!, fontColor: Color(song.priColor!), secondaryColor: Color(song.secColor!), seconds: 15)
-        
     }
     
-    let selectedStreamingApps: [ButtonType] = [.appleMusic, .spotify, .youtubeMusic].filter {
-        if $0 == .appleMusic {
-            return UserDefaults.standard.bool(forKey: "selectedAppleMusic")
-        } else if $0 == .spotify {
-            return UserDefaults.standard.bool(forKey: "selectedSpotify")
-        } else if $0 == .youtubeMusic {
-            return UserDefaults.standard.bool(forKey: "selectedYouTubeMusic")
-        } else {
-            // Si ninguna de las condiciones anteriores se cumple, devolver false (o true según lo que necesites)
-            return false
-        }
-    }
-    
-    @StateObject private var loadingState = LoadingState()
-    
+    // Screen width of the device
+    let screenWidth = UIScreen.screenWidth
     
     // MARK: - Body
     var body: some View {
-        
-        let screenWidth = UIScreen.main.bounds.width
-        
         NavigationStack{
             ZStack{
-                // Gradients to add the art work color to the background
+                // Gradients to add the artwork color to the background
                 LinearGradient(gradient: Gradient(colors: [Color(song.bgColor!), Color(hex: 0x101010)]),
                                startPoint: .top,
                                endPoint: .bottom)
@@ -72,10 +52,10 @@ struct SongDetailView: View {
                     ZStack{
                         // Art work of the passed song
                         SongDetailCoverArt(song: song)
-                            .environmentObject(loadingState)
+                            .environmentObject(loadingStateModel)
                             .onAppear {
                                 // Set isLoading to true when the view appears
-                                self.loadingState.isLoading = true
+                                loadingStateModel.isLoading = true
                             }
                         
                         // Song meta data
@@ -88,14 +68,14 @@ struct SongDetailView: View {
                             SongMetaData(song: song)
                                 .padding(.vertical, 10)
                         }
-                        .opacity(metaDataOpacity)
+                        .opacity(songViewModel.metaDataOpacity)
                         .frame(width: screenWidth - 32, height: screenWidth - 32)
                     }
                     
                     // Info of the passed song
-                    SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff), isMetaDataDisplayed: metaDataOpacity == 1.0 ? true : false){
+                    SongDetailTitleInfo(title: song.title, author: song.artists, fontColor: Color(hex: 0xffffff), isMetaDataDisplayed: songViewModel.metaDataOpacity == 1.0 ? true : false){
                         withAnimation(.linear(duration: 0.3)){
-                            metaDataOpacity = metaDataOpacity == 1.0 ? 0.0 : 1.0
+                            songViewModel.metaDataOpacity = songViewModel.metaDataOpacity == 1.0 ? 0.0 : 1.0
                         }
                     }
                     .padding(.horizontal)
@@ -104,120 +84,39 @@ struct SongDetailView: View {
                     
                     // View to play the preview of the passed song
                     previewPlayer
-                        .environmentObject(loadingState)
+                        .environmentObject(loadingStateModel)
                     
                     Spacer()
                     
                     // Daily and open with buttons
                     VStack(spacing: 15){
                         // Daily button
-                        
                         ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .black, backgroundColor: .white.opacity(0.8), isShareDaily: false, isDisabled: postViewModel.isDailyPosted) {
-                            isDailySheetDisplayed.toggle()
+                            songViewModel.isDailySheetDisplayed.toggle()
                         }
-                        .sheet(isPresented: $isDailySheetDisplayed){
+                        .sheet(isPresented: $songViewModel.isDailySheetDisplayed){
                             DailySongView(song: song, isSongFromDaily: false)
                                 .presentationDetents([.fraction(0.7)])
                         }
                         
                         
                         // Open with button
-                        if selectedStreamingApps.count != 1 {
+                        // If the user selects more than one favorite app open the open with sheet
+                        if songViewModel.selectedStreamingApps.count != 1 {
                             ActionButton(label: LocalizedStringKey("OpenWith"), symbolName: "arrow.up.forward.circle.fill", fontColor: Color(song.priColor!), backgroundColor: Color(song.bgColor!), isShareDaily: false, isDisabled: false) {
-                                isOpenWithSheetDisplayed.toggle()
-                            }.sheet(isPresented: $isOpenWithSheetDisplayed){
+                                songViewModel.isOpenWithSheetDisplayed.toggle()
+                            }.sheet(isPresented: $songViewModel.isOpenWithSheetDisplayed){
                                 OpenWithView(buttonTypes: [.appleMusic, .spotify, .youtubeMusic], songTitle: song.title, songArtist: song.artists, songId: song.id)
                                     .presentationDetents([.fraction(0.4)])
                             }
                         } else {
-                            var buttonText: LocalizedStringKey {
-                                if selectedStreamingApps.count == 1 {
-                                    switch selectedStreamingApps[0] {
-                                    case .appleMusic:
-                                        return LocalizedStringKey("OpenWithAppleMusic")
-                                    case .spotify:
-                                        return LocalizedStringKey("OpenWithSpotify")
-                                    case .youtubeMusic:
-                                        return LocalizedStringKey("OpenWithYouTubeMusic")
-                                    case .amazonMusic:
-                                        return LocalizedStringKey("OpenWithAmazonMusic")
-                                    }
-                                } else {
-                                    return "Open With"
-                                }
-                            }
-                            
-                            var openWithAction: (() -> Void)? {
-                                if let streamingApp = selectedStreamingApps.first {
-                                    switch streamingApp {
-                                    case .appleMusic:
-                                        return {
-                                            Task {
-                                                let albumID = await requestIDAlbum(songId: song.id)
-                                                DispatchQueue.main.async {
-                                                    let urlString = "https://music.apple.com/us/album/\(albumID)?i=\(song.id)"
-                                                    if let url = URL(string: urlString), !albumID.isEmpty {
-                                                        UIApplication.shared.open(url)
-                                                    } else {
-                                                        // Handle error, e.g., show an alert
-                                                        print("Invalid URL or Album ID")
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    case .spotify:
-                                        return {
-                                            if let encodedArtist = song.artists.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-                                               let encodedTitle = song.title.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                                                
-                                                let urlString = "https://open.spotify.com/search/\(encodedTitle)%20\(encodedArtist)"
-                                                
-                                                guard let spotifyUrl = URL(string: urlString) else { return }
-                                                UIApplication.shared.open(spotifyUrl)
-                                            } else {
-                                                print("Unable to create URL: Artist or title is nil")
-                                            }
-                                        }
-                                    case .youtubeMusic:
-                                        return {
-                                            if let encodedArtist = song.artists.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-                                               let encodedTitle = song.title.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                                                
-                                                let urlString = "https://music.youtube.com/search?q=\(encodedTitle)%20\(encodedArtist)"
-                                                guard let youtubeMusicUrl = URL(string: urlString) else { return }
-                                                UIApplication.shared.open(youtubeMusicUrl)
-                                            } else {
-                                                print("Unable to create URL: Artist or title is nil")
-                                            }
-                                        }
-                                    case .amazonMusic:
-                                        return {
-                                            if let encodedArtist = song.artists.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-                                               let encodedTitle = song.title.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                                                
-                                                let urlString = "https://music.amazon.com/search/\(encodedTitle)%20\(encodedArtist)?filter=IsLibrary%7Cfalse&sc=none"
-                                                guard let amazonMusicUrl = URL(string: urlString) else { return }
-                                                UIApplication.shared.open(amazonMusicUrl)
-                                            } else {
-                                                print("Unable to create URL: Artist or title is nil")
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    return nil
-                                }
-                            }
-                            
-                            ActionButton(label: buttonText, symbolName: "arrow.up.forward.circle.fill", fontColor: Color(song.priColor!), backgroundColor: Color(song.bgColor!), isShareDaily: false, isDisabled: false) {
-                                if let openWithAction = openWithAction {
-                                    openWithAction()
-                                }
+                            // The user selected just one favorite streaming app
+                            ActionButton(label: songViewModel.buttonText, symbolName: "arrow.up.forward.circle.fill", fontColor: Color(song.priColor!), backgroundColor: Color(song.bgColor!), isShareDaily: false, isDisabled: false) {
+                                songViewModel.openWithAction(self.song)
                             }
                         }
-                        
                     }
                     .padding()
-                    
                 }
             }
             .toolbarBackground(.hidden, for: .navigationBar)
@@ -238,10 +137,20 @@ struct SongDetailView: View {
                 }
             }
         }
+        .alert(isPresented: Binding<Bool>(
+            get: { songViewModel.alertMessage != nil },
+            set: { _ in songViewModel.alertMessage = nil }
+        )) {
+            Alert(
+                title: Text("Error"),
+                message: Text(songViewModel.alertMessage ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
 }
 
-
+// MARK: - Preview
 #Preview {
     SongDetailView(song: SongModel(
         id: "1",

@@ -17,6 +17,7 @@
 		44ADCC552B9F91DF008A050E /* PostComponentInProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ADCC542B9F91DF008A050E /* PostComponentInProfile.swift */; };
 		44D1A4212B91DAC200BE6F92 /* NotificationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */; };
 		44D1A4232B91DB3100BE6F92 /* NotificationActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */; };
+		44E7BA2A2BA5C4F200E35FE4 /* SongDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E7BA292BA5C4F200E35FE4 /* SongDetailViewModel.swift */; };
 		C402E7D72B8CD42D004EC79C /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402E7D62B8CD42D004EC79C /* CustomTabBar.swift */; };
 		C402E7D92B8CD444004EC79C /* TabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402E7D82B8CD444004EC79C /* TabBarItem.swift */; };
 		C402E7DD2B8CD4E7004EC79C /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402E7DC2B8CD4E7004EC79C /* FeedView.swift */; };
@@ -108,6 +109,7 @@
 		44ADCC542B9F91DF008A050E /* PostComponentInProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComponentInProfile.swift; sourceTree = "<group>"; };
 		44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationItem.swift; sourceTree = "<group>"; };
 		44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationActionButton.swift; sourceTree = "<group>"; };
+		44E7BA292BA5C4F200E35FE4 /* SongDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailViewModel.swift; sourceTree = "<group>"; };
 		C402E7D62B8CD42D004EC79C /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		C402E7D82B8CD444004EC79C /* TabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItem.swift; sourceTree = "<group>"; };
 		C402E7DC2B8CD4E7004EC79C /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
@@ -418,6 +420,7 @@
 				F709F6C12B90CA0000B60216 /* PostViewModel.swift */,
 				F7AE69242B90B5C5003C6A7C /* FriendRequestsViewModel.swift */,
 				C48F64662B99DDC6006AD369 /* PushNotificationViewModel.swift */,
+				44E7BA292BA5C4F200E35FE4 /* SongDetailViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -590,6 +593,7 @@
 				F137D2352B839A82006264C1 /* ContentView.swift in Sources */,
 				EA9BC9F62B87960900292705 /* ProfileView.swift in Sources */,
 				EA9BC9E82B83A44800292705 /* ProfileBar.swift in Sources */,
+				44E7BA2A2BA5C4F200E35FE4 /* SongDetailViewModel.swift in Sources */,
 				EA36A1A72B8F7900007F56FD /* AppInfoSheet.swift in Sources */,
 				C48F64672B99DDC6006AD369 /* PushNotificationViewModel.swift in Sources */,
 				F7E810CF2B921E6A00000946 /* UserViewModel.swift in Sources */,
