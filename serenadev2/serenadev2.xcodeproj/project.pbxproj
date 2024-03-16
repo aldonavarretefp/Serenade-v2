@@ -13,6 +13,7 @@
 		4447C07C2B95B97A00593AF5 /* SongHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */; };
 		445E95F82BA5F3A5004C8BB1 /* TabSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445E95F72BA5F3A5004C8BB1 /* TabSelection.swift */; };
 		445E95FC2BA614DD004C8BB1 /* SelectSongViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445E95FB2BA614DD004C8BB1 /* SelectSongViewModel.swift */; };
+		445E95FE2BA624F6004C8BB1 /* HeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445E95FD2BA624F6004C8BB1 /* HeaderViewModel.swift */; };
 		446800292B90C87D00A858F1 /* SongMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446800282B90C87D00A858F1 /* SongMetaData.swift */; };
 		446979382B9A59F900A6A8FC /* PostInstagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446979372B9A59F900A6A8FC /* PostInstagramView.swift */; };
 		448CF82B2B9CA7910065B77F /* PostComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448CF82A2B9CA7910065B77F /* PostComponent.swift */; };
@@ -107,6 +108,7 @@
 		4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongHistoryManager.swift; sourceTree = "<group>"; };
 		445E95F72BA5F3A5004C8BB1 /* TabSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSelection.swift; sourceTree = "<group>"; };
 		445E95FB2BA614DD004C8BB1 /* SelectSongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSongViewModel.swift; sourceTree = "<group>"; };
+		445E95FD2BA624F6004C8BB1 /* HeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderViewModel.swift; sourceTree = "<group>"; };
 		446800282B90C87D00A858F1 /* SongMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongMetaData.swift; sourceTree = "<group>"; };
 		446979372B9A59F900A6A8FC /* PostInstagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostInstagramView.swift; sourceTree = "<group>"; };
 		448CF82A2B9CA7910065B77F /* PostComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComponent.swift; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 				C40C09B22B863C49009BE4C5 /* SongDetailView.swift */,
 				C49B42112B87869800FD66F9 /* SearchView.swift */,
 				EA9BC9F52B87960900292705 /* ProfileView.swift */,
+				445E95FD2BA624F6004C8BB1 /* HeaderViewModel.swift */,
 				EAD6383E2B993877007E2B67 /* ProfileViewFromSearch.swift */,
 				EA5A43DD2B88F66800F6F04C /* SettingsView.swift */,
 				C402E7DC2B8CD4E7004EC79C /* FeedView.swift */,
@@ -644,6 +647,7 @@
 				445E95F82BA5F3A5004C8BB1 /* TabSelection.swift in Sources */,
 				EAD6383F2B993877007E2B67 /* ProfileViewFromSearch.swift in Sources */,
 				EA5A43DE2B88F66800F6F04C /* SettingsView.swift in Sources */,
+				445E95FE2BA624F6004C8BB1 /* HeaderViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
