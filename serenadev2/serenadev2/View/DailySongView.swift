@@ -18,7 +18,7 @@ struct DailySongView: View {
     @State var  characterLimit = 150
     @State private var isPresentingSearchSong = false //for modal presentation of SearchSong
     @State private var isLoading: Bool = false
-    @State var song: SongModel? // Optional to handle the case where no song is selected
+    @State var selectedSongBinding: SongModel? // Optional to handle the case where no song is selected
     //State fot the caption
     @FocusState var isTextEditorFocused : Bool
     @EnvironmentObject var userViewModel: UserViewModel
@@ -40,7 +40,7 @@ struct DailySongView: View {
                         .fontWeight(.light)
                         .foregroundStyle(.callout)
                     
-                    if let song = song  {
+                    if let song = selectedSongBinding  {
                         
                         if isSongFromDaily {
                             Button(action: {
@@ -71,7 +71,7 @@ struct DailySongView: View {
                                 
                             }
                             .sheet(isPresented: $isPresentingSearchSong) {
-                                SelectSongView(song: $song)
+                                SelectSongView(song: $selectedSongBinding)
                                     .presentationDetents([.medium, .large])
                             }
                             .buttonStyle(.plain)
@@ -106,7 +106,7 @@ struct DailySongView: View {
                                 isPresentingSearchSong = true
                             }
                             .sheet(isPresented: $isPresentingSearchSong) {
-                                SelectSongView(song: $song)
+                                SelectSongView(song: $selectedSongBinding)
                                     .presentationDetents([.medium, .large])
                             }
                         }
@@ -127,9 +127,9 @@ struct DailySongView: View {
                     Spacer()
                     // Enable the 'Daily' button only if a song is selected
                     
-                    ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: song == nil || isLoading || postViewModel.isDailyPosted || (postViewModel.dailySong != nil), isLoading: isLoading) {
+                    ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: selectedSongBinding == nil || isLoading || postViewModel.isDailyPosted || (postViewModel.dailySong != nil), isLoading: isLoading) {
                         
-                        guard var user = userViewModel.user, let song = song else {
+                        guard var user = userViewModel.user, let song = selectedSongBinding else {
                             print("ERROR: User does not exist")
                             return
                         }
@@ -194,7 +194,7 @@ struct DailySongView: View {
         var user = user
         // User has tapped on the daily button
         postViewModel.createAPost(post: post) {
-            postViewModel.dailySong = song
+            postViewModel.dailySong = selectedSongBinding
             postViewModel.isDailyPosted = true
             user.streak += 1
             userViewModel.updateUser(updatedUser: user)

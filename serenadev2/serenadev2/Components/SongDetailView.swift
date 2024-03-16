@@ -95,7 +95,7 @@ struct SongDetailView: View {
                             songViewModel.isDailySheetDisplayed.toggle()
                         }
                         .sheet(isPresented: $songViewModel.isDailySheetDisplayed){
-                            DailySongView(song: song, isSongFromDaily: false)
+                            DailySongView(selectedSongBinding: song, isSongFromDaily: false)
                                 .presentationDetents([.fraction(0.7)])
                         }
                         

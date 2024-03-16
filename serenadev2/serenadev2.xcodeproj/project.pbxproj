@@ -12,6 +12,7 @@
 		4447C05A2B92223700593AF5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4447C05C2B92223700593AF5 /* Localizable.strings */; };
 		4447C07C2B95B97A00593AF5 /* SongHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */; };
 		445E95F82BA5F3A5004C8BB1 /* TabSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445E95F72BA5F3A5004C8BB1 /* TabSelection.swift */; };
+		445E95FC2BA614DD004C8BB1 /* SelectSongViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445E95FB2BA614DD004C8BB1 /* SelectSongViewModel.swift */; };
 		446800292B90C87D00A858F1 /* SongMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446800282B90C87D00A858F1 /* SongMetaData.swift */; };
 		446979382B9A59F900A6A8FC /* PostInstagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446979372B9A59F900A6A8FC /* PostInstagramView.swift */; };
 		448CF82B2B9CA7910065B77F /* PostComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448CF82A2B9CA7910065B77F /* PostComponent.swift */; };
@@ -105,6 +106,7 @@
 		4447C05E2B92223900593AF5 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		4447C07B2B95B97900593AF5 /* SongHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongHistoryManager.swift; sourceTree = "<group>"; };
 		445E95F72BA5F3A5004C8BB1 /* TabSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSelection.swift; sourceTree = "<group>"; };
+		445E95FB2BA614DD004C8BB1 /* SelectSongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSongViewModel.swift; sourceTree = "<group>"; };
 		446800282B90C87D00A858F1 /* SongMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongMetaData.swift; sourceTree = "<group>"; };
 		446979372B9A59F900A6A8FC /* PostInstagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostInstagramView.swift; sourceTree = "<group>"; };
 		448CF82A2B9CA7910065B77F /* PostComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComponent.swift; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 				F76E0B202B99B0F00048DC83 /* ProfilePicViewModel.swift */,
 				44E7BA292BA5C4F200E35FE4 /* SongDetailViewModel.swift */,
 				C4D511182B8E67F000E95549 /* SearchViewModel.swift */,
+				445E95FB2BA614DD004C8BB1 /* SelectSongViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -591,6 +594,7 @@
 				44E7BA2A2BA5C4F200E35FE4 /* SongDetailViewModel.swift in Sources */,
 				EA36A1A72B8F7900007F56FD /* AppInfoSheet.swift in Sources */,
 				C48F64672B99DDC6006AD369 /* PushNotificationViewModel.swift in Sources */,
+				445E95FC2BA614DD004C8BB1 /* SelectSongViewModel.swift in Sources */,
 				F7E810CF2B921E6A00000946 /* UserViewModel.swift in Sources */,
 				C40C09AD2B863B9B009BE4C5 /* SongDetailCoverArt.swift in Sources */,
 				C4AF43182B9663E10089C62A /* OnboardingView.swift in Sources */,
