@@ -31,11 +31,13 @@ struct NotificationsView: View {
                 ScrollView {
                     VStack(spacing: 35) {
 
+                        // If is loading the notifications show a progressview
                         if loadingStateViewModel.isLoadingNotifications {
                             ProgressView()
                                 .progressViewStyle(.circular)
                                 .font(.title2)
                         } else {
+                            // For each notification show a notification item
                             ForEach(friendRequestViewModel.friendRequests, id: \.id ){ request  in
                                 if let user = friendRequestViewModel.userDetails[request.sender.recordID] {
                                     NotificationItem(user: user, friendRequest: request, isDisabled: $loadingStateViewModel.isLoadingHandleFriendship)
@@ -60,7 +62,8 @@ struct NotificationsView: View {
             UNUserNotificationCenter.current().setBadgeCount(0, withCompletionHandler: nil)
         }
     }
-
+    
+    // Function to update the notifications
     func updateNotifications() {
         loadingStateViewModel.isLoadingNotifications = true
         withAnimation(.easeInOut(duration: 1.0).delay(1.0) ) {

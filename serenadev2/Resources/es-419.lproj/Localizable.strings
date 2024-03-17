@@ -48,6 +48,8 @@
 // Notifications View
 "Notifications" = "Notificaciones";
 "FriendRequest" = " quiere ser tu amigo";
+"NoNotifications" = "¡Sin nuevas notificaciones!";
+"NoNotificationsDesc" = "Por el momento, no hay nuevas notificaciones para ti. Estaremos atentos para informarte cuando lleguen más";
 
 // Search View
 "Music" = "Música";
