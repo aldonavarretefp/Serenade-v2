@@ -7,6 +7,13 @@
 
 import Foundation
 
+// MARK: - Swipe direction
+enum SwipeDirection{
+    case up
+    case down
+    case none
+}
+
 final class HeaderViewModel: ObservableObject{
     // Variables to hide/show the header
     @Published var headerHeight: CGFloat = 0
