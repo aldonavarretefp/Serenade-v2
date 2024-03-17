@@ -128,7 +128,7 @@ struct ProfileBar: View {
                         }
                         .font(.caption)
                         
-                        NavigationLink(destination: FriendsListView(userTagName: user.tagName, friends: $friends, isLoading: $isLoading)) {
+                        NavigationLink(destination: FriendsListView(isLoading: $isLoading, friends: $friends, userTagName: user.tagName)) {
                             VStack {
                                 Text("\(user.friends.count == 0 ? "0" : "\(user.friends.count - 1)")")
                                 Text("Friends")
