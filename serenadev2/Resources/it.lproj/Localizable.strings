@@ -76,6 +76,9 @@
 // Settings View
 "Settings" = "Impostazioni";
 "EditProfile" = "Modifica profilo";
+"NewName" = "Nuovo nome";
+"NewUsername" = "Nuovo nome utente";
+"SaveChanges" = "Salvare le modifiche";
 "FavoriteStreamingApps" = "Applicazioni di streaming preferite";
 "LogOut" = "Disconnettersi";
 "DeleteAccount" = "Eliminare l'account";

@@ -9,42 +9,44 @@ import SwiftUI
 import CloudKit
 
 struct EditProfileView: View {
-    // MARK: - Properties
+    
+    // MARK: - ViewModel
+    @EnvironmentObject private var userVM: UserViewModel
+    @StateObject private var profilePicViewModel = ProfilePicViewModel()
+    @StateObject private var editProfileViewModel: EditProfileViewModel
+    
+    // MARK: - Environment properties
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var userVM: UserViewModel
-    @StateObject var profilePicViewModel: ProfilePicViewModel = ProfilePicViewModel()
-    var user: User
-    
-    // MARK: - Properties
-    @State private var name: String = ""
-    @State private var tagName: String = ""
-    @State private var error: String = ""
-    @State private var lastTagName: String = ""
     
     // Initializer to inject ProfilePicViewModel with an existing profile picture URL if available
     init(user: User) {
-        self.user = user
+        self._editProfileViewModel = StateObject(wrappedValue: EditProfileViewModel(user: user))
+        
         if let imageAssetUrlToShow = user.profilePictureAsset?.fileURL {
             _profilePicViewModel = StateObject(wrappedValue: ProfilePicViewModel(profileImageUrl: imageAssetUrlToShow.absoluteString))
         }
-        _name = State(initialValue: user.name)
-        _tagName = State(initialValue: user.tagName)
     }
     
     // MARK: - Body
     var body: some View {
         NavigationStack{
             ZStack{
+                // Background of the view
                 Color.viewBackground
                     .ignoresSafeArea()
+                
                 VStack {
                     
+                    // Circular profile image (edit)
                     EditableCircularProfileImage(viewModel: profilePicViewModel)
                         .padding()
+                    
                     VStack{
                         Divider()
                             .padding(.vertical, 4)
+                        
+                        // Text field for the name
                         HStack{
                             HStack{
                                 Text(LocalizedStringKey("Name"))
@@ -52,10 +54,13 @@ struct EditProfileView: View {
                             }
                             .frame(maxWidth: 100)
                             Spacer()
-                            TextField("New name", text: $name)
+                            TextField(LocalizedStringKey("NewName"), text: $editProfileViewModel.name)
                         }
+                        
                         Divider()
                             .padding(.vertical, 4)
+                        
+                        // Text field for the username
                         HStack{
                             HStack{
                                 Text(LocalizedStringKey("Username"))
@@ -63,20 +68,22 @@ struct EditProfileView: View {
                             }
                             .frame(maxWidth: 100)
                             Spacer()
-                            TextField("New username",text: $tagName)
+                            TextField(LocalizedStringKey("NewUsername"),text: $editProfileViewModel.tagName)
                                 .autocapitalization(.none)
-                                .onChange(of: tagName) { oldValue, newValue in
-                                    tagName = newValue.lowercased()
+                                .onChange(of: editProfileViewModel.tagName) { oldValue, newValue in
+                                    editProfileViewModel.tagName = newValue.lowercased()
                                 }
                         }
+                        
                         Divider()
                         
-                        if self.error != ""{
+                        // If there is an error show it
+                        if editProfileViewModel.error != ""{
                             HStack{
                                 Spacer()
                                 
                                 Image(systemName: "info.circle")
-                                Text(error)
+                                Text(editProfileViewModel.error)
                                 Spacer()
                             }
                             .font(.footnote)
@@ -84,13 +91,16 @@ struct EditProfileView: View {
                         }
                     }
                     .padding(.top)
+                    
                     Spacer()
-                    ActionButton(label: "Save changes", symbolName: "checkmark.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagName == "" || name == "") {
-                        guard var user = userVM.user else {
+                    
+                    // Button to save the changes
+                    ActionButton(label: LocalizedStringKey("SaveChanges"), symbolName: "checkmark.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: editProfileViewModel.tagName == "" || editProfileViewModel.name == "") {
+                        guard let user = userVM.user else {
                             return
                         }
                         var imageAsset: CKAsset?
-                        // Imagen cargada
+                        // Image loaded
                         switch profilePicViewModel.imageState {
                         case .empty:
                             break;
@@ -98,43 +108,48 @@ struct EditProfileView: View {
                             break;
                         case .success(let uIImage):
                             imageAsset = profilePicViewModel.imageToCKAsset(image: uIImage)
-                            guard let imageAsset, let profilePicUrl = imageAsset.fileURL else {
-                                print("Couldn't bring the profileImgURL")
-                                return
-                                
-                            }
+                            //                            guard let imageAsset, let profilePicUrl = imageAsset.fileURL else {
+                            //                                print("Couldn't bring the profileImgURL")
+                            //                                return
+                            //                            }
                         case .failure(_):
                             break;
                         }
-                        let trimmedTagName: String = tagName.formattedForTagName
+                        
+                        // Give a format to the tagname
+                        let trimmedTagName: String = editProfileViewModel.tagName.formattedForTagName
                         
                         userVM.searchUsers(searchText: trimmedTagName) { users in
                             if let users, users.count > 0 && trimmedTagName != "" {
                                 let userFromDB = users[0]
-                                if isSameUserInSession(fromUser: user, toCompareWith: userFromDB) {
-                                    if trimmedTagName.containsEmoji {
+                                
+                                // If the user is the same in session
+                                if userVM.isSameUserInSession(fromUser: user, toCompareWith: userFromDB) {
+                                    if trimmedTagName.containsEmoji { // If the user name contains emojis give an error to the user
                                         withAnimation {
-                                            self.error = "The username can't include emojis. Try again."
+                                            editProfileViewModel.error = "The username can't include emojis. Try again."
                                         }
                                         return
                                     }
-                                    saveUserDetails(user: user, imageAsset: imageAsset, trimmedTagName: trimmedTagName)
-                                } else {
+                                    editProfileViewModel.saveUserDetails(userVM: userVM, imageAsset: imageAsset, trimmedTagName: trimmedTagName)
+                                    self.dismiss()
+                                } else { // If the username is already taken
                                     withAnimation {
-                                        self.error = "Sorry! \(trimmedTagName) is already in use. Please try another one"
+                                        editProfileViewModel.error = "Sorry! \(trimmedTagName) is already in use. Please try another one"
                                     }
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                        lastTagName = ""
+                                        editProfileViewModel.lastTagName = ""
                                     }
                                 }
                             } else {
-                                if trimmedTagName.containsEmoji {
+                                if trimmedTagName.containsEmoji { // If the user name contains emojis give an error to the user
                                     withAnimation {
-                                        self.error = "The username can't include emojis. Try again."
+                                        editProfileViewModel.error = "The username can't include emojis. Try again."
                                     }
                                     return
                                 }
-                                saveUserDetails(user: user, imageAsset: imageAsset, trimmedTagName: trimmedTagName)
+                                editProfileViewModel.saveUserDetails(userVM: userVM, imageAsset: imageAsset, trimmedTagName: trimmedTagName)
+                                self.dismiss()
                             }
                         }
                         
@@ -148,21 +163,6 @@ struct EditProfileView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(colorScheme == .light ? .white : .black,for: .navigationBar)
         }
-        
-    }
-    func isSameUserInSession(fromUser user1: User, toCompareWith user2: User) -> Bool {
-        return user1.accountID == user2.accountID
-    }
-    
-    func saveUserDetails(user: User, imageAsset: CKAsset?, trimmedTagName: String) {
-        guard var user = userVM.user else {
-            return
-        }
-        user.profilePictureAsset = imageAsset
-        user.tagName = trimmedTagName
-        user.name = name
-        userVM.updateUser(updatedUser: user)
-        self.dismiss()
     }
 }
 
