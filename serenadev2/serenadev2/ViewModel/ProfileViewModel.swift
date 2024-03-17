@@ -10,6 +10,7 @@ import CloudKit
 
 final class ProfileViewModel: ObservableObject{
     
+    // MARK: - Properties
     @Published var user: User = User(name: "No User", tagName: "nouser", email: "", streak: 0, profilePicture: "", isActive: false, record: CKRecord(recordType: UserRecordKeys.type.rawValue))
     
     @Published var friendsFromUser : [User] = []

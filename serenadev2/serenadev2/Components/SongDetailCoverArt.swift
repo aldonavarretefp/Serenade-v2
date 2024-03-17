@@ -10,6 +10,7 @@ import Kingfisher
 
 class LoadingState: ObservableObject {
     @Published var isLoading: Bool = false
+    @Published var isLoadingStateOfFriendShip: Bool = false
 }
 
 struct SongDetailCoverArt: View {

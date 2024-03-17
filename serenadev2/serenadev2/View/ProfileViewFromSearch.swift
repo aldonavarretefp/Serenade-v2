@@ -11,28 +11,17 @@ import CloudKit
 
 struct ProfileViewFromSearch: View {
     
+    // MARK: - ViewModel
+    @EnvironmentObject var userVM: UserViewModel
     @StateObject var postVM: PostViewModel = PostViewModel()
     @StateObject var friendRequestsVM: FriendRequestsViewModel = FriendRequestsViewModel()
-    @EnvironmentObject var userVM: UserViewModel
-    @State var posts: [Post] = []
-    @State var user: User
-    @State var friends : [User] = []
+    @StateObject private var loadingStateModel = LoadingState()
+    @StateObject private var profileViewModel = ProfileViewModel()
     
-    func isFriendCheck(user: User) -> Bool {
-        if userVM.user!.friends.contains(where: { $0 == user.record.recordID }) {
-            return true
-        } else {
-            return false
-        }
-    }
-
-    @State var isFriend: Bool = false
-    @State var isFriendRequestSent: Bool = false
-    @State var isFriendRequestReceived: Bool = false
-    @State var showFriendRequestButton: Bool = false
-
-    @State private var isLoading = false
-    @State private var isLoadingStateOfFriendShip = false
+    // MARK: - Properties
+    // Received user as parameter
+    @State var user: User
+    @State var friends: [User] = []
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -42,14 +31,14 @@ struct ProfileViewFromSearch: View {
             VStack(spacing: 0){
                 
                 //  PENDING: Check friend requests sent for isFriendRequestSent
-
-                if let user = userVM.user {
-                    ProfileBar(friends: $friends, user: $user, isFriend: $isFriend, isFriendRequestSent: $isFriendRequestSent, isFriendRequestRecieved: $isFriendRequestReceived, showFriendRequestButton: $showFriendRequestButton, isLoading: $isLoading, isLoadingStateOfFriendship: $isLoadingStateOfFriendShip, isCurrentUser: isSameUserInSession(fromUser: user, toCompareWith: self.user))
+                if let userInSession = userVM.user {
+                    ProfileBar(friends: $friends, user: $user, isFriend: $profileViewModel.isFriend, isFriendRequestSent: $profileViewModel.isFriendRequestSent, isFriendRequestRecieved: $profileViewModel.isFriendRequestReceived, showFriendRequestButton: $profileViewModel.showFriendRequestButton, isLoading: $loadingStateModel.isLoading, isLoadingStateOfFriendship: $loadingStateModel.isLoadingStateOfFriendShip, isCurrentUser: userVM.isSameUserInSession(fromUser: userInSession, toCompareWith: self.user))
                 }
 
+                // Scroll view to show all the posts
                 ScrollView (.vertical, showsIndicators: false) {
                     LazyVStack(spacing: 15) {
-                        if postVM.posts.isEmpty {
+                        if postVM.posts.isEmpty { // If no posts show a message
                             ContentUnavailableView(label: {
                                 Label(LocalizedStringKey("No posts"), systemImage: "music.note")
                             }, description: {
@@ -77,30 +66,19 @@ struct ProfileViewFromSearch: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            isLoading = true
-            isLoadingStateOfFriendShip = true
+            loadingStateModel.isLoading = true
+            loadingStateModel.isLoadingStateOfFriendShip = true
             fetchUserAndFriendRequest()
             await fetchProfilePosts()
             
             friends = await userVM.fetchFriendsForUser(user: user)
-            isLoading = false
+            loadingStateModel.isLoading = false
             
         }
     }
     
-    func isSameUserInSession(fromUser user1: User, toCompareWith user2: User) -> Bool {
-        return user1.accountID == user2.accountID
-    }
-    
+    // MARK: - Functions to load properly the posts
     private func fetchUserAndFriendRequest() {
-//        userVM.fetchUserFromRecord(record: self.user.record) { returnedUser in
-//            guard let updatedUser = returnedUser else {
-//                print("NO USER FROM DB")
-//                return
-//            }
-//            print("Fetched User from DB: \(updatedUser)")
-//            self.user = updatedUser
-//        }
         let user = self.user
         guard let mainUser = userVM.user else {
             print("No user from userViewModel")
@@ -113,8 +91,8 @@ struct ProfileViewFromSearch: View {
             }
             print("Fetched User from DB: \(updatedUser)")
             userVM.user = updatedUser
-            self.isFriend = userVM.isFriend(of: user)
-            print(String("isFriend: \(self.isFriend)"))
+            profileViewModel.isFriend = userVM.isFriend(of: user)
+            print(String("isFriend: \(profileViewModel.isFriend)"))
         }
         guard let mainUser = userVM.user else {
             print("No user from userViewModel")
@@ -123,25 +101,25 @@ struct ProfileViewFromSearch: View {
         
         friendRequestsVM.fetchFriendRequest(from: user, for: mainUser) { incomingFriendRequest in
             guard incomingFriendRequest.first != nil else {
-                self.isFriendRequestReceived = false
+                profileViewModel.isFriendRequestReceived = false
                 friendRequestsVM.fetchFriendRequest(from: mainUser, for: user) { outgoingFriendRequest in
                     guard outgoingFriendRequest.first != nil else {
-                        self.isFriendRequestSent = false
+                        profileViewModel.isFriendRequestSent = false
                         return
                     }
-                    self.isFriendRequestSent = true
+                    profileViewModel.isFriendRequestSent = true
                 }
-                self.showFriendRequestButton = true
-                isLoadingStateOfFriendShip = false
+                profileViewModel.showFriendRequestButton = true
+                loadingStateModel.isLoadingStateOfFriendShip = false
                 return
             }
-            self.isFriendRequestReceived = true
-            self.showFriendRequestButton = true
-            isLoadingStateOfFriendShip = false
+            profileViewModel.isFriendRequestReceived = true
+            profileViewModel.showFriendRequestButton = true
+            loadingStateModel.isLoadingStateOfFriendShip = false
         }
     }
     
-    private func fetchProfilePosts() async -> Void {
+    private func fetchProfilePosts() async {
         Task {
             let user = self.user
             if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
@@ -164,7 +142,6 @@ struct ProfileViewFromSearch: View {
                     }
                 }
             }
-        }
-        
+        } 
     }
 }
