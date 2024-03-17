@@ -9,38 +9,23 @@ import SwiftUI
 // Each button represents a music streaming platform where a song can be listened to.
 struct OpenWithView : View {
     
+    // MARK: - ViewModel
+    @StateObject private var openWithViewModel: OpenWithViewModel
+    
     // MARK: - Environment properties
     @Environment(\.dismiss) var dismiss
-    // Property to receive an array of ButtonType.
-    // which specifies the different types of buttons that can be displayed in the BrandsGrid.
-    var buttonTypes: [ButtonType]
-    var songTitle : String
-    var songArtist: String
-    var songId: String
     
-    @State var selectedAppleMusic = UserDefaults.standard.bool(forKey: "selectedAppleMusic")
-    @State var selectedSpotify = UserDefaults.standard.bool(forKey: "selectedSpotify")
-    @State var selectedYouTubeMusic = UserDefaults.standard.bool(forKey: "selectedYouTubeMusic")
-    @State var firstTimeEntering = UserDefaults.standard.bool(forKey: "firstTimeEntering")
+    // Initializer to pass the parameters to the openWithviewModel
+    init(buttonTypes: [ButtonType], songTitle: String, songArtist: String, songId: String) {
+        
+        // Create an instance of the viewModel with the received parameters
+        self._openWithViewModel = StateObject(wrappedValue: OpenWithViewModel(buttonTypes: buttonTypes, songTitle: songTitle, songArtist: songArtist, songId: songId))
+    }
+    
     
     var body: some View {
-       
+        
         NavigationStack {
-            
-            let filteredButtons = buttonTypes.filter {
-                if $0 == .appleMusic {
-                    return UserDefaults.standard.bool(forKey: "selectedAppleMusic")
-                } else if $0 == .spotify {
-                    return UserDefaults.standard.bool(forKey: "selectedSpotify")
-                } else if $0 == .youtubeMusic {
-                    return UserDefaults.standard.bool(forKey: "selectedYouTubeMusic")
-                } else {
-                    // Si ninguna de las condiciones anteriores se cumple, devolver false (o true según lo que necesites)
-                    return false
-                }
-            }
-            
-            
             ZStack{
                 Rectangle()
                     .fill(.ultraThinMaterial)
@@ -60,10 +45,10 @@ struct OpenWithView : View {
                         // BrandsGrid is a custom view responsible for displaying the buttons.
                         Spacer()
                         
-                        if !firstTimeEntering {
-                            BrandsGrid(buttonTypes: buttonTypes, songTitle: songTitle, songArtist: songArtist, songId: songId)
+                        if !openWithViewModel.firstTimeEntering {
+                            BrandsGrid(buttonTypes: openWithViewModel.buttonTypes, songTitle: openWithViewModel.songTitle, songArtist: openWithViewModel.songArtist, songId: openWithViewModel.songId)
                         } else {
-                            BrandsGrid(buttonTypes: filteredButtons, songTitle: songTitle, songArtist: songArtist, songId: songId)
+                            BrandsGrid(buttonTypes: openWithViewModel.filteredButtons, songTitle: openWithViewModel.songTitle, songArtist: openWithViewModel.songArtist, songId: openWithViewModel.songId)
                         }
                         Spacer()
                     }
