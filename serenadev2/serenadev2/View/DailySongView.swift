@@ -10,31 +10,37 @@ import CloudKit
 
 struct DailySongView: View {
     
+    // MARK: - ViewModel
+    @EnvironmentObject private var userViewModel: UserViewModel
+    @EnvironmentObject private var postViewModel: PostViewModel
+    @StateObject private var dailySongViewModel = DailySongViewModel()
+    @StateObject private var loadingStateModel = LoadingState()
+    
     // MARK: - Environment properties
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
     
-    @Environment(\.colorScheme) private var colorScheme
-    @State private var caption: String = ""
-    @State var  characterLimit = 150
-    @State private var isPresentingSearchSong = false //for modal presentation of SearchSong
-    @State private var isLoading: Bool = false
-    @State var selectedSongBinding: SongModel? // Optional to handle the case where no song is selected
+    // MARK: - Properties
+    // Optional to handle the case where no song is selected
+    @State var selectedSongBinding: SongModel?
     //State fot the caption
     @FocusState var isTextEditorFocused : Bool
-    @EnvironmentObject var userViewModel: UserViewModel
-    @EnvironmentObject var postViewModel: PostViewModel
-    
     var isSongFromDaily : Bool
     
+    // MARK: - Body
     var body: some View {
         NavigationStack {
             ZStack {
+                
+                // Background of the view
                 Rectangle()
                     .fill(.ultraThinMaterial)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        hideKeyboard()
+                        isTextEditorFocused = false
                     }
+                
+                
                 VStack(alignment: .leading, spacing: 30) {
                     Text(LocalizedStringKey("DailyDescription"))
                         .fontWeight(.light)
@@ -42,10 +48,10 @@ struct DailySongView: View {
                     
                     if let song = selectedSongBinding  {
                         
+                        // If comes from daily show button to open the sheet to search for a song
                         if isSongFromDaily {
                             Button(action: {
-                                
-                                isPresentingSearchSong = true
+                                dailySongViewModel.toggleIsPresentingSearchSong()
                             }) {
                                 VStack(alignment: .leading) {
                                     HStack {
@@ -70,13 +76,13 @@ struct DailySongView: View {
                                 }
                                 
                             }
-                            .sheet(isPresented: $isPresentingSearchSong) {
+                            .sheet(isPresented: $dailySongViewModel.isPresentingSearchSong) {
                                 SelectSongView(song: $selectedSongBinding)
                                     .presentationDetents([.medium, .large])
                             }
                             .buttonStyle(.plain)
                         }
-                        else{
+                        else{ // If it doesnt comes from daily show the current selected song
                             
                             VStack(alignment: .leading) {
                                 HStack {
@@ -93,19 +99,15 @@ struct DailySongView: View {
                                 }
                                 .frame(maxHeight: 60)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
-                                
                             }
-                            
-                            
                         }
-                        
                     } else {
                         // Display a placeholder when no song is selected
                         VStack(alignment: .leading) {
                             SelectSong{
-                                isPresentingSearchSong = true
+                                dailySongViewModel.toggleIsPresentingSearchSong()
                             }
-                            .sheet(isPresented: $isPresentingSearchSong) {
+                            .sheet(isPresented: $dailySongViewModel.isPresentingSearchSong) {
                                 SelectSongView(song: $selectedSongBinding)
                                     .presentationDetents([.medium, .large])
                             }
@@ -118,34 +120,33 @@ struct DailySongView: View {
                                 .font(.callout)
                             Spacer()
                             
-                            Text("\(caption.count)/\(characterLimit)")
+                            Text("\(dailySongViewModel.caption.count)/\(dailySongViewModel.characterLimit)")
                                 .font(.callout)
-                                .foregroundColor(caption.count < characterLimit ? .callout : .red)
+                                .foregroundColor(dailySongViewModel.caption.count < dailySongViewModel.characterLimit ? .callout : .red)
                         }
-                        CaptionView(caption: $caption, characterLimit: $characterLimit, isSongFromDaily: false, isTextEditorFocused: $isTextEditorFocused)
+                        CaptionComponent(caption: $dailySongViewModel.caption, characterLimit: $dailySongViewModel.characterLimit, isSongFromDaily: false, isTextEditorFocused: $isTextEditorFocused)
                     }
                     Spacer()
                     // Enable the 'Daily' button only if a song is selected
                     
-                    ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: selectedSongBinding == nil || isLoading || postViewModel.isDailyPosted || (postViewModel.dailySong != nil), isLoading: isLoading) {
+                    ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: selectedSongBinding == nil || loadingStateModel.isLoading || postViewModel.isDailyPosted || (postViewModel.dailySong != nil), isLoading: loadingStateModel.isLoading) {
                         
                         guard var user = userViewModel.user, let song = selectedSongBinding else {
                             print("ERROR: User does not exist")
                             return
                         }
-                        caption = sanitizeText(caption)
+                        dailySongViewModel.caption = sanitizeText(dailySongViewModel.caption)
                         let reference = CKRecord.Reference(recordID: user.record.recordID, action: .none)
-                        let post = Post(postType: .daily, sender: reference, caption: self.caption,  songId: song.id, date: Date.now, isAnonymous: false, isActive: true)
+                        let post = Post(postType: .daily, sender: reference, caption: dailySongViewModel.caption,  songId: song.id, date: Date.now, isAnonymous: false, isActive: true)
                         
-                        isLoading = true
+                        loadingStateModel.isLoading = true
                         Task {
                             await postViewModel.verifyDailyPostForUser(user: user)
                             await postViewModel.verifyPostFromYesterdayForUser(user: user)
                             if postViewModel.hasPostedYesterday == false && postViewModel.isDailyPosted == false {
                                 user.streak = 0
                             }
-                            
-                            createAPost(user: user, post: post)
+                            createPost(user: user, post: post)
                         }
                         
                     }
@@ -156,15 +157,13 @@ struct DailySongView: View {
             .ignoresSafeArea(.keyboard)
             .gesture(
                 DragGesture()
-                    .onChanged{gesture in
+                    .onChanged{ gesture in
                         if gesture.translation.height > 0 {
-                            // El usuario está arrastrando hacia abajo
+                            // Drag to down
                             
-                            isTextEditorFocused = false // Cambia el estado de la otra variable
+                            isTextEditorFocused = false // Change the state to close the keyboard
                         }
                     }
-                
-                
             )
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -190,7 +189,7 @@ struct DailySongView: View {
     }
     
     
-    func createAPost(user: User, post: Post) {
+    func createPost(user: User, post: Post) {
         var user = user
         // User has tapped on the daily button
         postViewModel.createAPost(post: post) {
@@ -199,103 +198,10 @@ struct DailySongView: View {
             user.streak += 1
             userViewModel.updateUser(updatedUser: user)
             userViewModel.addPostToUser(sender: user, post: post)
-            isLoading = false
+            loadingStateModel.isLoading = false
             self.dismiss()
             print("Shared daily")
         }
     }
     
 }
-
-struct CaptionView: View {
-    @Environment(\.colorScheme) var colorScheme
-    
-    @Binding var caption: String
-    @Binding var characterLimit: Int
-    var isSongFromDaily: Bool
-    //@FocusState private var isTextFieldFocused: Bool
-    @FocusState.Binding var isTextEditorFocused : Bool
-    
-    var body: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .topLeading) {
-                Rectangle()
-                    .fill(Color.card) // Change this to your actual color variable
-                TextEditor(text: $caption)
-                    .multilineTextAlignment(.leading)
-                    .font(.subheadline)
-                //.lineLimit(3)
-                    .padding(4)
-                    .scrollContentBackground(.hidden)
-                    .background(Color.clear) // Set background color to clear
-                    .foregroundColor(colorScheme == .light ? .black : .white)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .focused($isTextEditorFocused)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .onChange(of: caption) {
-                        if caption.count > characterLimit {
-                            caption = String(caption.prefix(characterLimit))
-                        }
-                    }
-                
-                
-                
-                if caption.isEmpty {
-                    Text(LocalizedStringKey ("PlaceholderCaption"))
-                        .font(.subheadline)
-                        .foregroundColor(.callout) // Placeholder text color
-                        .padding()
-                        .opacity(isTextEditorFocused ? 0 : 1)
-                }
-            }
-            .frame(width: geo.size.width, height: isSongFromDaily ? geo.size.height * 2/7 : max(geo.size.height * 2/7, 100))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .onTapGesture {
-                isTextEditorFocused = true
-                print($isTextEditorFocused)
-            }
-        }
-    }
-}
-//function to get the final trimmed caption
-extension View{
-    
-    func sanitizeText(_ text: String) -> String {
-        // Esto reemplazará los saltos de línea con puntos
-        let replacedText = text.replacingOccurrences(of: "\\n+", with: " ", options: .regularExpression)
-        
-        return replacedText
-    }
-    
-}
-
-struct SelectSong: View {
-    @Environment(\.colorScheme) private var colorScheme
-    var action: () -> Void
-    var body: some View {
-        Button(action: action) {
-            HStack(alignment: .center) {
-                Spacer()
-                Image(systemName: "plus.circle.fill")
-                    .foregroundColor(colorScheme == .dark ? .white : .black)
-                    .font(.title3)
-                Text(LocalizedStringKey("SelectSong"))
-                    .foregroundColor(colorScheme == .dark ? .white : .black)
-                    .font(.body)
-                    .fontWeight(.semibold)
-                Spacer()
-            }
-            .padding(30) // Add some padding inside the button
-            .overlay(
-                RoundedRectangle(cornerRadius: 10) // The shape of the border
-                    .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [1, 4])) // The dashed style
-                    .foregroundColor(colorScheme == .dark ? .white : .black)// The color of the dashed border
-            )
-            
-        }
-        
-        .foregroundColor(.white) // The color of the content (icon and text)
-    }
-}
-
-

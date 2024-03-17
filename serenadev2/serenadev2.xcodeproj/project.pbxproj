@@ -21,6 +21,9 @@
 		44ADCC552B9F91DF008A050E /* PostComponentInProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ADCC542B9F91DF008A050E /* PostComponentInProfile.swift */; };
 		44B7A61D2BA721AA00DD36AD /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B7A61C2BA721AA00DD36AD /* SettingsViewModel.swift */; };
 		44B7A6212BA728DB00DD36AD /* FeedNavbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B7A6202BA728DB00DD36AD /* FeedNavbar.swift */; };
+		44B7A6232BA72D9000DD36AD /* SelectSong.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B7A6222BA72D9000DD36AD /* SelectSong.swift */; };
+		44B7A6252BA72E0D00DD36AD /* CaptionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B7A6242BA72E0D00DD36AD /* CaptionComponent.swift */; };
+		44B7A6272BA730E100DD36AD /* DailySongViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B7A6262BA730E100DD36AD /* DailySongViewModel.swift */; };
 		44D1A4212B91DAC200BE6F92 /* NotificationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */; };
 		44D1A4232B91DB3100BE6F92 /* NotificationActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */; };
 		44E7BA2A2BA5C4F200E35FE4 /* SongDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E7BA292BA5C4F200E35FE4 /* SongDetailViewModel.swift */; };
@@ -119,6 +122,9 @@
 		44ADCC542B9F91DF008A050E /* PostComponentInProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComponentInProfile.swift; sourceTree = "<group>"; };
 		44B7A61C2BA721AA00DD36AD /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		44B7A6202BA728DB00DD36AD /* FeedNavbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedNavbar.swift; sourceTree = "<group>"; };
+		44B7A6222BA72D9000DD36AD /* SelectSong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSong.swift; sourceTree = "<group>"; };
+		44B7A6242BA72E0D00DD36AD /* CaptionComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionComponent.swift; sourceTree = "<group>"; };
+		44B7A6262BA730E100DD36AD /* DailySongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailySongViewModel.swift; sourceTree = "<group>"; };
 		44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationItem.swift; sourceTree = "<group>"; };
 		44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationActionButton.swift; sourceTree = "<group>"; };
 		44E7BA292BA5C4F200E35FE4 /* SongDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailViewModel.swift; sourceTree = "<group>"; };
@@ -281,6 +287,8 @@
 				44ADCC542B9F91DF008A050E /* PostComponentInProfile.swift */,
 				445E95F72BA5F3A5004C8BB1 /* TabSelection.swift */,
 				44B7A6202BA728DB00DD36AD /* FeedNavbar.swift */,
+				44B7A6222BA72D9000DD36AD /* SelectSong.swift */,
+				44B7A6242BA72E0D00DD36AD /* CaptionComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -431,6 +439,7 @@
 				445E95FB2BA614DD004C8BB1 /* SelectSongViewModel.swift */,
 				445E95FF2BA629E7004C8BB1 /* ProfileViewModel.swift */,
 				44B7A61C2BA721AA00DD36AD /* SettingsViewModel.swift */,
+				44B7A6262BA730E100DD36AD /* DailySongViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -592,6 +601,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F709F6C22B90CA0000B60216 /* PostViewModel.swift in Sources */,
+				44B7A6272BA730E100DD36AD /* DailySongViewModel.swift in Sources */,
 				C4AF43142B965AF40089C62A /* SignInView.swift in Sources */,
 				C4D5111E2B8FBF6D00E95549 /* SongService.swift in Sources */,
 				EAB0C0DC2B8CF489004F47F6 /* ConfirmationSheet.swift in Sources */,
@@ -629,6 +639,7 @@
 				EAB0C0D82B8CEC5A004F47F6 /* EditProfileView.swift in Sources */,
 				44D1A4232B91DB3100BE6F92 /* NotificationActionButton.swift in Sources */,
 				44B7A6212BA728DB00DD36AD /* FeedNavbar.swift in Sources */,
+				44B7A6232BA72D9000DD36AD /* SelectSong.swift in Sources */,
 				E0C891572B9387D70065234F /* OpenWithView.swift in Sources */,
 				EA9BC9EC2B8501ED00292705 /* PostView.swift in Sources */,
 				E0540C732B8E703A001A7561 /* DailySongView.swift in Sources */,
@@ -647,6 +658,7 @@
 				C40C09B62B863CA2009BE4C5 /* Extensions.swift in Sources */,
 				F7AE69252B90B5C5003C6A7C /* FriendRequestsViewModel.swift in Sources */,
 				F1CF7BFA2B987E15004AC18C /* PeopleHistoryManager.swift in Sources */,
+				44B7A6252BA72E0D00DD36AD /* CaptionComponent.swift in Sources */,
 				E0540C772B8E71AF001A7561 /* SelectSongView.swift in Sources */,
 				EA216FC82B8E3FAC00A715EB /* StreamingAppPickerSheet.swift in Sources */,
 				EA9BC9F22B87861C00292705 /* Post.swift in Sources */,

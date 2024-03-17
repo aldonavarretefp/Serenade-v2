@@ -92,14 +92,6 @@ extension View {
     }
 }
 
-#if canImport(UIKit)
-extension View {
-    func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
-}
-#endif
-
 // MARK: - Custom String extensions
 extension String {
     var formattedForTagName: String {
@@ -288,5 +280,15 @@ extension UIScreen {
     static let screenWidth = UIScreen.main.bounds.size.width
     static let screenHeight = UIScreen.main.bounds.size.height
     static let screenSize = UIScreen.main.bounds.size
+}
+
+//function to get the final trimmed caption
+extension View{
+    func sanitizeText(_ text: String) -> String {
+        // Esto reemplazará los saltos de línea con puntos
+        let replacedText = text.replacingOccurrences(of: "\\n+", with: " ", options: .regularExpression)
+        
+        return replacedText
+    }
 }
 
