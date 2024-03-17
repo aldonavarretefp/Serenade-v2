@@ -9,14 +9,20 @@ import SwiftUI
 
 struct AppInfoSheet: View {
     
+    // MARK: - Environment properties
     @Environment(\.openURL) private var openURL
     
+    // MARK: - Properties
     let website: URL = URL(string: "https://developer.apple.com")!
     
+    // MARK: - Body
     var body: some View {
         ZStack(alignment: .top) {
+            
+            // Background of the view
             Color.viewBackground
                 .ignoresSafeArea()
+            
             VStack {
                 HStack {
                     Text(LocalizedStringKey("Information"))
@@ -25,15 +31,17 @@ struct AppInfoSheet: View {
                     Spacer()
                 }
                 
+                // App logo and info
                 Image("AppLogo")
                     .resizable()
                     .frame(width: 100, height: 100)
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                 Text("Serenade")
                     .font(.title3)
-                Text("1.0")
+                Text("1.2.14")
                     .foregroundStyle(.callout)
                 
+                // Info of the developers
                 GroupBox {
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
@@ -57,6 +65,7 @@ struct AppInfoSheet: View {
                 .padding(.top)
                 .backgroundStyle(.card)
                 
+                // Website
                 GroupBox {
                     HStack {
                         Image(systemName: "network")
@@ -67,7 +76,7 @@ struct AppInfoSheet: View {
                             .foregroundStyle(.callout)
                     }
                 }
-                .onTapGesture{
+                .onTapGesture{ // on tap open the website
                     openURL(website)
                 }
                 .backgroundStyle(.card)
