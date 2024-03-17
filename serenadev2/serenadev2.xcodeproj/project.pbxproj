@@ -19,6 +19,7 @@
 		446979382B9A59F900A6A8FC /* PostInstagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446979372B9A59F900A6A8FC /* PostInstagramView.swift */; };
 		448CF82B2B9CA7910065B77F /* PostComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448CF82A2B9CA7910065B77F /* PostComponent.swift */; };
 		44ADCC552B9F91DF008A050E /* PostComponentInProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ADCC542B9F91DF008A050E /* PostComponentInProfile.swift */; };
+		44B7A61D2BA721AA00DD36AD /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B7A61C2BA721AA00DD36AD /* SettingsViewModel.swift */; };
 		44D1A4212B91DAC200BE6F92 /* NotificationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */; };
 		44D1A4232B91DB3100BE6F92 /* NotificationActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */; };
 		44E7BA2A2BA5C4F200E35FE4 /* SongDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E7BA292BA5C4F200E35FE4 /* SongDetailViewModel.swift */; };
@@ -115,6 +116,7 @@
 		446979372B9A59F900A6A8FC /* PostInstagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostInstagramView.swift; sourceTree = "<group>"; };
 		448CF82A2B9CA7910065B77F /* PostComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComponent.swift; sourceTree = "<group>"; };
 		44ADCC542B9F91DF008A050E /* PostComponentInProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComponentInProfile.swift; sourceTree = "<group>"; };
+		44B7A61C2BA721AA00DD36AD /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		44D1A4202B91DAC200BE6F92 /* NotificationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationItem.swift; sourceTree = "<group>"; };
 		44D1A4222B91DB3100BE6F92 /* NotificationActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationActionButton.swift; sourceTree = "<group>"; };
 		44E7BA292BA5C4F200E35FE4 /* SongDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailViewModel.swift; sourceTree = "<group>"; };
@@ -425,6 +427,7 @@
 				C4D511182B8E67F000E95549 /* SearchViewModel.swift */,
 				445E95FB2BA614DD004C8BB1 /* SelectSongViewModel.swift */,
 				445E95FF2BA629E7004C8BB1 /* ProfileViewModel.swift */,
+				44B7A61C2BA721AA00DD36AD /* SettingsViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -644,6 +647,7 @@
 				EA216FC82B8E3FAC00A715EB /* StreamingAppPickerSheet.swift in Sources */,
 				EA9BC9F22B87861C00292705 /* Post.swift in Sources */,
 				F7207CA02B84F52E00E383E6 /* CloudKitConfig.swift in Sources */,
+				44B7A61D2BA721AA00DD36AD /* SettingsViewModel.swift in Sources */,
 				F1FC0FD82B8E1DB300FD50CB /* CloudKitUtility.swift in Sources */,
 				F137D2332B839A82006264C1 /* serenadev2App.swift in Sources */,
 				C4D5111B2B8F759300E95549 /* SongModel.swift in Sources */,

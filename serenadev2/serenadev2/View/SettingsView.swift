@@ -9,22 +9,24 @@ import SwiftUI
 
 struct SettingsView: View {
     
+    // MARK: - ViewModel
+    @EnvironmentObject private var userViewModel: UserViewModel
+    @StateObject private var settingsViewModel = SettingsViewModel()
+    
+    // MARK: - Environment properties
     @Environment(\.colorScheme) var colorScheme
-    
-    @State var isStreamingServiceSheetDisplayed: Bool = false
-    @State var isInfoSheetDisplayed: Bool = false
-    @State var isLogOutSheetDisplayed: Bool = false
-    @State var isDeleteAccountSheetDisplayed: Bool = false
 
-    @EnvironmentObject var userViewModel: UserViewModel
-    
-    
+    // MARK: - Body
     var body: some View {
         NavigationStack {
+            
+            // Background of the view
             ZStack(alignment: .top) {
                 Color.viewBackground
                     .ignoresSafeArea()
                 VStack(spacing: 10) {
+                    
+                    // Button to navigate to the edit the profile view
                     GroupBox {
                         if let user = userViewModel.user {
                             NavigationLink(destination: EditProfileView(user: user).toolbarRole(.editor), label: {
@@ -36,33 +38,36 @@ struct SettingsView: View {
                                     .foregroundStyle(.callout)
                             })
                         }
-                        
                     }
                     .backgroundStyle(.card)
                     .foregroundStyle(.primary)
                     
+                    // Button to open the sheet of the favorite streaming apps
                     GroupBox {
-                        Button(action: { isStreamingServiceSheetDisplayed = true }, label: {
+                        Button(action: { settingsViewModel.toggleStreamingServiceSheet() }, label: {
                             Image(systemName: "star")
                                 .foregroundStyle(.accent)
                             Text(LocalizedStringKey("FavoriteStreamingApps"))
                             Spacer()
                         })
-                        .sheet(isPresented: $isStreamingServiceSheetDisplayed, content: {
+                        .sheet(isPresented: $settingsViewModel.isStreamingServiceSheetDisplayed, content: {
                             StreamingAppPickerSheet()
                                 .presentationDetents([.fraction(0.85)])
                         })
                     }
                     .backgroundStyle(.card)
                     .foregroundStyle(.primary)
+                    
                     Spacer()
+                    
+                    // Button to open the sheet to log out
                     GroupBox {
-                        Button(action: { isLogOutSheetDisplayed = true }, label: {
+                        Button(action: { settingsViewModel.toggleIsLogOutSheet() }, label: {
                             Spacer()
                             Text(LocalizedStringKey("LogOut"))
                             Spacer()
                         })
-                        .sheet(isPresented: $isLogOutSheetDisplayed, content: {
+                        .sheet(isPresented: $settingsViewModel.isLogOutSheetDisplayed, content: {
                             
                             ConfirmationSheet(titleStart: LocalizedStringKey("LogOut"), descriptionStart: LocalizedStringKey("LogOutMessage"), buttonLabel: LocalizedStringKey("LogOut")){
                             
@@ -74,14 +79,15 @@ struct SettingsView: View {
                     .backgroundStyle(.card)
                     .foregroundStyle(.primary)
                     
-                    /*
-                    GroupBox {
-                        Button(role: .destructive, action: { isDeleteAccountSheetDisplayed = true }, label: {
+                    // Button to open the delete account sheet
+                    /* Remove the comment when we have the option to delete users
+                     GroupBox {
+                        Button(role: .destructive, action: { settingsViewModel.toggleIsDeleteAccountSheet() }, label: {
                             Spacer()
                             Text(LocalizedStringKey("DeleteAccount"))
                             Spacer()
                         })
-                        .sheet(isPresented: $isDeleteAccountSheetDisplayed, content: {
+                        .sheet(isPresented: $settingsViewModel.isDeleteAccountSheetDisplayed, content: {
                             
                             ConfirmationSheet(titleStart: LocalizedStringKey("DeleteAccount"), descriptionStart: LocalizedStringKey("DeleteAccountDescriptionStart"), boldMessage: LocalizedStringKey("DeleteAccountBoldMessage"), descriptionEnd: LocalizedStringKey("DeleteAccountDescriptionEnd"), buttonLabel: LocalizedStringKey("DeleteAccount"), buttonColor: .red){
                                 /*deleteAccount()*/
@@ -89,19 +95,19 @@ struct SettingsView: View {
                             .presentationDetents([.fraction(0.3)])
                         })
                     }
-                    .backgroundStyle(.card) */
+                    .backgroundStyle(.card)
+                     */
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button(action: { isInfoSheetDisplayed = true }, label: {
+                        // Button to show the sheet with the info of the app
+                        Button(action: { settingsViewModel.toggleIsInfoSheet() }, label: {
                             Image(systemName: "info.circle")
-//                                .font(.title3)
-//                                .symbolRenderingMode(.palette)
                                 .foregroundStyle(.accent)
                                 .fontWeight(.bold)
                         })
                         .foregroundStyle(.primary)
-                        .sheet(isPresented: $isInfoSheetDisplayed, content: {
+                        .sheet(isPresented: $settingsViewModel.isInfoSheetDisplayed, content: {
                             AppInfoSheet()
                                 .presentationDetents([.fraction(0.7)])
                         })
