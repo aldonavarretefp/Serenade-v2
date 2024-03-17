@@ -11,7 +11,7 @@ import AVFoundation
 struct PreviewPlayer: View {
     
     var player: AVPlayer!
-    @EnvironmentObject var loadingState: LoadingState
+    @EnvironmentObject var loadingStateViewModel: LoadingStateViewModel
     
     init(mainColor: Color, audioURL: URL, fontColor: Color, secondaryColor: Color, seconds: Double = 15.0) {
         self.mainColor = mainColor
@@ -57,7 +57,7 @@ struct PreviewPlayer: View {
         // Button to play/pause audio
         VStack(spacing: 5){
             
-            if !loadingState.isLoading {
+            if !loadingStateViewModel.isLoading {
                 Text(isPlaying ? LocalizedStringKey("TapToPausePreview") :LocalizedStringKey("TapToPlayPreview"))
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.7))
@@ -90,7 +90,7 @@ struct PreviewPlayer: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     
                     
-                    if loadingState.isLoading {
+                    if loadingStateViewModel.isLoading {
                         ZStack{
                             Image(systemName: "circle.fill")
                                 .font(.largeTitle)
@@ -109,7 +109,7 @@ struct PreviewPlayer: View {
                     }
                 }
                 .onTapGesture {
-                    if !loadingState.isLoading {
+                    if !loadingStateViewModel.isLoading {
                         if self.isPlaying {
                             self.player.pause()
                             

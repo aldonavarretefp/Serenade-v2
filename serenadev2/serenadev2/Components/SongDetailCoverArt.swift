@@ -8,16 +8,11 @@
 import SwiftUI
 import Kingfisher
 
-class LoadingState: ObservableObject {
-    @Published var isLoading: Bool = false
-    @Published var isLoadingStateOfFriendShip: Bool = false
-}
-
 struct SongDetailCoverArt: View {
     
     // MARK: - Properties
     var song: SongModel
-    @EnvironmentObject var loadingState: LoadingState
+    @EnvironmentObject var loadingStateViewModel: LoadingStateViewModel
     
     // MARK: - Body
     var body: some View {
@@ -57,7 +52,7 @@ struct SongDetailCoverArt: View {
             // Front song cover art
             KFImage(song.artworkUrlLarge)
                 .onSuccess{ result in
-                    self.loadingState.isLoading = false
+                    self.loadingStateViewModel.isLoading = false
                 }
                 .placeholder{
                     if let songColor = song.bgColor {
@@ -73,7 +68,7 @@ struct SongDetailCoverArt: View {
                     }
                 }
                 .onProgress{ receivedSize, totalSize in
-                    self.loadingState.isLoading = true
+                    self.loadingStateViewModel.isLoading = true
                 }
                 .fade(duration: 0.5)
                 .resizable()

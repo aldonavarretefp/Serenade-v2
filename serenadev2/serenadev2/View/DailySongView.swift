@@ -14,7 +14,7 @@ struct DailySongView: View {
     @EnvironmentObject private var userViewModel: UserViewModel
     @EnvironmentObject private var postViewModel: PostViewModel
     @StateObject private var dailySongViewModel = DailySongViewModel()
-    @StateObject private var loadingStateModel = LoadingState()
+    @StateObject private var loadingStateViewModel = LoadingStateViewModel()
     
     // MARK: - Environment properties
     @Environment(\.dismiss) var dismiss
@@ -129,7 +129,7 @@ struct DailySongView: View {
                     Spacer()
                     // Enable the 'Daily' button only if a song is selected
                     
-                    ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: selectedSongBinding == nil || loadingStateModel.isLoading || postViewModel.isDailyPosted || (postViewModel.dailySong != nil), isLoading: loadingStateModel.isLoading) {
+                    ActionButton(label: LocalizedStringKey("Daily"), symbolName: "waveform", fontColor: .white, backgroundColor: .accentColor, isShareDaily: false, isDisabled: selectedSongBinding == nil || loadingStateViewModel.isLoading || postViewModel.isDailyPosted || (postViewModel.dailySong != nil), isLoading: loadingStateViewModel.isLoading) {
                         
                         guard var user = userViewModel.user, let song = selectedSongBinding else {
                             print("ERROR: User does not exist")
@@ -139,7 +139,7 @@ struct DailySongView: View {
                         let reference = CKRecord.Reference(recordID: user.record.recordID, action: .none)
                         let post = Post(postType: .daily, sender: reference, caption: dailySongViewModel.caption,  songId: song.id, date: Date.now, isAnonymous: false, isActive: true)
                         
-                        loadingStateModel.isLoading = true
+                        loadingStateViewModel.isLoading = true
                         Task {
                             await postViewModel.verifyDailyPostForUser(user: user)
                             await postViewModel.verifyPostFromYesterdayForUser(user: user)
@@ -198,7 +198,7 @@ struct DailySongView: View {
             user.streak += 1
             userViewModel.updateUser(updatedUser: user)
             userViewModel.addPostToUser(sender: user, post: post)
-            loadingStateModel.isLoading = false
+            loadingStateViewModel.isLoading = false
             self.dismiss()
             print("Shared daily")
         }

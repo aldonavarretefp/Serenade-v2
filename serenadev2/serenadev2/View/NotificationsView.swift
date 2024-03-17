@@ -11,28 +11,34 @@ import CloudKit
 
 struct NotificationsView: View {
     
-    @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var userViewModel: UserViewModel
-    @EnvironmentObject var friendRequestViewModel: FriendRequestsViewModel
-    @State private var isLoadingNotifications: Bool = false
-    @State var isLoadingHandleFriendship: Bool = false
+    // MARK: - ViewModel
+    @EnvironmentObject private var userViewModel: UserViewModel
+    @EnvironmentObject private var friendRequestViewModel: FriendRequestsViewModel
+    @StateObject private var loadingStateViewModel = LoadingStateViewModel()
     
+    // MARK: - Environment properties
+    @Environment(\.colorScheme) var colorScheme
+    
+    // MARK: - Body
     var body: some View {
         NavigationStack{
             ZStack{
+                // Background of the view
                 Color.viewBackground
                     .ignoresSafeArea()
+                
+                // Scroll to show all the notifications
                 ScrollView {
                     VStack(spacing: 35) {
 
-                        if isLoadingNotifications {
+                        if loadingStateViewModel.isLoadingNotifications {
                             ProgressView()
                                 .progressViewStyle(.circular)
                                 .font(.title2)
                         } else {
                             ForEach(friendRequestViewModel.friendRequests, id: \.id ){ request  in
                                 if let user = friendRequestViewModel.userDetails[request.sender.recordID] {
-                                    NotificationItem(user: user, friendRequest: request, isDisabled: $isLoadingHandleFriendship)
+                                    NotificationItem(user: user, friendRequest: request, isDisabled: $loadingStateViewModel.isLoadingHandleFriendship)
                                         .transition(.asymmetric(insertion: .opacity, removal: .opacity))
                                 }
                             }
@@ -56,21 +62,19 @@ struct NotificationsView: View {
     }
 
     func updateNotifications() {
-        isLoadingNotifications = true
+        loadingStateViewModel.isLoadingNotifications = true
         withAnimation(.easeInOut(duration: 1.0).delay(1.0) ) {
             if let currentUser = userViewModel.user {
                 print(friendRequestViewModel.friendRequests.count)
                 self.friendRequestViewModel.fetchFriendRequestsForUser(user: currentUser) {
                     print(friendRequestViewModel.friendRequests.count)
-                    isLoadingNotifications = false
+                    loadingStateViewModel.isLoadingNotifications = false
                 }
             }
         }
-        
     }
 }
 
 #Preview {
     NotificationsView()
-        .environment(\.locale, .init(identifier: "it"))
 }

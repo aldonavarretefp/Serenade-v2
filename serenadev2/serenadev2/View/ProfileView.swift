@@ -14,7 +14,7 @@ struct ProfileView: View {
     @EnvironmentObject private var userVM: UserViewModel
     @StateObject private var postVM = PostViewModel()
     @StateObject private var headerViewModel = HeaderViewModel()
-    @StateObject private var loadingStateModel = LoadingState()
+    @StateObject private var loadingStateViewModel = LoadingStateViewModel()
     @StateObject private var profileViewModel = ProfileViewModel()
     
     // MARK: - Body
@@ -98,7 +98,7 @@ struct ProfileView: View {
                     }
                     .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top) {
-                        ProfileBar(friends: $profileViewModel.friendsFromUser, user: $profileViewModel.user, isFriend: $profileViewModel.isFriend, isFriendRequestSent: $profileViewModel.isFriendRequestSent, isFriendRequestRecieved: $profileViewModel.isFriendRequestReceived, showFriendRequestButton: $profileViewModel.showFriendRequestButton, isLoading: $loadingStateModel.isLoading, isLoadingStateOfFriendship: .constant(false), isCurrentUser: true)
+                        ProfileBar(friends: $profileViewModel.friendsFromUser, user: $profileViewModel.user, isFriend: $profileViewModel.isFriend, isFriendRequestSent: $profileViewModel.isFriendRequestSent, isFriendRequestRecieved: $profileViewModel.isFriendRequestReceived, showFriendRequestButton: $profileViewModel.showFriendRequestButton, isLoading: $loadingStateViewModel.isLoading, isLoadingStateOfFriendship: .constant(false), isCurrentUser: true)
                             .opacity(headerViewModel.headerOpacity)
                             .padding(.top, safeArea().top)
                             .padding(.bottom)
@@ -135,9 +135,9 @@ struct ProfileView: View {
             }
             .task {
                 await fetchProfileUserAndPosts()
-                loadingStateModel.isLoading = true
+                loadingStateViewModel.isLoading = true
                 profileViewModel.friendsFromUser = await userVM.fetchFriendsForUser(user: profileViewModel.user)
-                loadingStateModel.isLoading = false
+                loadingStateViewModel.isLoading = false
 //                for friend in friendsFromUser{
 //                    print("THIS ARE THE UPDATED FRIENDS")
 //                    print(friend.tagName)

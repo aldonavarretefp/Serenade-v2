@@ -12,7 +12,7 @@ struct SongDetailView: View {
     // MARK: - ViewModel
     @EnvironmentObject private var postViewModel: PostViewModel
     @StateObject private var songViewModel = SongDetailViewModel()
-    @StateObject private var loadingStateModel = LoadingState()
+    @StateObject private var loadingStateViewModel = LoadingStateViewModel()
     
     // MARK: - Environment properties
     @Environment(\.dismiss) var dismiss
@@ -60,10 +60,10 @@ struct SongDetailView: View {
                     ZStack{
                         // Art work of the passed song
                         SongDetailCoverArt(song: song)
-                            .environmentObject(loadingStateModel)
+                            .environmentObject(loadingStateViewModel)
                             .onAppear {
                                 // Set isLoading to true when the view appears
-                                loadingStateModel.isLoading = true
+                                loadingStateViewModel.isLoading = true
                             }
                         
                         // Song meta data
@@ -92,7 +92,7 @@ struct SongDetailView: View {
                     
                     // View to play the preview of the passed song
                     previewPlayer
-                        .environmentObject(loadingStateModel)
+                        .environmentObject(loadingStateViewModel)
                     
                     Spacer()
                     
