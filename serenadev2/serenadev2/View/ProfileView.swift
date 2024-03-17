@@ -8,6 +8,7 @@
 import SwiftUI
 import CloudKit
 
+
 struct ProfileView: View {
     
     // MARK: - ViewModel
@@ -15,7 +16,12 @@ struct ProfileView: View {
     @StateObject private var postVM = PostViewModel()
     @StateObject private var headerViewModel = HeaderViewModel()
     @StateObject private var loadingStateViewModel = LoadingStateViewModel()
-    @StateObject private var profileViewModel = ProfileViewModel()
+    
+    @StateObject private var profileViewModel: ProfileViewModel = ProfileViewModel()
+    
+    
+    @State var user: User = User(name: "No User", tagName: "nouser", email: "", streak: 0, profilePicture: "", isActive: false, record: CKRecord(recordType: UserRecordKeys.type.rawValue))
+    
     
     // MARK: - Body
     var body: some View {
@@ -41,8 +47,7 @@ struct ProfileView: View {
                                     .offset(y: -50)
                                 ForEach(postVM.posts, id: \.self) { post in
                                     // Ensure PostView can handle nil or incomplete data gracefully
-                                    if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID], let song = postVM.songsDetails[post.songId] {
-                                        // When the sender is loaded show the post component
+                                    if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID.recordName], let song = postVM.songsDetails[post.songId] {
                                         PostComponentInProfile(post: post, sender: senderUser, song: song)
                                     }
                                     else {
@@ -53,48 +58,10 @@ struct ProfileView: View {
                                 }
                             }
                         }
-                        .padding(.top, headerViewModel.headerHeight)
+                        .padding(.top, profileViewModel.headerHeight)
                         .padding([.bottom,.horizontal])
                         .offset(y: -20)
-                        .offsetY{ previous, current in
-                            // Moving header based on direction scroll
-                            if previous > current{
-                                // MARK: - Up
-                                if headerViewModel.direction != .up && current < 0{
-                                    headerViewModel.shiftOffset = current - headerViewModel.headerOffset
-                                    headerViewModel.direction = .up
-                                    headerViewModel.lastHeaderOffset = headerViewModel.headerOffset
-                                }
-                                
-                                let offset = current < 0 ? (current - headerViewModel.shiftOffset) : 0
-                                
-                                // Checking if it does not goes over header height
-                                headerViewModel.headerOffset = (-offset < headerViewModel.headerHeight ? (offset < 0 ? offset : 0) : -headerViewModel.headerHeight)
-                                
-                                // get the normalized offset so it is always between 0 and 1
-                                let normalizedOffset = 100
-                                
-                                // Calculate the opaciti for the header and the button
-                                headerViewModel.headerOpacity = max(0.0, 1.0 + Double(normalizedOffset))
-                                
-                            } else {
-                                // MARK: - Down
-                                if headerViewModel.direction != .down{
-                                    headerViewModel.shiftOffset = current
-                                    headerViewModel.direction = .down
-                                    headerViewModel.lastHeaderOffset = headerViewModel.headerOffset
-                                }
-                                
-                                let offset = headerViewModel.lastHeaderOffset + (current - headerViewModel.shiftOffset)
-                                headerViewModel.headerOffset = (offset > 0 ? 0 : offset)
-                                
-                                // get the normalized offset so it is always between 0 and 1
-                                let normalizedOffset = 100
-                                
-                                // Calculate the opaciti for the header and the button
-                                headerViewModel.headerOpacity = max(0.0, 1.0 + Double(normalizedOffset))
-                            }
-                        }
+                        .offsetY{prev,curr in profileViewModel.adjustOffsets(previous: prev, current: curr)}
                     }
                     .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top) {
@@ -110,18 +77,19 @@ struct ProfileView: View {
                                         Color.clear
                                             .onAppear(){
                                                 // MARK: - Retreiving rect using proxy
-                                                headerViewModel.headerHeight = proxy[anchor].height
+                                                profileViewModel.headerHeight = proxy[anchor].height
                                             }
                                     }
                                 }
                             }
-                            .offset(y: -headerViewModel.headerOffset < headerViewModel.headerHeight ? headerViewModel.headerOffset : (headerViewModel.headerOffset < 0 ? headerViewModel.headerOffset : 0))
+                            .offset(y: -profileViewModel.headerOffset < profileViewModel.headerHeight ? profileViewModel.headerOffset : (profileViewModel.headerOffset < 0 ? profileViewModel.headerOffset : 0))
                         
                     }
                     .ignoresSafeArea(.all, edges: .top)
                     .refreshable {
                         await fetchProfileUserAndPosts()
                     }
+                    
                 }
             }
             // This overlay is to show a bar behind the status bar
@@ -130,8 +98,6 @@ struct ProfileView: View {
                     .background()
                     .ignoresSafeArea(edges: .top)
                     .frame(height: 0)
-            }
-            .onAppear{
             }
             .task {
                 await fetchProfileUserAndPosts()
@@ -145,17 +111,14 @@ struct ProfileView: View {
             }
         }
     }
+    
+    
     private func fetchProfileUserAndPosts() async -> Void {
         guard let user = userVM.user else {
             print("No user in userViewModel")
             return
         }
         userVM.fetchUserFromRecord(record: user.record) { returnedUser in
-            guard let updatedUser = returnedUser else {
-                print("NO USER FROM DB")
-                return
-            }
-            print("Fetched User from DB: \(updatedUser)")
             userVM.user = returnedUser
         }
         guard let user = userVM.user else {
@@ -163,31 +126,7 @@ struct ProfileView: View {
             return
         }
         profileViewModel.user = user
-        Task{
-            if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
-                postVM.posts = posts
-                //                    postVM.sortPostsByDate()
-                for post in posts {
-                    print("Post: ", post.songId)
-                    guard let sender = post.sender else {
-                        print("Post has no sender")
-                        return
-                    }
-                    
-                    // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
-                    await postVM.fetchSenderDetailsAsync(for: sender.recordID)
-                    let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
-                    switch result {
-                    case .success(let songModel):
-                        postVM.songsDetails[post.songId] = songModel
-                    default:
-                        print("ERROR: Couldn't bring song details")
-                        break;
-                        
-                    }
-                }
-            }
-        }
+        await postVM.fetchAllPostsFromUserID(id: user.record.recordID)
     }
 }
 

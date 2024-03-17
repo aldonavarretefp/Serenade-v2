@@ -16,14 +16,14 @@ enum PostViewModelError: String, Error {
 
 
 class PostViewModel: ObservableObject {
-    @Published var senderDetails: [CKRecord.ID: User] = [:]
-    @Published var songsDetails: [String: SongModel] = [:]
-    @Published var posts: [Post] = []
+    var posts: [Post] = []
     @Published var dailyPost: Post?
     @Published var dailySong: SongModel? = nil
-    @Published var isDailyPosted: Bool = true
-    @Published var hasPostedYesterday: Bool = true
-    @Published var streak: Int = 0
+    @Published var songsDetails: [String: SongModel] = [:]
+    @Published var senderDetails: [String: User] = [:]
+    var isDailyPosted: Bool = true
+    var hasPostedYesterday: Bool = true
+    var streak: Int = 0
     
     private var fetchCursor: CKQueryOperation.Cursor?
     private var isFetching: Bool = false
@@ -43,22 +43,30 @@ class PostViewModel: ObservableObject {
             
             if let user = User(record: record) {
                 DispatchQueue.main.async {
-                    self.senderDetails[recordID] = user
+                    self.senderDetails[recordID.recordName] = user
                 }
             }
         }
     }
     
+    deinit {
+        print("PostViewModel deinitalized")
+        self.songsDetails = [:]
+        self.senderDetails = [:]
+    }
     
     //MARK: AsyncFunc
-    func fetchSenderDetailsAsync(for recordID: CKRecord.ID) async {
+    func fetchSenderDetails(for recordID: CKRecord.ID) async {
+        if self.senderDetails[recordID.recordName] != nil {
+            return
+        }
         do {
             let predicate = NSPredicate(format: "recordID == %@", recordID)
             let users: [User] = try await CloudKitUtility.fetch(predicate: predicate, recordType: UserRecordKeys.type.rawValue)
             if users.count > 0 {
-                let user = users[0]
+                let user = users.first
                 DispatchQueue.main.async {
-                    self.senderDetails[recordID] = user
+                    self.senderDetails[recordID.recordName] = user
                 }
             }
         } catch {
@@ -66,162 +74,130 @@ class PostViewModel: ObservableObject {
         }
     }
     
-    func fetchAllPostsFromUserIDAsync(id: CKRecord.ID, customPredicate: NSPredicate? = nil) async -> [Post]? {
+    func fetchAllPostsFromUserID(id: CKRecord.ID, customPredicate: NSPredicate? = nil) async {
         let recordToMatch = CKRecord.Reference(recordID: id, action: .none)
-        
+        let recordType = PostRecordKeys.type.rawValue
         var predicate: NSPredicate
         if let customPredicate {
             predicate = customPredicate
         } else {
             predicate = NSPredicate(format: "sender == %@ && isActive == 1", recordToMatch)
         }
-        
-        let recordType = PostRecordKeys.type.rawValue
-        let sortDescriptions: [NSSortDescriptor] = [.init(key: "date", ascending: false)]
+        let sortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "date", ascending: false)]
         
         do {
-            let posts: [Post] = try await CloudKitUtility.fetch(predicate: predicate, recordType: recordType, sortDescriptions: sortDescriptions)
+            let posts: [Post] = try await CloudKitUtility.fetch(predicate: predicate, recordType: recordType, sortDescriptions: sortDescriptors)
+            
+            await MainActor.run {
+                self.posts = posts
+            }
+            
+            await fetchDetailsForPosts(posts)
+        } catch {
+            print("Error fetching posts: \(error)")
+        }
+    }
+    
+    func fetchAllPostsFromUserID2(id: CKRecord.ID, customPredicate: NSPredicate? = nil) async -> [Post] {
+        let recordToMatch = CKRecord.Reference(recordID: id, action: .none)
+        let recordType = PostRecordKeys.type.rawValue
+        var predicate: NSPredicate
+        if let customPredicate {
+            predicate = customPredicate
+        } else {
+            predicate = NSPredicate(format: "sender == %@ && isActive == 1", recordToMatch)
+        }
+        let sortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "date", ascending: false)]
+        
+        do {
+            let posts: [Post] = try await CloudKitUtility.fetch(predicate: predicate, recordType: recordType, sortDescriptions: sortDescriptors)
+            
             return posts
         } catch {
-            print("Error fetching posts: \(error.localizedDescription)")
-            return nil
+            print("Error fetching posts: \(error)")
+            return []
         }
     }
     
-    func fetchAllPostsAsync(user: User) async {
-        let userID: CKRecord.Reference = CKRecord.Reference(recordID: user.record.recordID, action: .none)
-        if user.friends.count == 0 {
-            // Now call an async version of `fetchAllPostsFromUserID`
-            let calendar = Calendar.current
-            let now = Date()
-            let startOfDay = calendar.startOfDay(for: now)
-            
-            guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)?.addingTimeInterval(-1) else {
-                return
-            }
+    
+    private func createPredicateForPosts(user: User, userList: [CKRecord.Reference]) -> NSPredicate {
+        let calendar = Calendar.current
+        let now = Date()
+        let startOfDay = calendar.startOfDay(for: now)
+        
+        guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)?.addingTimeInterval(-1) else {
+            fatalError("Error calculating end of day")
+        }
+        
+        print(startOfDay, endOfDay)
+        
+        if userList.isEmpty {
             let recordToMatch = CKRecord.Reference(recordID: user.record.recordID, action: .none)
-            let predicate = NSPredicate(format: "sender == %@ && date >= %@ && date < %@ && isActive == 1", recordToMatch, startOfDay as NSDate, endOfDay as NSDate)
-            
-            if let posts = await fetchAllPostsFromUserIDAsync(id: user.record.recordID, customPredicate: predicate) {
-                await MainActor.run {
-                    self.posts = posts
-                }
-                for post in posts {
-                    guard let sender = post.sender else {
-                        print("Post has no sender")
-                        return
-                    }
-                    // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
-                    await fetchSenderDetailsAsync(for: sender.recordID)
-                    let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
-                    switch result {
-                    case .success(let songModel):
-                        DispatchQueue.main.async {
-                            self.songsDetails[post.songId] = songModel
-                        }
-                    default:
-                        print("ERROR: Couldn't bring song details")
-                        break;
-                    }
-                    
-                }
-            }
+            return NSPredicate(format: "sender == %@ && date >= %@ && date < %@ && isActive == 1", recordToMatch, startOfDay as NSDate, endOfDay as NSDate)
         } else {
-            let userFriends = user.friends
-            var userList = userFriends
-            userList.append(userID)
-            
-            let calendar = Calendar.current
-            let now = Date()
-            let startOfDay = calendar.startOfDay(for: now)
-            
-            guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)?.addingTimeInterval(-1) else {
-                return
-            }
-            
-            let predicate = NSPredicate(format: "sender IN %@ && date >= %@ && date < %@ && isActive == 1", userList, startOfDay as NSDate, endOfDay as NSDate)
-            let sortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "date", ascending: false)]
-            let recordType = PostRecordKeys.type.rawValue
-            
-            do {
-                let posts: [Post] = try await CloudKitUtility.fetch(predicate: predicate, recordType: recordType, sortDescriptions: sortDescriptors)
-                
-                DispatchQueue.main.async {
-                    self.posts = posts
-                }
-                for post in posts {
-                    guard let sender = post.sender else {
-                        print("Post has no sender")
-                        return
-                    }
-                    // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
-                    await fetchSenderDetailsAsync(for: sender.recordID)
-                    let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
-                    switch result {
-                    case .success(let songModel):
-                        DispatchQueue.main.async {
-                            self.songsDetails[post.songId] = songModel
-                        }
-                    default:
-                        print("ERROR: Couldn't bring song details")
-                        break;
-                    }
-                    
-                }
-            } catch {
-                print("Error fetching posts: \(error)")
-            }
-            
+            return NSPredicate(format: "sender IN %@ && date >= %@ && date < %@ && isActive == 1", userList, startOfDay as NSDate, endOfDay as NSDate)
         }
     }
     
-    //MARK: Closure Functions
+    func fetchAllPosts(user: User) async {
+        var userList: [CKRecord.Reference] = user.friends
+        userList.append(CKRecord.Reference(recordID: user.record.recordID, action: .none))
+        
+        let predicate = createPredicateForPosts(user: user, userList: userList)
     
-    func fetchAllPosts(user: User) {
-        let userID: CKRecord.Reference = CKRecord.Reference(recordID: user.record.recordID, action: .none)
-        if user.friends.count == 0 {
-            fetchAllPostsFromUserID(id: user.record.recordID) { (returnedPosts:[Post]?) in
-                guard let posts = returnedPosts else {
-                    print("No posts")
+        let sortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "date", ascending: false)]
+        
+        do {
+            
+            let posts: [Post] = try await CloudKitUtility.fetch(predicate: predicate, recordType: PostRecordKeys.type.rawValue, sortDescriptions: sortDescriptors)
+            print(posts.count)
+            
+            await MainActor.run {
+                self.posts = posts
+            }
+            
+            await fetchDetailsForPosts(posts)
+        } catch {
+            print("Error fetching posts: \(error)")
+        }
+    }
+    
+    private func fetchDetailsForPosts(_ posts: [Post]) async {
+        await withTaskGroup(of: Void.self) { group in
+            // First, fetch sender details concurrently
+            for post in posts  {
+                
+                guard let sender = post.sender else {
                     return
                 }
-                DispatchQueue.main.async {
-                    self.posts = posts
+                group.addTask {
+                    await self.fetchSenderDetails(for: sender.recordID)
                 }
-                for post in posts {
-                    guard let sender = post.sender else {
-                        print("Post has no sender")
-                        return
+            }
+            
+            // Then, fetch song details concurrently
+            for post in posts {
+                group.addTask {
+                    if self.songsDetails[post.songId] == nil {
+                        let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
+                        await self.handleSongFetchResult(result, for: post.songId)
                     }
-                    self.fetchSenderDetails(for: sender.recordID)
-                    
                 }
             }
         }
-        else {
-            var userList = user.friends
-            userList.append(userID)
-            
-            let predicate = NSPredicate(format: "sender IN %@ && isActive == 1", userList)
-            let recordType = PostRecordKeys.type.rawValue
-            
-            CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
-                .receive(on: DispatchQueue.main)
-                .sink { _ in
-                    
-                } receiveValue: { (returnedPosts: [Post]?) in
-                    guard let posts = returnedPosts else {
-                        print("No returned posts userfriends is NIL")
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        self.posts = posts
-                    }
-                    
-                }
-                .store(in: &cancellables)
+    }
+    
+    private func handleSongFetchResult(_ result: Result<SongModel, Error>, for songId: String) async {
+        await MainActor.run {
+            switch result {
+            case .success(let songModel):
+                self.songsDetails[songId] = songModel
+            case .failure(let error):
+                print("ERROR: Couldn't fetch song details for songId \(songId): \(error)")
+            }
         }
     }
+    
     
     func fetchUserFromRecord(record: CKRecord, completion: @escaping (User?) -> Void) {
         let predicate = NSPredicate(format: "recordID == %@", record.recordID)
@@ -238,33 +214,6 @@ class PostViewModel: ObservableObject {
                 }
                 let userR = users[0]
                 completion(userR) // Llamada asincrónica exitosa con usuario devuelto
-            }
-            .store(in: &cancellables)
-    }
-    
-    func fetchAllPostsFromUserID(id: CKRecord.ID, completion: @escaping ([Post]?) -> Void){
-        let recordToMatch = CKRecord.Reference(recordID: id, action: .none)
-        let predicate = NSPredicate(format: "sender == %@ && isActive == 1", recordToMatch)
-        
-        let recordType = PostRecordKeys.type.rawValue
-        
-        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                
-            } receiveValue: { (returnedPosts: [Post]?) in
-                guard let posts = returnedPosts else {
-                    return
-                }
-                completion(posts)
-                for post in posts {
-                    guard let sender = post.sender else {
-                        print("Post has no sender")
-                        return
-                    }
-                    self.fetchSenderDetails(for: sender.recordID)
-                }
-                
             }
             .store(in: &cancellables)
     }
@@ -303,8 +252,9 @@ class PostViewModel: ObservableObject {
         guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)?.addingTimeInterval(-1) else {
             return (false, nil)
         }
+        let posts = await fetchAllPostsFromUserID2(id: user.record.recordID)
         
-        guard let userPosts = await fetchAllPostsFromUserIDAsync(id: user.record.recordID), let newestPost = userPosts.first else {
+        guard let newestPost = posts.first else {
             return (false, nil)
         }
         // Check if the newest post (first in the sorted array) is within the target date range
@@ -366,7 +316,7 @@ extension PostViewModel {
                     cursor: fetchCursor)
                 for post in newPosts {
                     guard let sender = post.sender else { return }
-                    await fetchSenderDetailsAsync(for: sender.recordID)
+                    await fetchSenderDetails(for: sender.recordID)
                     let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
                     switch result {
                     case .success(let songModel):

@@ -23,11 +23,12 @@ struct ContentView: View {
         
         TabView {
             Group{
-                FeedView()
+                FeedView(postViewModel: postViewModel)
                     .tabItem {
                         Image("feed.fill")
                         Text(LocalizedStringKey("Feed"))
                     }
+                    
                 SearchView()
                     .tabItem {
                         Label(LocalizedStringKey("Search"), systemImage: "magnifyingglass")
@@ -46,30 +47,31 @@ struct ContentView: View {
                 }
 
                 self.user = user
-                
                 userViewModel.friends = await userViewModel.fetchFriendsForUser(user: user)
-                print("USER HAS THIS NUMBER OF FRIENDS")
-                print(userViewModel.friends.count)
-                
-                //                userViewModel.fetchUserFromAccountID(accountID: "000758.2f1d6dd1cd4e4563a99a6ad78f20cde3.0946") { returnedUser in
-                //                    guard let user = returnedUser else {
-                //                        print("No user returned")
-                //                        return
-                //                    }
-                //                    self.user = returnedUser
-                //                }
-
-                await postViewModel.fetchAllPostsAsync(user: user)
-                await postViewModel.verifyDailyPostForUser(user: user)
-                await postViewModel.verifyPostFromYesterdayForUser(user: user)
+                await fetchDataConcurrently(user: user)
                 if postViewModel.hasPostedYesterday == false && postViewModel.isDailyPosted == false {
                     user.streak = 0
                     userViewModel.updateUser(updatedUser: user)
                 }
-
+                
             }
         }
     }
+    func fetchDataConcurrently(user: User) async {
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                await postViewModel.fetchAllPosts(user: user)
+            }
+            
+            group.addTask {
+                await postViewModel.verifyDailyPostForUser(user: user)
+                await postViewModel.verifyPostFromYesterdayForUser(user: user)
+                
+            }
+            
+        }
+    }
+
 }
 
 #Preview {

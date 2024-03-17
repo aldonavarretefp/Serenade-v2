@@ -12,8 +12,9 @@ class UserViewModel: ObservableObject {
     @Published var finishedTheProfile: Bool = false
     @Published var hasPostedHisDaily: Bool = false
     var cancellables = Set<AnyCancellable>()
+    weak var cloudKitUtility: MockCloudKitUtility? = nil
     
-    init(){
+    init() {
         let userID = UserDefaults.standard.string(forKey: UserDefaultsKeys.userID) ?? ""
         print("UserID: ", userID)
         if userID != "" {
@@ -23,7 +24,6 @@ class UserViewModel: ObservableObject {
                     self.error = "No user fetch"
                     return
                 }
-                print("Fetched User from DB: \(user)")
                 DispatchQueue.main.async {
                     self.user = returnedUser
                     self.userID = userID
@@ -31,10 +31,12 @@ class UserViewModel: ObservableObject {
                     self.tagNameExists = user.tagName != userID.lowercased()
                 }
             }
-            
-            
         }
         
+    }
+    
+    init(cloudKitUtility: MockCloudKitUtility? = nil) {
+        self.cloudKitUtility = cloudKitUtility
     }
     
     func handleAuthorization(userID: String, fullName: String, email: String) {
@@ -160,7 +162,7 @@ class UserViewModel: ObservableObject {
     }
 
     
-    func createUser(user: User){
+    func createUser(user: User) {
         if(user.tagName == "") { return }
         guard let newUser = User(accountID: user.accountID, name: user.name, tagName: user.tagName, email: user.email, friends: user.friends, posts: user.posts, streak: user.streak, profilePicture: user.profilePicture, isActive: user.isActive, profilePictureAsset: nil) else {
             self.error.append(" No se pudo crear un nuevo usuario en createUser")

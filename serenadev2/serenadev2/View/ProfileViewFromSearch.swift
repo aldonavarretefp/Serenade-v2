@@ -46,7 +46,7 @@ struct ProfileViewFromSearch: View {
                             })
                         } else {
                             ForEach(postVM.posts, id: \.self) { post in
-                                if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID], let song = postVM.songsDetails[post.songId] {
+                                if let sender = post.sender, let senderUser = postVM.senderDetails[sender.recordID.recordName], let song = postVM.songsDetails[post.songId] {
                                     PostComponentInProfile(post: post, sender: senderUser, song: song)
                                 }
                                 else {
@@ -89,7 +89,6 @@ struct ProfileViewFromSearch: View {
                 print("NO USER FROM DB")
                 return
             }
-            print("Fetched User from DB: \(updatedUser)")
             userVM.user = updatedUser
             profileViewModel.isFriend = userVM.isFriend(of: user)
             print(String("isFriend: \(profileViewModel.isFriend)"))
@@ -122,26 +121,8 @@ struct ProfileViewFromSearch: View {
     private func fetchProfilePosts() async {
         Task {
             let user = self.user
-            if let posts = await postVM.fetchAllPostsFromUserIDAsync(id: user.record.recordID) {
-                postVM.posts = posts
-                for post in posts {
-                    print("Post: ", post.songId)
-                    guard let sender = post.sender else {
-                        print("Post has no sender")
-                        return
-                    }
-                    // Make sure `fetchSenderDetails` is also async if it performs asynchronous operations
-                    await postVM.fetchSenderDetailsAsync(for: sender.recordID)
-                    let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
-                    switch result {
-                    case .success(let songModel):
-                        postVM.songsDetails[post.songId] = songModel
-                    default:
-                        print("ERROR: Couldn't bring song details")
-                        break;
-                    }
-                }
-            }
-        } 
+            await postVM.fetchAllPostsFromUserID(id: user.record.recordID)
+        }
+        
     }
 }
