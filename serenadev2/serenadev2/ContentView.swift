@@ -28,7 +28,7 @@ struct ContentView: View {
                         Image("feed.fill")
                         Text(LocalizedStringKey("Feed"))
                     }
-                    
+                
                 SearchView()
                     .tabItem {
                         Label(LocalizedStringKey("Search"), systemImage: "magnifyingglass")
@@ -41,37 +41,33 @@ struct ContentView: View {
             .toolbarBackground(.visible, for: .tabBar)
             .toolbarBackground(colorScheme == .light ? .white : .black, for: .tabBar)
             .task {
-                guard var user = userViewModel.user else {
+                guard let user = userViewModel.user else {
                     print("NO USER FROM PROFILE")
                     return
                 }
-
                 self.user = user
                 userViewModel.friends = await userViewModel.fetchFriendsForUser(user: user)
                 await fetchDataConcurrently(user: user)
-                if postViewModel.hasPostedYesterday == false && postViewModel.isDailyPosted == false {
-                    user.streak = 0
-                    userViewModel.updateUser(updatedUser: user)
-                }
-                
             }
         }
     }
     func fetchDataConcurrently(user: User) async {
         await withTaskGroup(of: Void.self) { group in
             group.addTask {
-                await postViewModel.fetchAllPosts(user: user)
-            }
-            
-            group.addTask {
-                await postViewModel.verifyDailyPostForUser(user: user)
-                await postViewModel.verifyPostFromYesterdayForUser(user: user)
+                var user = user
+                let newStreak = await postViewModel.verifyUserStreak(user: user)
+                if user.streak != newStreak {
+                    user.streak = newStreak
+                    await userViewModel.updateUser(updatedUser: user)
+                }
                 
             }
-            
+            group.addTask {
+                await postViewModel.fetchAllPosts(user: user)
+            }
         }
     }
-
+    
 }
 
 #Preview {

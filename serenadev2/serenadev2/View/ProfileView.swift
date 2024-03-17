@@ -21,6 +21,8 @@ struct ProfileView: View {
     
     
     @State var user: User = User(name: "No User", tagName: "nouser", email: "", streak: 0, profilePicture: "", isActive: false, record: CKRecord(recordType: UserRecordKeys.type.rawValue))
+    @State var posts: [Post] = []
+    
     
     
     // MARK: - Body
@@ -65,25 +67,9 @@ struct ProfileView: View {
                     }
                     .coordinateSpace(name: "SCROLL")
                     .overlay(alignment: .top) {
-                        ProfileBar(friends: $profileViewModel.friendsFromUser, user: $profileViewModel.user, isFriend: $profileViewModel.isFriend, isFriendRequestSent: $profileViewModel.isFriendRequestSent, isFriendRequestRecieved: $profileViewModel.isFriendRequestReceived, showFriendRequestButton: $profileViewModel.showFriendRequestButton, isLoading: $loadingStateViewModel.isLoading, isLoadingStateOfFriendship: .constant(false), isCurrentUser: true)
-                            .opacity(headerViewModel.headerOpacity)
-                            .padding(.top, safeArea().top)
-                            .padding(.bottom)
-                            .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){ $0 }
-                        // Get the header height
-                            .overlayPreferenceValue(HeaderBoundsKey.self) { value in
-                                GeometryReader { proxy in
-                                    if let anchor = value {
-                                        Color.clear
-                                            .onAppear(){
-                                                // MARK: - Retreiving rect using proxy
-                                                profileViewModel.headerHeight = proxy[anchor].height
-                                            }
-                                    }
-                                }
-                            }
-                            .offset(y: -profileViewModel.headerOffset < profileViewModel.headerHeight ? profileViewModel.headerOffset : (profileViewModel.headerOffset < 0 ? profileViewModel.headerOffset : 0))
-                        
+                        if let user = userVM.user {
+                            UserProfileBar(user: user)
+                        }
                     }
                     .ignoresSafeArea(.all, edges: .top)
                     .refreshable {
@@ -127,6 +113,29 @@ struct ProfileView: View {
         }
         profileViewModel.user = user
         await postVM.fetchAllPostsFromUserID(id: user.record.recordID)
+    }
+}
+
+extension ProfileView {
+    @ViewBuilder
+    func UserProfileBar(user: User) -> some View {
+        ProfileBar(friends: $profileViewModel.friendsFromUser, user: .constant(user), isFriend: $profileViewModel.isFriend, isFriendRequestSent: $profileViewModel.isFriendRequestSent, isFriendRequestRecieved: $profileViewModel.isFriendRequestReceived, showFriendRequestButton: $profileViewModel.showFriendRequestButton, isLoading: $loadingStateViewModel.isLoading, isLoadingStateOfFriendship: .constant(false), isCurrentUser: true)
+            .opacity(profileViewModel.headerOpacity)
+            .padding(.top, safeArea().top)
+            .padding(.bottom)
+            .anchorPreference(key: HeaderBoundsKey.self, value: .bounds){ $0 }
+            .overlayPreferenceValue(HeaderBoundsKey.self) { value in
+                GeometryReader { proxy in
+                    if let anchor = value {
+                        Color.clear
+                            .onAppear(){
+                                // MARK: - Retreiving rect using proxy
+                                profileViewModel.headerHeight = proxy[anchor].height
+                            }
+                    }
+                }
+            }
+            .offset(y: -profileViewModel.headerOffset < profileViewModel.headerHeight ? profileViewModel.headerOffset : (profileViewModel.headerOffset < 0 ? profileViewModel.headerOffset : 0))
     }
 }
 

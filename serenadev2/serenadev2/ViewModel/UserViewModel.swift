@@ -190,7 +190,7 @@ class UserViewModel: ObservableObject {
         
     }
     
-    func updateUser(updatedUser: User, completionHandler: (() -> ())? = nil) {   
+    func updateUser(updatedUser: User) {
         if(updatedUser.tagName == "" || updatedUser.name == "") {
             return
         }
@@ -207,7 +207,31 @@ class UserViewModel: ObservableObject {
                 }
                 
                 print("\(newUser.name) updated")
+                break;
+            case .failure(let error):
+                print("Error while updating the user ", error.localizedDescription)
+                break;
+            }
+        }
+    }
+    func updateUser(updatedUser: User) async {
+        if(updatedUser.tagName == "" || updatedUser.name == "") {
+            return
+        }
+        
+        var copyUser = updatedUser
+        guard let newUser = copyUser.update(newUser: updatedUser) else { return }
+        CloudKitUtility.update(item: newUser) { result in
+            switch result {
+            case .success(_):
                 
+                if let user = self.user, updatedUser.accountID == user.accountID {
+                    DispatchQueue.main.async {
+                        self.user = newUser
+                    }
+                }
+                
+                print("\(newUser.name) updated")
                 break;
             case .failure(let error):
                 print("Error while updating the user ", error.localizedDescription)
@@ -396,3 +420,5 @@ class UserViewModel: ObservableObject {
         return user1.accountID == user2.accountID
     }
 }
+
+

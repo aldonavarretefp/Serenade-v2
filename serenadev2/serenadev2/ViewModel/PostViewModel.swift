@@ -12,6 +12,7 @@ import SwiftUI
 
 enum PostViewModelError: String, Error {
     case fetchedMoreThanOnePostWithSameID = "Didn't fetch post"
+    case couldNotFetchSenderDetails
 }
 
 
@@ -50,13 +51,12 @@ class PostViewModel: ObservableObject {
     }
     
     deinit {
-        print("PostViewModel deinitalized")
         self.songsDetails = [:]
         self.senderDetails = [:]
     }
     
     //MARK: AsyncFunc
-    func fetchSenderDetails(for recordID: CKRecord.ID) async {
+    func fetchSenderDetails(for recordID: CKRecord.ID) async throws {
         if self.senderDetails[recordID.recordName] != nil {
             return
         }
@@ -70,7 +70,7 @@ class PostViewModel: ObservableObject {
                 }
             }
         } catch {
-            print("Error fetching user details: \(error.localizedDescription)")
+            throw PostViewModelError.couldNotFetchSenderDetails
         }
     }
     
@@ -144,13 +144,12 @@ class PostViewModel: ObservableObject {
         userList.append(CKRecord.Reference(recordID: user.record.recordID, action: .none))
         
         let predicate = createPredicateForPosts(user: user, userList: userList)
-    
+        
         let sortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "date", ascending: false)]
         
         do {
             
             let posts: [Post] = try await CloudKitUtility.fetch(predicate: predicate, recordType: PostRecordKeys.type.rawValue, sortDescriptions: sortDescriptors)
-            print(posts.count)
             
             await MainActor.run {
                 self.posts = posts
@@ -163,15 +162,14 @@ class PostViewModel: ObservableObject {
     }
     
     private func fetchDetailsForPosts(_ posts: [Post]) async {
-        await withTaskGroup(of: Void.self) { group in
+        await withThrowingTaskGroup(of: Void.self) { group in
             // First, fetch sender details concurrently
             for post in posts  {
-                
                 guard let sender = post.sender else {
                     return
                 }
                 group.addTask {
-                    await self.fetchSenderDetails(for: sender.recordID)
+                    try await self.fetchSenderDetails(for: sender.recordID)
                 }
             }
             
@@ -265,11 +263,23 @@ class PostViewModel: ObservableObject {
         return (false, nil)
     }
     
-    func verifyDailyPostForUser(user: User) async -> Void {
-        let today: Date = .now
-        let (hasPostedToday, newestPost) = await self.hasPostFromDate(date: today, user: user)
-        if hasPostedToday {
-            self.isDailyPosted = true
+    func verifyUserStreak(user: User) async -> Int {
+        let today = Date.now
+        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
+        
+        let (hasPostedToday, newestPost) = await hasPostFromDate(date: today, user: user)
+        let hasPostedYesterday = await hasPostFromDate(date: yesterday, user: user).0
+    
+        // Determine the new streak value
+        switch (hasPostedYesterday, hasPostedToday) {
+        case (false, false):
+            // If no posts both today and yesterday, streak ends
+            return 0
+        case (true, false):
+            // Posted yesterday, but not today: keep streak unchanged
+            return user.streak
+        case (_, true):
+            // Posted today: get the last song to pin
             do {
                 if let newestPost {
                     let song: SongModel = try await SongService.fetchSongById(newestPost.songId)
@@ -280,24 +290,9 @@ class PostViewModel: ObservableObject {
             } catch let error {
                 print("ERROR: hasPostFromDate \(error.localizedDescription)")
             }
-        } else {
-            self.isDailyPosted = false
+            return user.streak
         }
     }
-    
-    func verifyPostFromYesterdayForUser(user: User) async -> Void {
-        guard let yesterday: Date = Calendar.current.date(byAdding: .day, value: -1, to: .now) else {
-            print("Couldn't create yesterday date")
-            return
-        }
-        let (hasPostedYesterday, _) = await self.hasPostFromDate(date: yesterday, user: user)
-        if hasPostedYesterday {
-            self.hasPostedYesterday = true
-        } else {
-            self.hasPostedYesterday = false
-        }
-    }
-    
 }
 
 
@@ -316,7 +311,7 @@ extension PostViewModel {
                     cursor: fetchCursor)
                 for post in newPosts {
                     guard let sender = post.sender else { return }
-                    await fetchSenderDetails(for: sender.recordID)
+                    try await fetchSenderDetails(for: sender.recordID)
                     let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
                     switch result {
                     case .success(let songModel):
@@ -336,7 +331,7 @@ extension PostViewModel {
                     self.hasMorePosts = newCursor != nil
                     self.isFetching = false
                 }
-            } catch {
+            } catch let error {
                 print("An error occurred: \(error)")
                 DispatchQueue.main.async {
                     self.isFetching = false

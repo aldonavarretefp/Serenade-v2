@@ -63,12 +63,12 @@ final class UserViewModelTests: XCTestCase {
         
         let expectation = XCTestExpectation(description: "Handle failure in fetching user")
         
-        viewModel.fetchUserFromAccountID(accountID: "testID") { user in
+        viewModel.fetchUserFromAccountID(accountID: "NOVALIDUSERID") { user in
             XCTAssertNil(user)
             expectation.fulfill()
         }
         
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [expectation], timeout: 1.0)
     }
     
     // Add more tests...

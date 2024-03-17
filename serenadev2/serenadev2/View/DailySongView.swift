@@ -143,10 +143,10 @@ struct DailySongView: View {
                         
                         loadingStateViewModel.isLoading = true
                         Task {
-                            await postViewModel.verifyDailyPostForUser(user: user)
-                            await postViewModel.verifyPostFromYesterdayForUser(user: user)
-                            if postViewModel.hasPostedYesterday == false && postViewModel.isDailyPosted == false {
-                                user.streak = 0
+                            let newStreak = await postViewModel.verifyUserStreak(user: user)
+                            if user.streak == newStreak {
+                                user.streak += 1
+                                await userViewModel.updateUser(updatedUser: user)
                             }
                             createPost(user: user, post: post)
                         }
