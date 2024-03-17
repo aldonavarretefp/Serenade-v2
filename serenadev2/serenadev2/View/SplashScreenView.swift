@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct SplashScreenView: View {
+    
+    // MARK: - Environment properties
     @Environment(\.colorScheme) var colorScheme
     
+    // MARK: - Properties
     @Binding var isShowingSplashScreen: Bool
     
     var body: some View {
         ZStack{
-            
+            // Background of the view
             if colorScheme == .dark{
                 Color.black.ignoresSafeArea()
             }
@@ -22,8 +25,8 @@ struct SplashScreenView: View {
                 Color.white.ignoresSafeArea()
             }
             
+            // Show the app logo at the middle of the view
             Image("AppLogo")
-            
         }
         .onAppear {
             // Delay to simulate loading time
