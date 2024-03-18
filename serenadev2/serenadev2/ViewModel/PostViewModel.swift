@@ -274,23 +274,29 @@ class PostViewModel: ObservableObject {
         switch (hasPostedYesterday, hasPostedToday) {
         case (false, false):
             // If no posts both today and yesterday, streak ends
+            self.isDailyPosted = false
+            self.hasPostedYesterday = false
             return 0
         case (true, false):
             // Posted yesterday, but not today: keep streak unchanged
+            self.isDailyPosted = false
             return user.streak
-        case (_, true):
+        case (let hasPostedYesterday, true):
             // Posted today: get the last song to pin
             do {
                 if let newestPost {
                     let song: SongModel = try await SongService.fetchSongById(newestPost.songId)
                     await MainActor.run {
                         self.dailySong = song
+                        self.isDailyPosted = true
+                        self.hasPostedYesterday = hasPostedYesterday
                     }
                 }
             } catch let error {
                 print("ERROR: hasPostFromDate \(error.localizedDescription)")
             }
             return user.streak
+            
         }
     }
 }
