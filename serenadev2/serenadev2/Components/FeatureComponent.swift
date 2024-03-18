@@ -34,5 +34,5 @@ struct FeatureComponent: View {
 }
 
 #Preview {
-    FeatureComponent()
+    FeatureComponent(icon: "", title: "", description: "")
 }
