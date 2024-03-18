@@ -9,25 +9,19 @@ import SwiftUI
 
 struct UserDetailsView: View {
     
+    // MARK: - ViewModel
+    @EnvironmentObject private var userViewModel: UserViewModel
+    @StateObject private var userDetailsViewModel = UserDetailsViewModel()
+    
+    // MARK: - Environment properties
     @Environment(\.colorScheme) var colorScheme
     
-    @EnvironmentObject var userViewModel: UserViewModel
-    
-    @State private var name: String = ""
-    @State var tagname: String = ""
-    @State var tagNameRepeated: Bool = false
-    
-    @State private var isLinkActive = false
-    
-    @State private var sameUser = false
-    
-    @State private var error: String = ""
-    
+    // MARK: - Body
     var body: some View {
         NavigationStack {
-            
             ZStack{
                 
+                // Background of the view
                 LinearGradient(colors: [colorScheme == .light ? .white : Color(hex: 0x101010), Color(hex: 0xBA55D3)], startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
                 
@@ -40,20 +34,24 @@ struct UserDetailsView: View {
                 }
                 
                 VStack (){
+                    // Title of the view
                     Text(LocalizedStringKey("CompleteYourProfile"))
                         .font(.largeTitle)
                         .bold()
                         .multilineTextAlignment(.center)
                         .padding()
                     
+                    // Description of the view
                     Text(LocalizedStringKey("FillInYourDetails"))
                         .multilineTextAlignment(.center)
                         .padding(.bottom, 40)
                     
+                    // Form
                     VStack(alignment: .leading, spacing: 40){
                         VStack(spacing: 20){
-                            TextField("", text: $name)
-                                .placeholder(when: name.isEmpty) {
+                            // Text field for the user to put his name
+                            TextField("", text: $userDetailsViewModel.name)
+                                .placeholder(when: userDetailsViewModel.name.isEmpty) {
                                     Text(LocalizedStringKey("Name"))
                                         .foregroundColor(.gray)
                                 }
@@ -63,9 +61,9 @@ struct UserDetailsView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                 .disableAutocorrection(true)
                             
-                            
-                            TextField("", text: $tagname)
-                                .placeholder(when: tagname.isEmpty) {
+                            // Text field for the user to put his username
+                            TextField("", text: $userDetailsViewModel.tagname)
+                                .placeholder(when: userDetailsViewModel.tagname.isEmpty) {
                                     Text(LocalizedStringKey("Username"))
                                         .foregroundColor(.gray)
                                 }
@@ -75,16 +73,17 @@ struct UserDetailsView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                 .autocapitalization(.none)
                                 .disableAutocorrection(true)
-                                .onChange(of: tagname) { oldValue, newValue in
-                                    tagname = newValue.lowercased()
+                                .onChange(of: userDetailsViewModel.tagname) { oldValue, newValue in
+                                    userDetailsViewModel.tagname = newValue.lowercased()
                                 }
                             
-                            if self.error != ""{
+                            // If there's an error display it
+                            if userDetailsViewModel.error != ""{
                                 HStack{
                                     Spacer()
                                     
                                     Image(systemName: "info.circle")
-                                    Text(error)
+                                    Text(userDetailsViewModel.error)
                                     Spacer()
                                 }
                                 .font(.footnote)
@@ -95,40 +94,43 @@ struct UserDetailsView: View {
                     
                     Spacer()
                     
-                    ActionButton(label: "Next", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: tagname == "" || name == "" || tagname.containsEmoji) {
-                        print("Passed name: \(self.name) & passed username: \(self.tagname)")
+                    // Button to go to the next part
+                    ActionButton(label: "Next", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: userDetailsViewModel.tagname == "" || userDetailsViewModel.name == "" || userDetailsViewModel.tagname.containsEmoji) {
+                        print("Passed name: \(userDetailsViewModel.name) & passed username: \(userDetailsViewModel.tagname)")
                         
-                        userViewModel.searchUsers(searchText: tagname) { users in
-                            if let users, users.count > 0 && tagname != "" {
+                        // Make a search of the user tagname
+                        userViewModel.searchUsers(searchText: userDetailsViewModel.tagname) { users in
+                            if let users, users.count > 0 && userDetailsViewModel.tagname != "" {
                                 let userFromDB = users[0]
                                 guard let user = userViewModel.user else {return}
-                                if isSameUserInSession(fromUser: user, toCompareWith: userFromDB) {
-                                    if tagname.containsEmoji {
+                                if userViewModel.isSameUserInSession(fromUser: user, toCompareWith: userFromDB) { // If the user is the same user continue
+                                    if userDetailsViewModel.tagname.containsEmoji { // If the username has emojis throw error
                                         withAnimation {
-                                            self.error = "The username can't include emojis. Try again."
+                                            userDetailsViewModel.error = "The username can't include emojis. Try again."
                                         }
                                         return
                                     }
-                                    sameUser = true
-                                    saveUserDetails()
+                                    userDetailsViewModel.sameUser = true
+                                    userDetailsViewModel.saveUserDetails(userViewModel: userViewModel) // Save the user details
                                 } else {
-                                    withAnimation {
-                                        self.error = "Sorry! \(tagname) is already in use. Please try another one"
+                                    withAnimation { // If someone has the unsername throw the error
+                                        userDetailsViewModel.error = "Sorry! \(userDetailsViewModel.tagname) is already in use. Please try another one"
                                     }
                                 }
                             } else {
-                                if tagname.containsEmoji {
+                                if userDetailsViewModel.tagname.containsEmoji {  // If the username has emojis throw error
                                     withAnimation {
-                                        self.error = "The username can't include emojis. Try again."
+                                        userDetailsViewModel.error = "The username can't include emojis. Try again."
                                     }
                                     return
                                 }
-                                saveUserDetails()
+                                userDetailsViewModel.saveUserDetails(userViewModel: userViewModel) // Save the user details
                             }
                         }
                     }
                     
-                    NavigationLink(destination: UserDetailsPPictureView(), isActive: $isLinkActive) {
+                    // Navigation link to go to the user details profile picture view
+                    NavigationLink(destination: UserDetailsPPictureView(), isActive: $userDetailsViewModel.isLinkActive) {
                         EmptyView()
                     }
                 }
@@ -136,50 +138,11 @@ struct UserDetailsView: View {
             }
             .onAppear {
                 if let userName = userViewModel.user?.name {
-                    name = userName
+                    userDetailsViewModel.name = userName
                 }
             }
         }
-    }
-    
-    private func saveUserDetails() {
-        tagname = tagname.formattedForTagName
-        userViewModel.searchUsers(searchText: tagname) { users in
-            
-            guard let users = users else { return }
-            
-            if !users.isEmpty && !sameUser {
-                self.tagNameRepeated = true
-                return
-            } else {
-                self.tagNameRepeated = false
-                guard var user = userViewModel.user else {
-                    print("No user in DB")
-                    return
-                }
-                user.tagName = tagname
-                user.name = name
-                
-                userViewModel.updateUser(updatedUser: user)
-                isLinkActive = true
-            }
-        }
-    }
-    
-    func isSameUserInSession(fromUser user1: User, toCompareWith user2: User) -> Bool {
-        return user1.accountID == user2.accountID
     }
 }
 
-extension View {
-    func placeholder<Content: View>(
-        when shouldShow: Bool,
-        alignment: Alignment = .leading,
-        @ViewBuilder placeholder: () -> Content) -> some View {
-            
-            ZStack(alignment: alignment) {
-                placeholder().opacity(shouldShow ? 1 : 0)
-                self
-            }
-        }
-}
+
