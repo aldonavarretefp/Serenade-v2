@@ -12,6 +12,7 @@ struct UserDetailsView: View {
     // MARK: - ViewModel
     @EnvironmentObject private var userViewModel: UserViewModel
     @StateObject private var userDetailsViewModel = UserDetailsViewModel()
+    @StateObject private var loadingStateViewModel: LoadingStateViewModel = LoadingStateViewModel()
     
     // MARK: - Environment properties
     @Environment(\.colorScheme) var colorScheme
@@ -95,38 +96,22 @@ struct UserDetailsView: View {
                     Spacer()
                     
                     // Button to go to the next part
-                    ActionButton(label: "Next", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: userDetailsViewModel.tagname == "" || userDetailsViewModel.name == "" || userDetailsViewModel.tagname.containsEmoji) {
-                        print("Passed name: \(userDetailsViewModel.name) & passed username: \(userDetailsViewModel.tagname)")
-                        
-                        // Make a search of the user tagname
-                        userViewModel.searchUsers(searchText: userDetailsViewModel.tagname) { users in
-                            if let users, users.count > 0 && userDetailsViewModel.tagname != "" {
-                                let userFromDB = users[0]
-                                guard let user = userViewModel.user else {return}
-                                if userViewModel.isSameUserInSession(fromUser: user, toCompareWith: userFromDB) { // If the user is the same user continue
-                                    if userDetailsViewModel.tagname.containsEmoji { // If the username has emojis throw error
-                                        withAnimation {
-                                            userDetailsViewModel.error = "The username can't include emojis. Try again."
-                                        }
-                                        return
-                                    }
-                                    userDetailsViewModel.sameUser = true
-                                    userDetailsViewModel.saveUserDetails(userViewModel: userViewModel) // Save the user details
+                    ActionButton(label: "Next", symbolName: "arrow.forward.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: loadingStateViewModel.isLoading || userDetailsViewModel.tagname == "" || userDetailsViewModel.name == "" || userDetailsViewModel.tagname.containsEmoji, isLoading: loadingStateViewModel.isLoading) {
+                        loadingStateViewModel.isLoading = true
+                        print("Verify username availability")
+                        userDetailsViewModel.verifyUsernameAvailability(userViewModel: userViewModel) { isSuccess, errorMessage in
+                                loadingStateViewModel.isLoading = false
+                            print("Verify username availability loading false")
+                                if isSuccess {
+                                    userDetailsViewModel.saveUserDetails(userViewModel: userViewModel)
+                                    userDetailsViewModel.isLinkActive = true
+                                    print("Verify username availability save User Details")
                                 } else {
-                                    withAnimation { // If someone has the unsername throw the error
-                                        userDetailsViewModel.error = "Sorry! \(userDetailsViewModel.tagname) is already in use. Please try another one"
-                                    }
-                                }
-                            } else {
-                                if userDetailsViewModel.tagname.containsEmoji {  // If the username has emojis throw error
                                     withAnimation {
-                                        userDetailsViewModel.error = "The username can't include emojis. Try again."
+                                        userDetailsViewModel.error = errorMessage
                                     }
-                                    return
                                 }
-                                userDetailsViewModel.saveUserDetails(userViewModel: userViewModel) // Save the user details
                             }
-                        }
                     }
                     
                     // Navigation link to go to the user details profile picture view

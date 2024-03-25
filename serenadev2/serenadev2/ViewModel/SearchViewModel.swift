@@ -57,7 +57,8 @@ class SearchViewModel: ObservableObject {
             .debounce(for: .seconds(searchDelay), scheduler: RunLoop.main)
         // Subscribes to the searchText changes and triggers the music fetch operation.
             .sink { [weak self] searchText in
-                self?.fetchMusic(with: searchText)
+                guard let self = self else { return }
+                self.fetchMusic(with: searchText)
             }
         // Stores the subscription in the cancellables set.
             .store(in: &cancellables)

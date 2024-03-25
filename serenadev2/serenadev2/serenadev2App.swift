@@ -24,24 +24,22 @@ struct serenadev2App: App {
                     SplashScreenView(isShowingSplashScreen: $isShowingSplashScreen)
                         .zIndex(3) // Highest zIndex ensures it's always on top initially.
                         .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
-                }
-
+                
                 // Conditional views based on user state that are displayed after the splash screen logic has completed.
-                if !hasCompletedOnboarding {
+                } else if !hasCompletedOnboarding {
                     OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
                         .zIndex(1)
                         .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
                 } else if userViewModel.user == nil && !userViewModel.isLoggedIn {
                     SignInView()
                         .zIndex(2)
-                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
                 } else if userViewModel.user != nil && !userViewModel.tagNameExists && !userViewModel.finishedTheProfile {
                     UserDetailsView()
                         .zIndex(1) // Lower zIndex as it's not initially important.
                 } else {
                     ContentView()
                         .zIndex(0) // Default content view with the lowest priority.
-                        .transition(AnyTransition.opacity.animation(.easeOut(duration: 0.5)))
+                        
                 }
             }
             .environmentObject(userViewModel)

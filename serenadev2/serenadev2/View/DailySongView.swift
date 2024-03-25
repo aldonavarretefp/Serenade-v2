@@ -138,10 +138,12 @@ struct DailySongView: View {
                             return
                         }
                         dailySongViewModel.caption = sanitizeText(dailySongViewModel.caption)
+                        
                         let reference = CKRecord.Reference(recordID: user.record.recordID, action: .none)
                         let post = Post(postType: .daily, sender: reference, caption: dailySongViewModel.caption,  songId: song.id, date: Date.now, isAnonymous: false, isActive: true)
                         
                         loadingStateViewModel.isLoading = true
+                        
                         Task {
                             let newStreak = await postViewModel.verifyUserStreak(user: user)
                             if user.streak == newStreak {
@@ -195,14 +197,16 @@ struct DailySongView: View {
         var user = user
         // User has tapped on the daily button
         postViewModel.createAPost(post: post) {
-            postViewModel.dailySong = selectedSongBinding
-            postViewModel.isDailyPosted = true
-            user.streak += 1
-            userViewModel.updateUser(updatedUser: user)
-            userViewModel.addPostToUser(sender: user, post: post)
-            loadingStateViewModel.isLoading = false
-            self.dismiss()
-            print("Shared daily")
+            DispatchQueue.main.async {
+                postViewModel.dailySong = selectedSongBinding
+                postViewModel.isDailyPosted = true
+                user.streak += 1
+                userViewModel.addPostToUser(sender: user, post: post)
+                loadingStateViewModel.isLoading = false
+                self.dismiss()
+                print("Shared daily")
+            }
+            
         }
     }
     

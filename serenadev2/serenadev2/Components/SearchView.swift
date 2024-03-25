@@ -183,7 +183,9 @@ struct SearchView: View {
         .onChange(of: searchViewModel.searchText) {
             // Everytime the user type perform the search
             if selectedTab == .music {
-                searchViewModel.fetchMusic(with: searchViewModel.searchText)
+                Task {
+                    searchViewModel.fetchMusic(with: searchViewModel.searchText)
+                }
             } else {
                 searchViewModel.peopleList = searchViewModel.users.filter({ user in
                     user.tagName.lowercased().contains(searchViewModel.searchText.lowercased()) || user.name.lowercased().contains(searchViewModel.searchText.lowercased())

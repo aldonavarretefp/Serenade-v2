@@ -95,7 +95,7 @@ struct EditProfileView: View {
                     Spacer()
                     
                     // Button to save the changes
-                    ActionButton(label: LocalizedStringKey("SaveChanges"), symbolName: "checkmark.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: editProfileViewModel.tagName == "" || editProfileViewModel.name == "") {
+                    ActionButton(label: LocalizedStringKey("SaveChanges"), symbolName: "checkmark.circle.fill", fontColor: Color(hex: 0xffffff), backgroundColor: Color(hex: 0xBA55D3), isShareDaily: false, isDisabled: editProfileViewModel.tagName.formattedForTagName == "" || editProfileViewModel.name.formattedForTagName == "") {
                         guard let user = userVM.user else {
                             return
                         }

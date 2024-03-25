@@ -4,11 +4,11 @@ import Combine
 
 class UserViewModel: ObservableObject {
     @Published var user: User? = nil
-    @Published var userID: String? = nil
+    var userID: String? = nil
     @Published var isLoggedIn: Bool = false
-    @Published var tagNameExists: Bool = false
+    var tagNameExists: Bool = false
     @Published var error: String = ""
-    @Published var friends : [User] = []
+    var friends : [User] = []
     @Published var finishedTheProfile: Bool = false
     @Published var hasPostedHisDaily: Bool = false
     var cancellables = Set<AnyCancellable>()
@@ -214,11 +214,11 @@ class UserViewModel: ObservableObject {
             }
         }
     }
+    
     func updateUser(updatedUser: User) async {
         if(updatedUser.tagName == "" || updatedUser.name == "") {
             return
         }
-        
         var copyUser = updatedUser
         guard let newUser = copyUser.update(newUser: updatedUser) else { return }
         CloudKitUtility.update(item: newUser) { result in
@@ -358,6 +358,30 @@ class UserViewModel: ObservableObject {
         }
     }
     
+    func searchUsersByExactTagName(searchText: String, completion: @escaping ([User]?) -> Void) {
+        let predicate = NSPredicate(format: "isActive == 1 && tagName == %@", searchText)
+        let recordType = UserRecordKeys.type.rawValue
+        CloudKitUtility.fetch(predicate: predicate, recordType: recordType)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                // Handle any subscription-related responses here, if necessary.
+            } receiveValue: { [weak self] (returnedUsers: [User]?) in
+                guard let self = self, let users = returnedUsers else {
+                    completion(nil)
+                    return
+                }
+                
+                // Perform local filtering based on searchText
+                let filteredUsers = users.filter { user in
+                    return user.tagName.lowercased().contains(searchText.lowercased()) || user.name.lowercased().contains(searchText.lowercased())
+                }
+                
+                completion(filteredUsers)
+            }
+            .store(in: &self.cancellables)
+        
+    }
+    
     func searchUsers(searchText: String, completion: @escaping ([User]?) -> Void) {
         let predicate = NSPredicate(format: "isActive == 1")
         let recordType = UserRecordKeys.type.rawValue
@@ -397,13 +421,17 @@ class UserViewModel: ObservableObject {
             }
             .store(in: &self.cancellables)
     }
-
-    
     
     func addPostToUser(sender: User, post: Post) {
         var newUser = sender
-        newUser.posts = newUser.posts ?? []
-        newUser.posts?.append(CKRecord.Reference(recordID: post.record.recordID, action: .none))
+        
+        let postReference = CKRecord.Reference(recordID: post.record.recordID, action: .none)
+        guard var _ = newUser.posts else {
+            newUser.posts = [postReference]
+            updateUser(updatedUser: newUser)
+            return
+        }
+        newUser.posts?.append(postReference)
         updateUser(updatedUser: newUser)
     }
     

@@ -28,7 +28,6 @@ struct ContentView: View {
                         Image("feed.fill")
                         Text(LocalizedStringKey("Feed"))
                     }
-                
                 SearchView()
                     .tabItem {
                         Label(LocalizedStringKey("Search"), systemImage: "magnifyingglass")
@@ -60,7 +59,6 @@ struct ContentView: View {
                     user.streak = newStreak
                     await userViewModel.updateUser(updatedUser: user)
                 }
-                
             }
             group.addTask {
                 await postViewModel.fetchAllPosts(user: user)
