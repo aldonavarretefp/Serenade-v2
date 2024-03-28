@@ -26,10 +26,13 @@ class UserViewModel: ObservableObject {
                 }
                 DispatchQueue.main.async {
                     self.user = returnedUser
+                    self.cleanDuplicateFriends()
                     self.userID = userID
                     self.isLoggedIn = true
                     self.tagNameExists = user.tagName != userID.lowercased()
                 }
+                
+                
             }
         }
         
@@ -447,6 +450,35 @@ class UserViewModel: ObservableObject {
     func isSameUserInSession(fromUser user1: User, toCompareWith user2: User) -> Bool {
         return user1.accountID == user2.accountID
     }
+    
+    func cleanDuplicateFriends() {
+        let hasCleanedDuplicates = UserDefaults.standard.bool(forKey: UserDefaultsKeys.hasCleanedDuplicateFriends)
+        guard let currentUser = self.user, hasCleanedDuplicates == false  else {
+            print("Wasn't necessary to clean friends")
+            return
+        }
+        
+        // Fetch the current user from CloudKit to ensure we have the most up-to-date information
+        
+        // Identify duplicate friend references
+        let uniqueFriends = Array(Set(currentUser.friends))
+        
+        // Check if duplicates were removed
+        if uniqueFriends.count < currentUser.friends.count {
+            // Update the user's friends list to only include unique references
+            var updatedUser = currentUser
+            updatedUser.friends = uniqueFriends
+            
+            // Update the user record in CloudKit
+            updateUser(updatedUser: updatedUser)
+            print("Duplicate friends found!")
+            UserDefaults.standard.setValue(true, forKey: UserDefaultsKeys.hasCleanedDuplicateFriends)
+            
+        } else {
+            print("No duplicate friends found.")
+        }
+    }
+
 }
 
 

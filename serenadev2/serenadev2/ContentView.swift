@@ -23,7 +23,7 @@ struct ContentView: View {
         
         TabView {
             Group{
-                FeedView(postViewModel: postViewModel)
+                FeedView()
                     .tabItem {
                         Image("feed.fill")
                         Text(LocalizedStringKey("Feed"))

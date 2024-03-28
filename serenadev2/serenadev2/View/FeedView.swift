@@ -42,8 +42,10 @@ class FeedViewModel: ObservableObject {
 }
 
 struct FeedView: View {
+    // MARK: - Environment objects
     @EnvironmentObject var userViewModel: UserViewModel
-    @ObservedObject var postViewModel: PostViewModel
+    @EnvironmentObject var postViewModel: PostViewModel
+    
     // MARK: - Environment properties
     @Environment(\.colorScheme) var colorScheme
     

@@ -7,10 +7,11 @@
 
 import Foundation
 
-struct UserDefaultsKeys {
+struct UserDefaultsKeys  {
     static let hasCompletedOnboarding = "hasCompletedOnboarding"
     static let userID = "userID"
     static let userEmail = "userEmail"
     static let userName = "userName"
+    static let hasCleanedDuplicateFriends = "hasCleanedDuplicateFriends"
 }
 

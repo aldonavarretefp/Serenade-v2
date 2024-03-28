@@ -18,17 +18,11 @@ enum PostViewModelError: String, Error {
 
 class PostViewModel: ObservableObject {
     var posts: [Post] = []
-    @Published var dailyPost: Post?
     @Published var dailySong: SongModel? = nil
     @Published var songsDetails: [String: SongModel] = [:]
     @Published var senderDetails: [String: User] = [:]
-    var isDailyPosted: Bool = true
-    var hasPostedYesterday: Bool = true
-    var streak: Int = 0
-    
-    private var fetchCursor: CKQueryOperation.Cursor?
-    private var isFetching: Bool = false
-    private var hasMorePosts: Bool = true
+    @Published var isDailyPosted: Bool = true
+    @Published var hasPostedYesterday: Bool = true
     
     var cancellables = Set<AnyCancellable>()
     
@@ -305,61 +299,6 @@ class PostViewModel: ObservableObject {
             return user.streak
             
         }
-    }
-}
-
-
-extension PostViewModel {
-    
-    func fetchPostsPaginated() {
-        guard !isFetching && hasMorePosts else { return }
-        isFetching = true
-        
-        Task {
-            do {
-                let (newPosts, newCursor): ([Post], CKQueryOperation.Cursor?) = try await CloudKitUtility.fetch(
-                    predicate: NSPredicate(value: true), // Example predicate, adjust as needed
-                    recordType: "Post",
-                    resultsLimit: 10, // Adjust based on your desired page size
-                    cursor: fetchCursor)
-                for post in newPosts {
-                    guard let sender = post.sender else { return }
-                    try await fetchSenderDetails(for: sender.recordID)
-                    let result = await SongHistoryManager.shared.fetchSong(id: post.songId)
-                    switch result {
-                    case .success(let songModel):
-                        DispatchQueue.main.async {
-                            self.songsDetails[post.songId] = songModel
-                        }
-                    default:
-                        print("ERROR: Couldn't bring song details")
-                        break;
-                    }
-                    
-                }
-                DispatchQueue.main.async {
-                    self.posts.append(contentsOf: newPosts)
-                    self.fetchCursor = newCursor
-                    // If no new cursor is returned, it means there are no more posts to fetch.
-                    self.hasMorePosts = newCursor != nil
-                    self.isFetching = false
-                }
-            } catch let error {
-                print("An error occurred: \(error)")
-                DispatchQueue.main.async {
-                    self.isFetching = false
-                    // Handle error, e.g., by showing an alert to the user
-                }
-            }
-        }
-    }
-}
-
-
-extension PostViewModel {
-    func fetchMorePostsIfNeeded(currentPost post: Post) {
-        guard let lastPost = posts.last, lastPost == post, hasMorePosts else { return }
-        self.fetchPostsPaginated()
     }
 }
 
