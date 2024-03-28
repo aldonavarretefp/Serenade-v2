@@ -32,7 +32,7 @@ struct ProfileViewFromSearch: View {
                 
                 //  PENDING: Check friend requests sent for isFriendRequestSent
                 if let userInSession = userVM.user {
-                    ProfileBar(friends: $friends, user: $user, isFriend: $profileViewModel.isFriend, isFriendRequestSent: $profileViewModel.isFriendRequestSent, isFriendRequestRecieved: $profileViewModel.isFriendRequestReceived, showFriendRequestButton: $profileViewModel.showFriendRequestButton, isLoading: $loadingStateViewModel.isLoading, isLoadingStateOfFriendship: $loadingStateViewModel.isLoadingStateOfFriendShip, isCurrentUser: userVM.isSameUserInSession(fromUser: userInSession, toCompareWith: self.user))
+                    ProfileBar(user: $user, isFriend: $profileViewModel.isFriend, isFriendRequestSent: $profileViewModel.isFriendRequestSent, isFriendRequestRecieved: $profileViewModel.isFriendRequestReceived, showFriendRequestButton: $profileViewModel.showFriendRequestButton, isLoadingStateOfFriendship: $loadingStateViewModel.isLoadingStateOfFriendShip, isCurrentUser: userVM.isSameUserInSession(fromUser: userInSession, toCompareWith: self.user))
                 }
 
                 // Scroll view to show all the posts
@@ -66,13 +66,13 @@ struct ProfileViewFromSearch: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            loadingStateViewModel.isLoading = true
+            //loadingStateViewModel.isLoadingFriends = true
             loadingStateViewModel.isLoadingStateOfFriendShip = true
             fetchUserAndFriendRequest()
             await fetchProfilePosts()
             
-            friends = await userVM.fetchFriendsForUser(user: user)
-            loadingStateViewModel.isLoading = false
+            //friends = await userVM.fetchFriendsForUser(user: user)
+            //loadingStateViewModel.isLoadingFriends = false
             
         }
     }

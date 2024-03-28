@@ -119,7 +119,7 @@ struct ProfileView: View {
 extension ProfileView {
     @ViewBuilder
     func UserProfileBar(user: User) -> some View {
-        ProfileBar(friends: $profileViewModel.friendsFromUser, user: .constant(user), isFriend: $profileViewModel.isFriend, isFriendRequestSent: $profileViewModel.isFriendRequestSent, isFriendRequestRecieved: $profileViewModel.isFriendRequestReceived, showFriendRequestButton: $profileViewModel.showFriendRequestButton, isLoading: $loadingStateViewModel.isLoading, isLoadingStateOfFriendship: .constant(false), isCurrentUser: true)
+        ProfileBar(user: .constant(user), isFriend: $profileViewModel.isFriend, isFriendRequestSent: $profileViewModel.isFriendRequestSent, isFriendRequestRecieved: $profileViewModel.isFriendRequestReceived, showFriendRequestButton: $profileViewModel.showFriendRequestButton, isLoadingStateOfFriendship: .constant(false), isCurrentUser: true)
             .opacity(profileViewModel.headerOpacity)
             .padding(.top, safeArea().top)
             .padding(.bottom)

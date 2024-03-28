@@ -16,7 +16,7 @@ struct ProfileBar: View {
     
     @EnvironmentObject var userViewModel: UserViewModel
     @StateObject var friendRequestViewModel: FriendRequestsViewModel = FriendRequestsViewModel()
-    @Binding var friends :[User]
+    //@Binding var friends :[User]
     
     
     @State var friendRequest: FriendRequest? = nil
@@ -27,7 +27,7 @@ struct ProfileBar: View {
     @Binding var isFriendRequestSent: Bool
     @Binding var isFriendRequestRecieved: Bool
     @Binding var showFriendRequestButton: Bool
-    @Binding var isLoading :Bool
+    //@Binding var isLoading :Bool
     @Binding var isLoadingStateOfFriendship: Bool
     let isCurrentUser: Bool
     
@@ -128,7 +128,7 @@ struct ProfileBar: View {
                         }
                         .font(.caption)
                         
-                        NavigationLink(destination: FriendsListView(isLoading: $isLoading, friends: $friends, userTagName: user.tagName)) {
+                        NavigationLink(destination: FriendsListView(user: $user)) {
                             VStack {
                                 Text("\(user.friends.count == 0 ? "0" : "\(user.friends.count - 1)")")
                                 Text("Friends")
